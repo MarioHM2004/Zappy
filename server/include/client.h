@@ -11,9 +11,15 @@
 #include <sys/queue.h>
 #include "socket.h"
 #include "game.h"
+#include "packet.h"
+
+typedef struct client_s {
+    socket_t *socket;
+    packet_list_t *packets;
+} client_t;
 
 typedef struct client_node_s {
-    socket_t *socket;
+    client_t *client;
     LIST_ENTRY(client_node_s) entries;
 } client_node_t;
 

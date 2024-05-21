@@ -8,19 +8,31 @@
 #ifndef MAP_H_
 #define MAP_H_
 
-enum items_e {
-    FOOD,
-    LINEMATE,
-    DERAUMERE,
-    SIBUR,
-    MENDIANE,
-    PHIRAS,
-    THYSTAME,
-    EGG
+#include <sys/types.h>
+
+enum resource_e {
+    FOOD = 1,
+    LINEMATE = 2,
+    DERAUMERE = 3,
+    SIBUR = 4,
+    MENDIANE = 5,
+    PHIRAS = 6,
+    THYSTAME = 7
 };
 
+typedef struct resources_s {
+    uint food;
+    uint linemate;
+    uint deraumere;
+    uint sibur;
+    uint mendiane;
+    uint phiras;
+    uint thystame;
+} resources_t;
+
 typedef struct tile_s {
-    items_e *item;
+    resources_t *resources;
+    uint players;
 } tile_t;
 
 typedef struct map_s {

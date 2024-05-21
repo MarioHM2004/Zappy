@@ -15,13 +15,22 @@
 #define MAX_TEAM_LENGTH 32
 #define GRAPHIC_NAME "GRAPHIC"
 
+enum direction_e {
+    NORTH = 1,
+    EAST = 2,
+    SOUTH = 3,
+    WEST = 4
+};
 
 typedef struct player_s {
     int fd;
+    uint number;
     uint x;
     uint y;
+    direction_e dir;
     uint level;
-    items_e *inventory;
+    bool alive;
+    resources_t *inventory;
 } player_t;
 
 typedef struct player_node_s {
@@ -48,6 +57,7 @@ typedef struct team_list_s {
 } team_list_t;
 
 typedef struct game_s {
+    bool ended;
     uint freq;
     bool auto_start;
     bool display_eggs;
