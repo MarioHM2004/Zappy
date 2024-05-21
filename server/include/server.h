@@ -21,4 +21,7 @@ typedef struct server_s {
     game_t *game;
 } server_t;
 
+server_t *create_server(int port);
+void destroy_server(server_t *s);
+
 #endif /* !SERVER_H_ */

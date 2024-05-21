@@ -16,4 +16,7 @@ typedef struct gui_s {
     packet_list_t *packets;
 } gui_t;
 
+gui_t *create_gui(void);
+void destroy_gui(gui_t *g);
+
 #endif /* !GUI_H_ */

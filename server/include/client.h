@@ -27,4 +27,11 @@ typedef struct client_list_s {
     struct client_node_s *lh_first;
 } client_list_t;
 
+client_t *create_client(socket_t *socket);
+client_node_t *create_client_node(client_t *c);
+client_list_t *create_client_list(void);
+void destroy_client(client_t *c);
+void destroy_client_node(client_node_t *cn);
+void destroy_client_list(client_list_t *head);
+
 #endif /* !CLIENT_H_ */

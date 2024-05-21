@@ -41,4 +41,13 @@ typedef struct map_s {
     tile_t **tiles;
 } map_t;
 
+map_t *create_map(uint width, uint height);
+void destroy_map(map_t *m);
+
+tile_t *create_tile(void);
+void destroy_tile(tile_t *t);
+
+resources_t *create_resources(void);
+void destroy_resources(resources_t *rs);
+
 #endif /* !MAP_H_ */

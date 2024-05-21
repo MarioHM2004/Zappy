@@ -25,4 +25,11 @@ typedef struct packet_list_s {
     struct packet_node_s *lh_first;
 } packet_list_t;
 
+packet_t *create_packet(const char *data);
+packet_node_t *create_packet_node(packet_t *p);
+packet_list_t *create_packet_list(void);
+void destroy_packet(packet_t *p);
+void destroy_packet_node(packet_node_t *pn);
+void destroy_packet_list(packet_list_t *head);
+
 #endif /* !PACKET_H_ */
