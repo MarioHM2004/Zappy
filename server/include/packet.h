@@ -1,0 +1,28 @@
+/*
+** EPITECH PROJECT, 2024
+** B-YEP-400-BAR-4-1-zappy-joan-pau.merida-ruiz
+** File description:
+** packet
+*/
+
+#ifndef PACKET_H_
+#define PACKET_H_
+
+#include <sys/queue.h>
+
+#define MAX_PACKET_SIZE 1024
+
+typedef struct packet_s {
+    char data[MAX_PACKET_SIZE];
+} packet_t;
+
+typedef struct packet_node_s {
+    packet_t *packet;
+    LIST_ENTRY(packet_node_s) entries;
+} packet_node_t;
+
+typedef struct packet_list_s {
+    struct packet_node_s *lh_first;
+} packet_list_t;
+
+#endif /* !PACKET_H_ */
