@@ -10,15 +10,18 @@
 
 #include <sys/queue.h>
 #include <sys/types.h>
+#include "map.h"
 
 #define MAX_TEAM_LENGTH 32
 #define GRAPHIC_NAME "GRAPHIC"
+
 
 typedef struct player_s {
     int fd;
     uint x;
     uint y;
     uint level;
+    items_e *inventory;
 } player_t;
 
 typedef struct player_node_s {
@@ -45,10 +48,12 @@ typedef struct team_list_s {
 } team_list_t;
 
 typedef struct game_s {
-    uint width;
-    uint height;
+    uint freq;
+    bool auto_start;
+    bool display_eggs;
     team_list_t *teams;
     uint players_per_team;
+    map_t *map;
 } game_t;
 
 #endif /* !GAME_H_ */
