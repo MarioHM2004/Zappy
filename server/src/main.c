@@ -13,7 +13,7 @@ int main (int argc, char **argv)
     arguments_t arguments = parser(argc, argv);
     server_t *server = NULL;
 
-    // server = create_server(arguments->port);
+    server = create_server(arguments);
     if (!server)
         return 84;
     return 0;

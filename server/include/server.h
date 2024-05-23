@@ -10,6 +10,7 @@
 
 #include <sys/types.h>
 #include "gui.h"
+#include "parser.h"
 #include "socket.h"
 #include "client.h"
 #include "game.h"
@@ -22,7 +23,8 @@ typedef struct server_s {
     game_t *game;
 } server_t;
 
-server_t *create_server(int port);
+server_t *create_server(arguments_t arguments);
+game_t *create_game(arguments_t arguments);
 void destroy_server(server_t *s);
 
 #endif /* !SERVER_H_ */
