@@ -1,1 +1,8 @@
 zappy_server
+
+server/build/
+.vscode/
+.cache/
+build/
+.clang-format
+server/compile_commands.json

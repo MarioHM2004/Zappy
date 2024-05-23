@@ -14,6 +14,7 @@
 #include "client.h"
 #include "game.h"
 
+
 typedef struct server_s {
     socket_t *socket;
     client_list_t *clients;

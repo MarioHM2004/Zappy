@@ -1,3 +1,0 @@
-/home/oriol/Documents/tek2/yep/B-YEP-400-BAR-4-1-zappy-joan-pau.merida-ruiz/server/build/CMakeFiles/zappy_server.dir
-/home/oriol/Documents/tek2/yep/B-YEP-400-BAR-4-1-zappy-joan-pau.merida-ruiz/server/build/CMakeFiles/edit_cache.dir
-/home/oriol/Documents/tek2/yep/B-YEP-400-BAR-4-1-zappy-joan-pau.merida-ruiz/server/build/CMakeFiles/rebuild_cache.dir

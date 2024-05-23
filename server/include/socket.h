@@ -17,6 +17,6 @@ typedef struct socket_s {
 } socket_t;
 
 socket_t *create_socket(int port, in_addr_t addr);
-void destroy_socket(socket_s *s);
+void destroy_socket(socket_t *s);
 
 #endif /* !SOCKET_H_ */

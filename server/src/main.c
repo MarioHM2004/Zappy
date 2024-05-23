@@ -5,7 +5,16 @@
 ** main
 */
 
-int main(void)
+#include "parser.h"
+#include "server.h"
+
+int main (int argc, char **argv)
 {
+    arguments_t arguments = parser(argc, argv);
+    server_t *server = NULL;
+
+    // server = create_server(arguments->port);
+    if (!server)
+        return 84;
     return 0;
 }

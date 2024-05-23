@@ -12,16 +12,17 @@
 #include <sys/types.h>
 #include "map.h"
 #include "socket.h"
+#include <stdbool.h>
 
 #define MAX_TEAM_LENGTH 32
 #define GRAPHIC_NAME "GRAPHIC"
 
-enum direction_e {
+typedef enum {
     NORTH = 1,
     EAST = 2,
     SOUTH = 3,
     WEST = 4
-};
+} direction_e;
 
 typedef struct player_s {
     int fd;
@@ -67,7 +68,7 @@ typedef struct game_s {
     map_t *map;
 } game_t;
 
-void create_game(map_t *map, team_list_t *teams, uint players_per_team, uint freq);
+game_t *create_game(map_t *map, team_list_t *teams, uint players_per_team, uint freq);
 void set_auto_start(game_t *g, bool auto_start);
 void set_display_eggs(game_t *g, bool display_eggs);
 void destroy_game(game_t *g);
