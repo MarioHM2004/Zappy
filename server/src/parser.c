@@ -71,9 +71,6 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
                 }
                 state->next++;
             }
-            for (int i = 0; arguments->name[i]; i++) {
-                printf("name[%d] = %s\n", i, arguments->name[i]);
-            }
             break;
         case 'c':
             arguments->clientNb = atoi(arg);
