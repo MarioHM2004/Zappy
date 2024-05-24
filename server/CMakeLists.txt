@@ -7,6 +7,9 @@ project(ZappyServer VERSION 1.0)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
+# Add subdirectory for the library
+add_subdirectory(libs)
+
 # Add the include directory for header files
 include_directories(include)
 
@@ -24,4 +27,5 @@ set_target_properties(zappy_server PROPERTIES
 )
 
 # If there are specific libraries your project depends on, link them here
-# target_link_libraries(zappy_server <library_name>)
+# target_link_libraries(zappy_server ${P})
+target_link_libraries(zappy_server my)
