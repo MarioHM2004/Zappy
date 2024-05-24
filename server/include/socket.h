@@ -6,7 +6,7 @@
 */
 
 #ifndef SOCKET_H_
-#define SOCKET_H_
+    #define SOCKET_H_
 
 #include <netinet/in.h>
 #include <stdbool.h>

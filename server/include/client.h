@@ -6,11 +6,12 @@
 */
 
 #ifndef CLIENT_H_
-#define CLIENT_H_
+    #define CLIENT_H_
 
-#include <sys/queue.h>
-#include "socket.h"
-#include "packet.h"
+    #include <sys/queue.h>
+    #include "socket.h"
+    #include "game.h"
+    #include "packet.h"
 
 typedef struct client_s {
     socket_t *socket;

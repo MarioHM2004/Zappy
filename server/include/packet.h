@@ -6,11 +6,11 @@
 */
 
 #ifndef PACKET_H_
-#define PACKET_H_
+    #define PACKET_H_
 
-#include <sys/queue.h>
+    #include <sys/queue.h>
 
-#define MAX_PACKET_SIZE 1024
+    #define MAX_PACKET_SIZE 1024
 
 typedef struct packet_s {
     char data[MAX_PACKET_SIZE];

@@ -6,7 +6,7 @@
 */
 
 #ifndef SERVER_H_
-#define SERVER_H_
+    #define SERVER_H_
 
 #include <sys/types.h>
 #include "gui.h"
@@ -30,7 +30,7 @@ typedef struct server_s {
     fd_set except_fds;
 } server_t;
 
-server_t *create_server(arguments_t arguments);
+server_t *create_server(arguments_t *arguments);
 void destroy_server(server_t *s);
 void run(server_t *server);
 void set_fds(server_t *server);
