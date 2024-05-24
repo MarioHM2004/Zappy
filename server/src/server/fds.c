@@ -5,8 +5,8 @@
 ** fds
 */
 
-#include "gui.h"
-#include "server.h"
+#include "server/gui.h"
+#include "server/server.h"
 
 static void clear_fd_sets(fd_set *read_fds, fd_set *write_fds, fd_set *except_fds)
 {

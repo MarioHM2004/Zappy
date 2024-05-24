@@ -5,7 +5,7 @@
 ** pending_list
 */
 
-#include "pending.h"
+#include "server/pending.h"
 #include <stdlib.h>
 
 pending_node_t *create_pending_node(pending_t *pending)

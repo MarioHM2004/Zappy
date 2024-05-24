@@ -11,6 +11,7 @@
 #include <netinet/in.h>
 #include <stdbool.h>
 #include <sys/queue.h>
+#include "packet.h"
 
 typedef enum {
     READ,
@@ -32,5 +33,7 @@ void destroy_socket(socket_t *s);
 bool bind_socket(socket_t *s);
 bool listen_socket(socket_t *s, int backlog);
 socket_t *accept_socket(socket_t *s);
+bool write_socket(socket_t *socket, packet_t *packet);
+packet_t *read_socket(socket_t *socket);
 
 #endif /* !SOCKET_H_ */

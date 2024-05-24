@@ -5,7 +5,7 @@
 ** select
 */
 
-#include "server.h"
+#include "server/server.h"
 
 static int get_biggest_fd(server_t *server)
 {

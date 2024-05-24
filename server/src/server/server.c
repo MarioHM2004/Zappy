@@ -5,7 +5,7 @@
 ** server
 */
 
-#include "server.h"
+#include "server/server.h"
 #include <netinet/in.h>
 #include <stdlib.h>
 
@@ -21,5 +21,6 @@ server_t *create_server(arguments_t *arguments)
     server->clients = NULL;
     server->guis = NULL;
     server->game = NULL;
+    server->pending = NULL;
     return server;
 }

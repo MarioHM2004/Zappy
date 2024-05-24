@@ -5,7 +5,7 @@
 ** pending
 */
 
-#include "pending.h"
+#include "server/pending.h"
 #include <stdlib.h>
 
 pending_t *create_pending(socket_t *socket)

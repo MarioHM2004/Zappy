@@ -12,7 +12,7 @@
     #include <sys/types.h>
     #include "map.h"
     #include "parser.h"
-    #include "socket.h"
+    #include "server/socket.h"
     #include <stdbool.h>
 
     #define MAX_TEAM_LENGTH 32

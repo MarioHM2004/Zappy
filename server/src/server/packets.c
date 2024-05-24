@@ -5,7 +5,7 @@
 ** packets
 */
 
-#include "server.h"
+#include "server/server.h"
 
 static void handle_client_packets(server_t *server)
 {

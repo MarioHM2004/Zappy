@@ -5,9 +5,9 @@
 ** connection
 */
 
-#include "client.h"
-#include "server.h"
-#include "socket.h"
+#include "server/client.h"
+#include "server/server.h"
+#include "server/socket.h"
 #include <sys/queue.h>
 #include <sys/select.h>
 

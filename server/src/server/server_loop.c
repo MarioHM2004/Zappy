@@ -5,7 +5,7 @@
 ** server_loop
 */
 
-#include "server.h"
+#include "server/server.h"
 
 
 void run(server_t *server)
