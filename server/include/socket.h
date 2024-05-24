@@ -6,9 +6,9 @@
 */
 
 #ifndef SOCKET_H_
-#define SOCKET_H_
+    #define SOCKET_H_
 
-#include <netinet/in.h>
+    #include <netinet/in.h>
 
 typedef struct socket_s {
     int fd;

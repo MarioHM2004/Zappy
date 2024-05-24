@@ -8,9 +8,9 @@
 #include "parser.h"
 #include "server.h"
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
-    arguments_t arguments = parser(argc, argv);
+    arguments_t *arguments = parser(argc, argv);
     server_t *server = NULL;
 
     server = create_server(arguments);

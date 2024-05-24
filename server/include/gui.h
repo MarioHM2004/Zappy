@@ -6,10 +6,10 @@
 */
 
 #ifndef GUI_H_
-#define GUI_H_
+    #define GUI_H_
 
-#include "packet.h"
-#include "socket.h"
+    #include "packet.h"
+    #include "socket.h"
 
 typedef struct gui_s {
     socket_t *socket;

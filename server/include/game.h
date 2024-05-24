@@ -6,31 +6,31 @@
 */
 
 #ifndef GAME_H_
-#define GAME_H_
+    #define GAME_H_
 
-#include <sys/queue.h>
-#include <sys/types.h>
-#include "map.h"
-#include "parser.h"
-#include "socket.h"
-#include <stdbool.h>
+    #include <sys/queue.h>
+    #include <sys/types.h>
+    #include "map.h"
+    #include "parser.h"
+    #include "socket.h"
+    #include <stdbool.h>
 
-#define MAX_TEAM_LENGTH 32
-#define GRAPHIC_NAME "GRAPHIC"
+    #define MAX_TEAM_LENGTH 32
+    #define GRAPHIC_NAME "GRAPHIC"
 
 typedef enum {
     NORTH = 1,
     EAST = 2,
     SOUTH = 3,
     WEST = 4
-} direction_e;
+} direction_t;
 
 typedef struct player_s {
     int fd;
     uint number;
     uint x;
     uint y;
-    direction_e dir;
+    direction_t dir;
     uint level;
     bool alive;
     resources_t *inventory;
@@ -69,7 +69,7 @@ typedef struct game_s {
     map_t *map;
 } game_t;
 
-game_t *create_game(arguments_t arguments);
+game_t *create_game(arguments_t *arguments);
 void set_auto_start(game_t *g, bool auto_start);
 void set_display_eggs(game_t *g, bool display_eggs);
 void destroy_game(game_t *g);

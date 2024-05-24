@@ -6,9 +6,9 @@
 */
 
 #ifndef MAP_H_
-#define MAP_H_
+    #define MAP_H_
 
-#include <sys/types.h>
+    #include <sys/types.h>
 
 enum resource_e {
     FOOD = 1,

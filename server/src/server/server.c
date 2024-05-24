@@ -9,13 +9,13 @@
 #include <netinet/in.h>
 #include <stdlib.h>
 
-server_t *create_server(arguments_t arguments)
+server_t *create_server(arguments_t *arguments)
 {
     server_t *server = calloc(1, sizeof(server_t));
 
     if (!server)
         return NULL;
-    server->socket = create_socket(arguments.port, INADDR_ANY);
+    //server->socket = create_socket(arguments->port, INADDR_ANY);
     if (!server->socket)
         return NULL;
     server->clients = NULL;
