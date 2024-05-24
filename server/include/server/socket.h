@@ -8,10 +8,10 @@
 #ifndef SOCKET_H_
     #define SOCKET_H_
 
-#include <netinet/in.h>
-#include <stdbool.h>
-#include <sys/queue.h>
-#include "packet.h"
+    #include <netinet/in.h>
+    #include <stdbool.h>
+    #include <sys/queue.h>
+    #include "packet.h"
 
 typedef enum {
     READ,

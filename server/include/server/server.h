@@ -8,17 +8,17 @@
 #ifndef SERVER_H_
     #define SERVER_H_
 
-#include <sys/types.h>
-#include "gui.h"
-#include "parser.h"
-#include "socket.h"
-#include "client.h"
-#include "game.h"
-#include "pending.h"
+    #include <sys/types.h>
+    #include "gui.h"
+    #include "parser.h"
+    #include "socket.h"
+    #include "client.h"
+    #include "game.h"
+    #include "pending.h"
 
-#define CRLF "\n"
-#define MAX(a, b) ((a) >= (b) ? (a) : (b))
-#define MIN(a, b) ((a) <= (b) ? (a) : (b))
+    #define CRLF "\n"
+    #define MAX(a, b) ((a) >= (b) ? (a) : (b))
+    #define MIN(a, b) ((a) <= (b) ? (a) : (b))
 
 typedef struct server_s {
     socket_t *socket;
@@ -39,5 +39,6 @@ int select_connection(server_t *server);
 void accept_connection(server_t *server);
 void close_connection(server_t *server);
 void handle_packets(server_t *server);
+void write_packets(socket_t *socket, packet_list_t **packets);
 
 #endif /* !SERVER_H_ */
