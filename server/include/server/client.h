@@ -14,7 +14,8 @@
 
 typedef struct client_s {
     socket_t *socket;
-    packet_list_t *packets;
+    packet_list_t *request;
+    packet_list_t *response;
 } client_t;
 
 typedef struct client_node_s {

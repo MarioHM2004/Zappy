@@ -13,7 +13,8 @@
 
 typedef struct pending_s {
     socket_t *socket;
-    packet_list_t *packets;
+    packet_list_t *request;
+    packet_list_t *response;
 } pending_t;
 
 typedef struct pending_node_s {

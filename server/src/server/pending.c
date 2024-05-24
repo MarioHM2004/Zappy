@@ -6,6 +6,7 @@
 */
 
 #include "server/pending.h"
+#include "server/packet.h"
 #include <stdlib.h>
 
 pending_t *create_pending(socket_t *socket)
@@ -15,9 +16,10 @@ pending_t *create_pending(socket_t *socket)
     if (!pending)
         return NULL;
     pending->socket = socket;
-    pending->packets = create_packet_list();
-    if (!pending->packets) {
-        free(pending);
+    pending->request = create_packet_list();
+    pending->response = create_packet_list();
+    if (!pending->request || !pending->response) {
+        destroy_pending(pending);
         return NULL;
     }
     return pending;
@@ -28,6 +30,7 @@ void destroy_pending(pending_t *pending)
     if (!pending)
         return;
     destroy_socket(pending->socket);
-    destroy_packet_list(pending->packets);
+    destroy_packet_list(pending->request);
+    destroy_packet_list(pending->response);
     free(pending);
 }

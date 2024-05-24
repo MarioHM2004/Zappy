@@ -14,7 +14,8 @@
 
 typedef struct gui_s {
     socket_t *socket;
-    packet_list_t *packets;
+    packet_list_t *request;
+    packet_list_t *response;
 } gui_t;
 
 typedef struct gui_node_s {
