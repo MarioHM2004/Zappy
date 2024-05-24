@@ -5,8 +5,8 @@
 ** parser
 */
 
-#include "parser.h"
 #include "log.h"
+#include "parser.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -100,8 +100,8 @@ arguments_t *parser(int argc, char **argv)
     arguments->client_nb = 0;
     arguments->freq = 0;
     arguments->verbose = false;
-    arguments->auto_start = OFF;
-    arguments->display_eggs = FALSE;
+    arguments->auto_start = -1;
+    arguments->display_eggs = -1;
     argp_parse(&argp, argc, argv, 0, 0, arguments);
     log_arguments(arguments);
     return arguments;
