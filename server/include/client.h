@@ -10,7 +10,6 @@
 
 #include <sys/queue.h>
 #include "socket.h"
-#include "game.h"
 #include "packet.h"
 
 typedef struct client_s {
