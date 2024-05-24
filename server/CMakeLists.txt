@@ -11,8 +11,6 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 include_directories(include)
 
 # Add the source files
-file(GLOB_RECURSE SOURCES "src/parser/*.c")
-file(GLOB_RECURSE SOURCES "src/utils/*.c")
 file(GLOB_RECURSE SOURCES "src/*.c")
 
 add_compile_options(-g3 -DLOG_USE_COLOR)
