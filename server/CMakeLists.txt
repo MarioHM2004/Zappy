@@ -1,11 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
-
-# Set the project name and version
-project(ZappyServer VERSION 1.0)
+project(zappy_server)
 
 # Specify the C standard
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_STANDARD_REQUIRED True)
 
 # Add subdirectory for the library
 add_subdirectory(libs)
@@ -13,12 +10,13 @@ add_subdirectory(libs)
 # Add the include directory for header files
 include_directories(include)
 
-# Add the source files
+# Add the directory containing liblog.so to the linker search path
+link_directories(${PROJECT_SOURCE_DIR}/libs)
+
+# Find all source files
 file(GLOB_RECURSE SOURCES "src/*.c")
 
-add_compile_options(-g3 -DLOG_USE_COLOR)
-
-# Add the executable target
+# Add the executable
 add_executable(zappy_server ${SOURCES})
 
 # Set the output directory for binaries
@@ -27,5 +25,5 @@ set_target_properties(zappy_server PROPERTIES
 )
 
 # If there are specific libraries your project depends on, link them here
-# target_link_libraries(zappy_server ${P})
+target_link_libraries(zappy_server ${PROJECT_SOURCE_DIR}/libs/liblog.so)
 target_link_libraries(zappy_server my)
