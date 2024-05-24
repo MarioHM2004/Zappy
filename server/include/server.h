@@ -19,7 +19,7 @@
 typedef struct server_s {
     socket_t *socket;
     client_list_t *clients;
-    gui_t *gui;
+    gui_list_t *guis;
     game_t *game;
 } server_t;
 

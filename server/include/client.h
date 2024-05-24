@@ -8,10 +8,16 @@
 #ifndef CLIENT_H_
     #define CLIENT_H_
 
+<<<<<<< HEAD
     #include <sys/queue.h>
     #include "socket.h"
     #include "game.h"
     #include "packet.h"
+=======
+#include <sys/queue.h>
+#include "socket.h"
+#include "packet.h"
+>>>>>>> 5fbd95d6e183ca4dc1b8f8cc8f4717e73daef81f
 
 typedef struct client_s {
     socket_t *socket;
