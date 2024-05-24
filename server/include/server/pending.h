@@ -6,10 +6,10 @@
 */
 
 #ifndef PENDING_H_
-#define PENDING_H_
+    #define PENDING_H_
 
-#include "socket.h"
-#include "packet.h"
+    #include "socket.h"
+    #include "packet.h"
 
 typedef struct pending_s {
     socket_t *socket;
