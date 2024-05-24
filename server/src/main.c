@@ -16,5 +16,6 @@ int main (int argc, char **argv)
     server = create_server(arguments);
     if (!server)
         return 84;
+    run(server);
     return 0;
 }

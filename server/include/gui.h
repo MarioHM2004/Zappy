@@ -26,7 +26,7 @@ typedef struct gui_list_s {
     struct gui_node_s *lh_first;
 } gui_list_t;
 
-gui_t *create_gui(void);
+gui_t *create_gui(socket_t *socket);
 gui_node_t *create_gui_node(gui_t *gui);
 gui_list_t *create_gui_list(void);
 void destroy_gui(gui_t *g);
