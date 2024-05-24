@@ -5,8 +5,10 @@
 ** fds
 */
 
+#include "server/pending.h"
 #include "server/gui.h"
 #include "server/server.h"
+#include <sys/queue.h>
 
 static void clear_fd_sets(fd_set *read_fds, fd_set *write_fds, fd_set *except_fds)
 {
@@ -15,62 +17,34 @@ static void clear_fd_sets(fd_set *read_fds, fd_set *write_fds, fd_set *except_fd
     FD_ZERO(except_fds);
 }
 
-static void set_client_fds(client_list_t *clients, fd_set *read_fds, fd_set *write_fds, fd_set *except_fds)
+static void set_socket_fd(socket_t *socket, fd_set *read_fds, fd_set *write_fds, fd_set *except_fds)
 {
-    client_node_t *tmp = NULL;
-
-    if (!clients)
-        return;
-    LIST_FOREACH(tmp, clients, entries) {
-        if (tmp->client->socket->mode == READ)
-            FD_SET(tmp->client->socket->fd, read_fds);
-        if (tmp->client->socket->mode == WRITE)
-            FD_SET(tmp->client->socket->fd, write_fds);
-        if (tmp->client->socket->mode == EXCEPT)
-            FD_SET(tmp->client->socket->fd, except_fds);
-    }
-}
-
-static void set_guis_fds(gui_list_t *guis, fd_set *read_fds, fd_set *write_fds, fd_set *except_fds)
-{
-    gui_node_t *tmp = NULL;
-
-    if (!guis)
-        return;
-    LIST_FOREACH(tmp, guis, entries) {
-        if (tmp->gui->socket->mode == READ)
-            FD_SET(tmp->gui->socket->fd, read_fds);
-        if (tmp->gui->socket->mode == WRITE)
-            FD_SET(tmp->gui->socket->fd, write_fds);
-        if (tmp->gui->socket->mode == EXCEPT)
-            FD_SET(tmp->gui->socket->fd, except_fds);
-    }
-}
-
-static void set_pending_fds(pending_list_t *pendings, fd_set *read_fds, fd_set *write_fds, fd_set *except_fds)
-{
-    pending_node_t *tmp = NULL;
-
-    if (!pendings)
-        return;
-    LIST_FOREACH(tmp, pendings, entries) {
-        if (tmp->pending->socket->mode == READ)
-            FD_SET(tmp->pending->socket->fd, read_fds);
-        if (tmp->pending->socket->mode == WRITE)
-            FD_SET(tmp->pending->socket->fd, write_fds);
-        if (tmp->pending->socket->mode == EXCEPT)
-            FD_SET(tmp->pending->socket->fd, except_fds);
-    }
+    if (socket->mode == READ)
+        FD_SET(socket->fd, read_fds);
+    if (socket->mode == WRITE)
+        FD_SET(socket->fd, write_fds);
+    if (socket->mode == EXCEPT)
+        FD_SET(socket->fd, except_fds);
 }
 
 void set_fds(server_t *server)
 {
+    client_node_t *client = NULL;
+    gui_node_t *gui = NULL;
+    pending_node_t *pending = NULL;
+
     clear_fd_sets(&server->read_fds, &server->write_fds, &server->except_fds);
     FD_SET(server->socket->fd, &server->read_fds);
-    set_client_fds(server->clients, &server->read_fds,
-        &server->write_fds, &server->except_fds);
-    set_guis_fds(server->guis, &server->read_fds,
-        &server->write_fds, &server->except_fds);
-    set_pending_fds(server->pending, &server->read_fds,
-        &server->write_fds, &server->except_fds);
+    LIST_FOREACH(client, server->pending, entries) {
+        set_socket_fd(client->client->socket, &server->read_fds,
+            &server->write_fds, &server->except_fds);
+    }
+    LIST_FOREACH(gui, server->guis, entries) {
+        set_socket_fd(gui->gui->socket, &server->read_fds,
+            &server->write_fds, &server->except_fds);
+    }
+    LIST_FOREACH(pending, server->pending, entries) {
+        set_socket_fd(pending->pending->socket, &server->read_fds,
+            &server->write_fds, &server->except_fds);
+    }
 }
