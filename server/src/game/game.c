@@ -5,7 +5,7 @@
 ** game
 */
 
-#include "game.h"
+#include "game/game.h"
 #include "parser.h"
 #include <stdlib.h>
 
@@ -15,7 +15,7 @@ game_t *create_game(arguments_t *arguments)
 
     if (!game)
         return NULL;
-    //game->map = create_map(arguments->width, arguments->height);
+    game->map = create_map(arguments->width, arguments->height);
     if (!game->map)
         return NULL;
     game->teams = NULL;

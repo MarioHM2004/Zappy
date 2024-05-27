@@ -13,7 +13,7 @@
     #include "parser.h"
     #include "socket.h"
     #include "client.h"
-    #include "game.h"
+    #include "game/game.h"
     #include "pending.h"
 
     #define CRLF "\n"
