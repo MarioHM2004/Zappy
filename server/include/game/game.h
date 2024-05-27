@@ -81,7 +81,7 @@ void destroy_team(team_t *t);
 void destroy_team_node(team_node_t *tn);
 void destroy_team_list(team_list_t *head);
 
-player_t *create_player(socket_t *socket, uint number);
+player_t *create_player(socket_t *socket, uint number, uint x, uint y);
 player_node_t *create_player_node(player_t *p);
 player_list_t *create_player_list(void);
 void destroy_player(player_t *p);
