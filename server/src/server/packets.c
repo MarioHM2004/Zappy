@@ -7,52 +7,36 @@
 
 #include "server/server.h"
 
-static void handle_client_packets(server_t *server)
+packet_t *create_packet(const char *data)
 {
-    client_node_t *tmp = NULL;
+    packet_t *packet = calloc(1, sizeof(packet_t));
 
-    if (!server->clients)
-        return;
-    LIST_FOREACH(tmp, server->clients, entries) {
-        if (FD_ISSET(tmp->socket->fd, &server->write_fds))
-            write_packets(&tmp->client->response);
-        if (FD_ISSET(tmp->socket->fd, &server->read_fds))
-            process_client_packets(tmp->client);
-    }
-    return;
+    if (!packet)
+        return NULL;
+    packet->data = data;
+    return packet;
 }
 
-static void handle_gui_packets(server_t *server)
+packet_node_t *create_packet_node(packet_t *p)
 {
-    gui_node_t *tmp = NULL;
+    packet_node_t *node = malloc(sizeof(packet_node_t));
 
-    if (!server->guis)
-        return;
-    LIST_FOREACH(tmp, server->guis, entries) {
-        if (FD_ISSET(tmp->socket->fd, &server->write_fds))
-            write_packets(tmp->gui->response);
-        if (FD_ISSET(tmp->socket->fd, &server->read_fds))
-            process_gui_packets(tmp->gui);
+    if (!node)
+        return NULL;
+    node->packet = malloc(sizeof(packet_t));
+    if (!node->packet) {
+        free(node);
+        return NULL;
     }
-    return;
+    memcpy(node->packet, p, sizeof(packet_t));
+    return node;
 }
 
-static void handle_pending_packets(server_t *server)
-{
-    pending_node_t *tmp = NULL;
+packet_list_t *create_packet_list(void) {
+    packet_list_t *list = malloc(sizeof(packet_list_t));
 
-    if (!server->pending)
-        return;
-    LIST_FOREACH(tmp, server->pending, entries) {
-        if (FD_ISSET(tmp->socket->fd, &server->write_fds))
-            write_packets(tmp->pending->response);
-        if (FD_ISSET(tmp->socket->fd, &server->read_fds))
-            process_pendings_packets(tmp->pending);
-    }
-    return;
-}
-
-void handle_packets(server_t *server)
-{
-    handle_pending_packets(server);
+    if (!list)
+        return NULL;
+    LIST_INIT(list);
+    return list;
 }

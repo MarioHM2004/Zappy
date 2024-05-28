@@ -10,6 +10,7 @@
 
     #include <sys/types.h>
     #include "../../libs/include/lib.h"
+    #include "packet.h"
     #include "gui.h"
     #include "parser.h"
     #include "socket.h"
