@@ -9,6 +9,7 @@
     #define SERVER_H_
 
     #include <sys/types.h>
+    #include "../../libs/include/lib.h"
     #include "gui.h"
     #include "parser.h"
     #include "socket.h"
@@ -40,5 +41,8 @@ void accept_connection(server_t *server);
 void close_connection(server_t *server);
 void handle_packets(server_t *server);
 void write_packets(socket_t *socket, packet_list_t **packets);
+void process_client_packets(client_t *client);
+void process_gui_packets(gui_t *gui);
+void process_pendings_packets(pending_t *pendings);
 
 #endif /* !SERVER_H_ */

@@ -20,3 +20,13 @@ char *str_insert(char *str, const char *insert)
     free(tmp);
     return str;
 }
+
+char *safe_strcat(char const *src, char const *concat)
+{
+    int length = strlen(concat) + strlen(src);
+    char *res = calloc(length + 1, sizeof(char));
+
+    strcpy(res, src);
+    strcat(res, concat);
+    return (res);
+}

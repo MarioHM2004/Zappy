@@ -7,7 +7,6 @@
 
 #include "server/server.h"
 
-// add proccess_client_packet(tmp) to the readfds
 static void handle_client_packets(server_t *server)
 {
     client_node_t *tmp = NULL;
@@ -17,13 +16,12 @@ static void handle_client_packets(server_t *server)
     LIST_FOREACH(tmp, server->clients, entries) {
         if (FD_ISSET(tmp->socket->fd, &server->write_fds))
             write_packets(&tmp->client->response);
-        if (FD_ISSET(tmp->socket->fd, &server->read_fds)) {
-        }
+        if (FD_ISSET(tmp->socket->fd, &server->read_fds))
+            process_client_packets(tmp->client);
     }
     return;
 }
 
-// add proccess_gui_packet(tmp) to the readfds
 static void handle_gui_packets(server_t *server)
 {
     gui_node_t *tmp = NULL;
@@ -33,13 +31,12 @@ static void handle_gui_packets(server_t *server)
     LIST_FOREACH(tmp, server->guis, entries) {
         if (FD_ISSET(tmp->socket->fd, &server->write_fds))
             write_packets(tmp->gui->response);
-        if (FD_ISSET(tmp->socket->fd, &server->read_fds)) {
-        }
+        if (FD_ISSET(tmp->socket->fd, &server->read_fds))
+            process_gui_packets(tmp->gui);
     }
     return;
 }
 
-// add proccess_pending_packet(tmp) to the readfds
 static void handle_pending_packets(server_t *server)
 {
     pending_node_t *tmp = NULL;
@@ -49,8 +46,8 @@ static void handle_pending_packets(server_t *server)
     LIST_FOREACH(tmp, server->pending, entries) {
         if (FD_ISSET(tmp->socket->fd, &server->write_fds))
             write_packets(tmp->pending->response);
-        if (FD_ISSET(tmp->socket->fd, &server->read_fds)) {
-        }
+        if (FD_ISSET(tmp->socket->fd, &server->read_fds))
+            process_pendings_packets(tmp->pending);
     }
     return;
 }
