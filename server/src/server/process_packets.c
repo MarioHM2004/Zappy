@@ -72,13 +72,20 @@ char *get_cmd_from_packets(packet_list_t *packets)
     return cmd;
 }
 
-// client_commands_ptr(server, client, cmd);
+static void client_command_ptr(server_t *server, client_t *client, char *cmd)
+{
+    for (size_t i = 0; commands[i]; i++) {
+        if (startswith(cmd, commands[i].name))
+            commands[i].func(server, client, cmd);
+    }
+}
+
 void process_client_packets(server_t *server, client_t *client)
 {
     char *cmd = NULL;
-    packet_t *packet = NULL;
 
     while (!LIST_EMPTY(client->request)) {
         cmd = get_cmd_from_packets(client->request);
+        client_command_ptr(server, client, cmd);
     }
 }
