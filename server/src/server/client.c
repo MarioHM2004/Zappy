@@ -21,6 +21,7 @@ client_t *create_client(socket_t *socket)
         destroy_client(new_client);
         return NULL;
     }
+    new_client->type = PENDING;
     return new_client;
 }
 

@@ -40,17 +40,3 @@ void process_client_packets(client_t *client)
     char *cmd = get_cmd_from_packets(client->request);
     packet_t *packet = NULL;
 }
-
-// gui_commands_ptr(gui, cmd);
-void process_gui_packets(gui_t *gui)
-{
-    char *cmd = get_cmd_from_packets(gui->request);
-    packet_t *packet = NULL;
-}
-
-// pendings_commands_ptr(gui, cmd);
-void process_pendings_packets(pending_t *pendings)
-{
-    char *cmd = get_cmd_from_packets(pendings->request);
-    packet_t *packet = NULL;
-}
