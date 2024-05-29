@@ -39,6 +39,10 @@ static const client_command_t gui_commands[] = {
     {"pin", NULL},
     {"sgt", NULL},
     {"sst", NULL}
+};
+
+static const client_command_t pending_commands[] = {
+    {"", NULL},
 }
 
 static bool is_packed_completed(packet_t *packet)
@@ -81,6 +85,7 @@ static void client_command_ptr(server_t *server, client_t *client, char *cmd)
 
     switch (client->type) {
         case PENDING:
+            commands = pending_commands;
             break;
         case AI:
             commands = ai_commands;
