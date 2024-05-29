@@ -5,7 +5,7 @@
 ** game_create
 */
 
-#include "game/game.h"
+#include "game/player.h"
 #include <stdlib.h>
 #include <sys/types.h>
 

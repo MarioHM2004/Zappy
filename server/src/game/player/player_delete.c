@@ -5,7 +5,7 @@
 ** game_delete
 */
 
-#include "game/game.h"
+#include "game/player.h"
 #include <stdlib.h>
 
 void destroy_player(player_t *p)

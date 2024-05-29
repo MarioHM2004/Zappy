@@ -5,7 +5,7 @@
 ** team_create
 */
 
-#include "game/game.h"
+#include "game/team.h"
 #include <stdlib.h>
 #include <string.h>
 
