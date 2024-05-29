@@ -12,8 +12,8 @@
 #include "zappy.h"
 #include "server/command.h"
 
-static const client_command_t commands[] = {
-    // AI Protocol
+// AI Protocol
+static const client_command_t ai_commands[] = {
     {"Forward", NULL},
     {"Right", NULL},
     {"Left", NULL},
@@ -26,7 +26,10 @@ static const client_command_t commands[] = {
     {"Take", NULL},
     {"Set", NULL},
     {"Incantation", NULL},
-    // GUI Protocol
+};
+
+// GUI Protocol
+static const client_command_t gui_commands[] = {
     {"msz", NULL},
     {"bct", NULL},
     {"mct", NULL},
@@ -36,7 +39,7 @@ static const client_command_t commands[] = {
     {"pin", NULL},
     {"sgt", NULL},
     {"sst", NULL}
-};
+}
 
 static bool is_packed_completed(packet_t *packet)
 {
@@ -74,6 +77,18 @@ char *get_cmd_from_packets(packet_list_t *packets)
 
 static void client_command_ptr(server_t *server, client_t *client, char *cmd)
 {
+    client_command_t commands = NULL;
+
+    switch (client->type) {
+        case PENDING:
+            break;
+        case AI:
+            commands = ai_commands;
+            break;
+        case GRAPHIC:
+            commands = gui_commands;
+            break;
+    }
     for (size_t i = 0; commands[i]; i++) {
         if (startswith(cmd, commands[i].name))
             commands[i].func(server, client, cmd);
