@@ -9,18 +9,12 @@
 
 static int get_biggest_fd(server_t *server)
 {
-    client_node_t *clients = NULL;
-    gui_node_t *guis = NULL;
-    pending_node_t *pendings = NULL;
+    client_node_t *tmp = NULL;
     int biggest = -1;
 
     biggest = MAX(biggest, server->socket->fd);
-    LIST_FOREACH(clients, server->clients, entries)
-        biggest = MAX(biggest, clients->client->socket->fd);
-    LIST_FOREACH(guis, server->guis, entries)
-        biggest = MAX(biggest, guis->gui->socket->fd);
-    LIST_FOREACH(pendings, server->pending, entries)
-        biggest = MAX(biggest, pendings->pending->socket->fd);
+    LIST_FOREACH(tmp, server->clients, entries)
+        biggest = MAX(biggest, tmp->client->socket->fd);
     return biggest;
 }
 

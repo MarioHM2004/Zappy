@@ -5,7 +5,8 @@
 ** destroy_packets
 */
 
-#include "server/server.h"
+#include "server/packet.h"
+#include <stdlib.h>
 
 void destroy_packet(packet_t *packet)
 {
@@ -18,8 +19,7 @@ void destroy_packet_node(packet_node_t *pn)
 {
     if (!pn)
         return;
-    if (pn->packet)
-        destroy_packet(pn->packet);
+    destroy_packet(pn->packet);
     free(pn);
 }
 
@@ -35,7 +35,6 @@ void destroy_packet_list(packet_list_t *head)
         tmp = LIST_NEXT(current, entries);
         LIST_REMOVE(current, entries);
         destroy_packet_node(current);
-        free(current);
         current = tmp;
     }
 }

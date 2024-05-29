@@ -19,8 +19,6 @@ server_t *create_server(arguments_t *arguments)
     if (!server->socket)
         return NULL;
     server->clients = NULL;
-    server->guis = NULL;
     server->game = NULL;
-    server->pending = NULL;
     return server;
 }

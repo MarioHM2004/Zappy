@@ -5,7 +5,9 @@
 ** packets
 */
 
-#include "server/server.h"
+#include "server/packet.h"
+#include <stdlib.h>
+#include <string.h>
 
 packet_t *create_packet(const char *data)
 {
@@ -13,27 +15,22 @@ packet_t *create_packet(const char *data)
 
     if (!packet)
         return NULL;
-    packet->data = data;
+    strcpy(packet->data, data);
     return packet;
 }
 
 packet_node_t *create_packet_node(packet_t *p)
 {
-    packet_node_t *node = malloc(sizeof(packet_node_t));
+    packet_node_t *node = calloc(1, sizeof(packet_node_t));
 
     if (!node)
         return NULL;
-    node->packet = malloc(sizeof(packet_t));
-    if (!node->packet) {
-        free(node);
-        return NULL;
-    }
-    memcpy(node->packet, p, sizeof(packet_t));
+    node->packet = p;
     return node;
 }
 
 packet_list_t *create_packet_list(void) {
-    packet_list_t *list = malloc(sizeof(packet_list_t));
+    packet_list_t *list = calloc(1, sizeof(packet_list_t));
 
     if (!list)
         return NULL;

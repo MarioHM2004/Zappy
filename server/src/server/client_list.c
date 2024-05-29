@@ -6,7 +6,7 @@
 */
 
 #include "server/client.h"
-#include "server/packet.h"
+#include <stdlib.h>
 
 client_node_t *create_client_node(client_t *c)
 {
@@ -47,8 +47,7 @@ void destroy_client_list(client_list_t *head)
     while (current != NULL) {
         tmp = LIST_NEXT(current, entries);
         LIST_REMOVE(current, entries);
-        destroy_packet_node(current);
-        free(current);
+        destroy_client_node(current);
         current = tmp;
     }
 }

@@ -20,5 +20,5 @@ void write_packets(socket_t *socket, packet_list_t **packets)
     }
     destroy_packet_list(*packets);
     *packets = create_packet_list();
-    client->socket->mode = READ;
+    socket->mode = READ;
 }

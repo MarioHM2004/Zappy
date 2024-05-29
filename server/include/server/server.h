@@ -37,6 +37,6 @@ void accept_connection(server_t *server);
 void close_connection(server_t *server);
 void handle_packets(server_t *server);
 void write_packets(socket_t *socket, packet_list_t **packets);
-void process_client_packets(client_t *client);
+void process_client_packets(server_t *server, client_t *client);
 
 #endif /* !SERVER_H_ */

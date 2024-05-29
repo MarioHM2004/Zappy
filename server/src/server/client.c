@@ -7,6 +7,7 @@
 
 #include "server/client.h"
 #include "server/packet.h"
+#include <stdlib.h>
 
 client_t *create_client(socket_t *socket)
 {
@@ -17,11 +18,11 @@ client_t *create_client(socket_t *socket)
     new_client->socket = socket;
     new_client->request = create_packet_list();
     new_client->response = create_packet_list();
+    new_client->type = PENDING;
     if (!new_client->request || !new_client->response) {
         destroy_client(new_client);
         return NULL;
     }
-    new_client->type = PENDING;
     return new_client;
 }
 
