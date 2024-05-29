@@ -9,6 +9,34 @@
 #include <stdlib.h>
 #include <string.h>
 #include "libs/lib.h"
+#include "zappy.h"
+#include "server/command.h"
+
+static const client_command_t commands[] = {
+    // AI Protocol
+    {"Forward", NULL},
+    {"Right", NULL},
+    {"Left", NULL},
+    {"Look", NULL},
+    {"Inventory", NULL},
+    {"Broadcast", NULL},
+    {"Connect_nbr", NULL},
+    {"Fork", NULL},
+    {"Eject", NULL},
+    {"Take", NULL},
+    {"Set", NULL},
+    {"Incantation", NULL},
+    // GUI Protocol
+    {"msz", NULL},
+    {"bct", NULL},
+    {"mct", NULL},
+    {"tna", NULL},
+    {"ppo", NULL},
+    {"plv", NULL},
+    {"pin", NULL},
+    {"sgt", NULL},
+    {"sst", NULL}
+};
 
 static bool is_packed_completed(packet_t *packet)
 {
@@ -23,7 +51,7 @@ static bool is_packed_completed(packet_t *packet)
 
 char *get_cmd_from_packets(packet_list_t *packets)
 {
-    char *cmd = calloc(2056, sizeof(char));
+    char *cmd = calloc(MAX_COMMAND_LENGTH, sizeof(char));
     packet_node_t *tmp = NULL;
     packet_node_t *current = NULL;
 
