@@ -15,26 +15,24 @@ void destroy_event(event_t *event)
     free(event);
 }
 
-void destroy_event_node(event_node_t *en)
+void destroy_event_node(event_node_t *node)
 {
-    if (!en)
+    if (!node)
         return;
-    destroy_event(en->event);
-    free(en);
+    destroy_event(node->event);
+    free(node);
 }
 
-void destroy_event_list(event_list_t *head)
+void destroy_event_list(event_list_t *list)
 {
     event_node_t *tmp = NULL;
-    event_node_t *current = NULL;
 
-    if (!head)
+    if (!list)
         return;
-    current = LIST_FIRST(head);
-    while (current != NULL) {
-        tmp = LIST_NEXT(current, entries);
-        LIST_REMOVE(current, entries);
-        destroy_event_node(current);
-        current = tmp;
+    while (!LIST_EMPTY(list)) {
+        tmp = LIST_FIRST(list);
+        LIST_REMOVE(tmp, entries);
+        destroy_event_node(tmp);
     }
+    free(list);
 }

@@ -12,6 +12,9 @@
     #include "game.h"
     #include "server/socket.h"
 
+typedef struct event_list_s event_list_t;
+typedef struct event_s event_t;
+
 typedef struct player_s {
     int fd;
     uint number;
@@ -20,6 +23,7 @@ typedef struct player_s {
     direction_e dir;
     player_state_e state;
     resources_t *inventory;
+    event_list_t *events;
 } player_t;
 
 typedef struct player_node_s {
@@ -37,5 +41,7 @@ player_list_t *create_player_list(void);
 void destroy_player(player_t *p);
 void destroy_player_node(player_node_t *pn);
 void destroy_player_list(player_list_t *head);
+
+bool append_event_to_player(event_t *event, player_t *player);
 
 #endif /* !PLAYER_H_ */

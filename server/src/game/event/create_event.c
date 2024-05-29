@@ -6,7 +6,6 @@
 */
 
 #include "game/event.h"
-
 #include <stdlib.h>
 
 event_t *create_event(event_type_e type, void *data, size_t size)
@@ -24,22 +23,23 @@ event_t *create_event(event_type_e type, void *data, size_t size)
     return event;
 }
 
-event_node_t *create_event_node(event_t *e)
+event_node_t *create_event_node(event_t *e, float wait_time)
 {
     event_node_t *node = calloc(1, sizeof(event_node_t));
 
     if (!node)
         return NULL;
     node->event = e;
+    node->wait_time = wait_time;
     return node;
 }
 
 event_list_t *create_event_list(void)
 {
-    event_list_t *head = calloc(1, sizeof(event_list_t));
+    event_list_t *list = calloc(1, sizeof(event_list_t));
 
-    if (!head)
+    if (!list)
         return NULL;
-    LIST_INIT(head);
-    return head;
+    return list;
 }
+
