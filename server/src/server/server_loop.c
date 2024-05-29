@@ -7,7 +7,6 @@
 
 #include "server/server.h"
 
-
 void run(server_t *server)
 {
     while (true) {

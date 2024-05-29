@@ -10,7 +10,6 @@
 
     #include <stdbool.h>
     #include <stdlib.h>
-    #include <string.h>
     #include <stdarg.h>
 
 char **split(const char *str, char *separator);
@@ -26,4 +25,5 @@ bool endswith(const char *str, const char *end);
 char *str_insert(char *str, const char *insert);
 void *load_library(const char *path);
 char *safe_strcat(char const *src, char const *concat);
+
 #endif /* !LIB_H_ */

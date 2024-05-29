@@ -6,6 +6,9 @@
 */
 
 #include "server/server.h"
+#include <stdlib.h>
+#include <string.h>
+#include "libs/lib.h"
 
 static bool is_packed_completed(packet_t *packet)
 {
@@ -20,7 +23,7 @@ static bool is_packed_completed(packet_t *packet)
 
 char *get_cmd_from_packets(packet_list_t *packets)
 {
-    char *cmd = calloc(MAX_BODY_LENGTH, sizeof(char));
+    char *cmd = calloc(2056, sizeof(char));
     packet_node_t *tmp = NULL;
     packet_node_t *current = NULL;
 
