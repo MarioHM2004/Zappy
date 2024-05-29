@@ -16,12 +16,14 @@ link_directories(${PROJECT_SOURCE_DIR}/libs)
 # Find all source files
 file(GLOB_RECURSE SOURCES "src/*.c")
 
+add_compile_options(-g3 -DLOG_USE_COLOR)
+
 # Add the executable
 add_executable(zappy_server ${SOURCES})
 
 # Set the output directory for binaries
 set_target_properties(zappy_server PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"
+RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"
 )
 
 # If there are specific libraries your project depends on, link them here
