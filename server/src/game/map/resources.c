@@ -5,6 +5,7 @@
 ** resources
 */
 
+#include "game/game.h"
 #include "game/map.h"
 #include <stdlib.h>
 
@@ -44,7 +45,7 @@ static void spawn_resources(map_t *map, float densitiy) {
     for (uint i = 0; random_position[i]; i++) {
         x = random_position[i]->x;
         y = random_position[i]->y;
-        map->tiles[x][y]->resources->food++;
+        map->tiles[x][y].resources->food++;
         free(random_position[i]);
     }
     free(random_position);

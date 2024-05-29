@@ -6,8 +6,9 @@
 */
 
 #include "game/game.h"
-#include "parser.h"
+#include "game/team.h"
 #include <stdlib.h>
+#include <time.h>
 
 game_t *create_game(arguments_t *arguments)
 {
@@ -26,3 +27,23 @@ game_t *create_game(arguments_t *arguments)
     game->display_eggs = arguments->display_eggs == 0 ? true : false;
     return game;
 }
+
+void game_destroy(game_t *game)
+{
+    destroy_team_list(game->teams);
+    // destroy_map(game->map);
+}
+
+
+void game_tick(game_t *game)
+{
+    static clock_t last_time = 0;
+    clock_t elapsed_time = clock();
+
+    if ((elapsed_time - last_time) >= CLOCKS_PER_SEC) {
+        //Run game logic
+        //Check if any command can be executed
+        printf("One second has passed\n");
+    }
+}
+

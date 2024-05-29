@@ -5,7 +5,7 @@
 ** team_delete
 */
 
-#include "game/game.h"
+#include "game/team.h"
 #include <stdlib.h>
 
 void destroy_team(team_t *t)

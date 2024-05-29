@@ -8,28 +8,25 @@
 #include "game/map.h"
 #include <stdlib.h>
 
-tile_t *create_tile(void)
+tile_t create_tile(void)
 {
-    tile_t *tile = calloc(1, sizeof(tile_t));
+    tile_t tile = {0};
 
-    if (!tile)
-        return NULL;
-    tile->resources = create_resources();
-    tile->players = 0;
+    tile.resources = create_resources();
+    tile.players = 0;
     return tile;
 }
 
-void destroy_tile(tile_t *tile)
+void destroy_tile(tile_t tile)
 {
-    if (tile->resources)
-        destroy_resources(tile->resources);
-    if (tile)
-        free(tile);
+    if (tile.resources)
+        destroy_resources(tile.resources);
+
 }
 
-tile_t ***create_tiles(uint width, uint height)
+tile_t **create_tiles(uint width, uint height)
 {
-    tile_t ***tiles = calloc(width, sizeof(tile_t *));
+    tile_t **tiles = calloc(width, sizeof(tile_t *));
 
     if (!tiles)
         return NULL;
@@ -41,19 +38,15 @@ tile_t ***create_tiles(uint width, uint height)
         }
         for (uint j = 0; j < height; j++) {
             tiles[i][j] = create_tile();
-            if (!tiles[i][j]) {
-                destroy_tiles(tiles, width, height);
-                return NULL;
-            }
         }
     }
     return tiles;
 }
 
-void destroy_tiles(tile_t ***tiles, uint width, uint height)
+void destroy_tiles(tile_t **tiles, uint width, uint height)
 {
     for (uint i = 0; i < width && tiles[i]; i++) {
-        for (uint j = 0; j < height && tiles[i][j]; j++) {
+        for (uint j = 0; j < height; j++) {
             destroy_tile(tiles[i][j]);
         }
         free(tiles[i]);
