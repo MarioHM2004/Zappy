@@ -23,16 +23,26 @@ typedef enum {
     EAST = 2,
     SOUTH = 3,
     WEST = 4
-} direction_t;
+} direction_e;
+
+typedef enum {
+    EGG,
+    ALIVE,
+    DEAD
+} player_state_e;
+
+typedef struct position_s {
+    uint x;
+    uint y;
+} position_t;
 
 typedef struct player_s {
     int fd;
     uint number;
-    uint x;
-    uint y;
-    direction_t dir;
     uint level;
-    bool alive;
+    position_t pos;
+    direction_e dir;
+    player_state_e state;
     resources_t *inventory;
 } player_t;
 

@@ -11,11 +11,6 @@
     #include <sys/types.h>
     #include "resources.h"
 
-typedef struct position_s {
-    uint x;
-    uint y;
-} position_t;
-
 typedef struct tile_s {
     resources_t *resources;
     uint players;
@@ -24,13 +19,13 @@ typedef struct tile_s {
 typedef struct map_s {
     uint width;
     uint height;
-    tile_t ***tiles;
+    tile_t **tiles;
 } map_t;
 
 map_t *create_map(uint width, uint height);
 void destroy_map(map_t *m);
 
-tile_t ***create_tiles(uint width, uint height);
+tile_t **create_tiles(uint width, uint height);
 void destroy_tiles(tile_t ***tiles, uint width, uint height);
 tile_t *create_tile(void);
 void destroy_tile(tile_t *t);

@@ -17,11 +17,11 @@ player_t *create_player(socket_t *socket, uint number, uint x, uint y)
         return NULL;
     player->fd = socket->fd;
     player->number = number;
-    player->x = x;
-    player->y = y;
+    player->pos.x = x;
+    player->pos.y = y;
     player->dir = NORTH;
     player->level = 1;
-    player->alive = true;
+    player->state = ALIVE;
     player->inventory = create_resources();
     if (player->inventory == NULL) {
         free(player);
