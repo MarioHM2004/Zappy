@@ -8,7 +8,7 @@
 #ifndef EVENT_H_
 #define EVENT_H_
 
-#include "game.h"
+#include "player.h"
 
 #define MAX_BROADCAST_LENGTH 1024
 
