@@ -5,7 +5,7 @@
 ** str_insert
 */
 
-#include "lib.h"
+#include "libs/lib.h"
 #include <string.h>
 
 char *str_insert(char *str, const char *insert)

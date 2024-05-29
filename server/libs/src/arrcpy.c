@@ -5,7 +5,8 @@
 ** arrcpy
 */
 
-#include "lib.h"
+#include "libs/lib.h"
+#include <string.h>
 
 void **arrcpy(void **arr)
 {

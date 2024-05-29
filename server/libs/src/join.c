@@ -5,7 +5,8 @@
 ** join
 */
 
-#include "lib.h"
+#include "libs/lib.h"
+#include <string.h>
 
 static size_t total_len(char **arr, char *sep)
 {

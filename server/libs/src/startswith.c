@@ -5,7 +5,8 @@
 ** startswith
 */
 
-#include "lib.h"
+#include "libs/lib.h"
+#include <string.h>
 
 bool startswith(const char *str, const char *start)
 {

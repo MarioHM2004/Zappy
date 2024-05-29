@@ -6,7 +6,7 @@
 */
 
 #include <stddef.h>
-#include "lib.h"
+#include "libs/lib.h"
 
 size_t arrlen(void **arr)
 {

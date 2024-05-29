@@ -5,7 +5,8 @@
 ** arrcat
 */
 
-#include "lib.h"
+#include "libs/lib.h"
+#include <string.h>
 
 void **arrcat(void **arr1, void **arr2)
 {

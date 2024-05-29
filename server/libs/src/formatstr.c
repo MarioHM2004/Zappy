@@ -6,7 +6,7 @@
 */
 
 #include <stdio.h>
-#include "lib.h"
+#include "libs/lib.h"
 
 static char *get_formatstr(const char *format, va_list args, va_list cpy)
 {

@@ -5,7 +5,8 @@
 ** split
 */
 
-#include "lib.h"
+#include "libs/lib.h"
+#include <string.h>
 
 static char **split_str(char *str, char *separator)
 {

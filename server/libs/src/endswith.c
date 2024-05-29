@@ -5,7 +5,8 @@
 ** endswith
 */
 
-#include "lib.h"
+#include "libs/lib.h"
+#include <string.h>
 
 bool endswith(const char *str, const char *end)
 {

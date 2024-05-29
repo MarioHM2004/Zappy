@@ -5,7 +5,7 @@
 ** freearr
 */
 
-#include "lib.h"
+#include "libs/lib.h"
 
 void freearr(void **arr)
 {
