@@ -49,3 +49,14 @@ uint get_player_list_size(player_list_t *head)
         size++;
     return size;
 }
+
+bool is_player_in_list(player_list_t *head, player_t *player)
+{
+    player_node_t *tmp = NULL;
+
+    LIST_FOREACH(tmp, head, entries) {
+        if (tmp->player == player)
+            return true;
+    }
+    return false;
+}

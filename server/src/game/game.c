@@ -7,6 +7,7 @@
 
 #include "game/game.h"
 #include "game/team.h"
+#include "libs/log.h"
 #include <stdlib.h>
 #include <sys/queue.h>
 #include <time.h>
@@ -35,23 +36,30 @@ void game_destroy(game_t *game)
     destroy_map(game->map);
 }
 
+static bool valid_tick() {
+    static clock_t last_time = 0;
+    clock_t elapsed_time = clock();
+    if ((elapsed_time - last_time) >= CLOCKS_PER_SEC) {
+        log_info("Game tick n: %d", elapsed_time / CLOCKS_PER_SEC);
+        last_time = elapsed_time;
+        return true;
+    }
+    return false;
+}
 
 void game_tick(game_t *game)
 {
-    static clock_t last_time = 0;
-    clock_t elapsed_time = clock();
     team_node_t *team_node = NULL;
     player_node_t *player_node = NULL;
 
-    if ((elapsed_time - last_time) >= CLOCKS_PER_SEC) {
-        LIST_FOREACH(team_node, game->teams, entries) {
-            team_t *team = team_node->team;
-            LIST_FOREACH(player_node, team->players, entries) {
-                player_t *player = player_node->player;
-                player_tick(game, player);
-            }
+    if (!valid_tick())
+        return;
+    LIST_FOREACH(team_node, game->teams, entries) {
+        team_t *team = team_node->team;
+        LIST_FOREACH(player_node, team->players, entries) {
+            player_t *player = player_node->player;
+            player_tick(game, player);
         }
-        printf("One second has passed\n");
     }
 }
 

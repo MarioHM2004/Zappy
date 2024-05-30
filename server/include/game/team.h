@@ -36,5 +36,6 @@ void destroy_team_list(team_list_t *head);
 bool add_team(team_list_t *team_list, team_t *team);
 
 uint get_team_list_size(team_list_t *head);
+team_t *get_team_by_player(game_t *game, player_t *player);
 
 #endif /* !TEAM_H_ */

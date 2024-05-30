@@ -6,7 +6,9 @@
 */
 
 #include "game/game.h"
+#include "game/player.h"
 #include "game/team.h"
+#include <sys/queue.h>
 
 bool add_team(team_list_t *team_list, team_t *team)
 {
@@ -25,6 +27,18 @@ bool add_team(team_list_t *team_list, team_t *team)
         return true;
     }
     return true;
+}
+
+team_t *get_team_by_player(game_t *game, player_t *player)
+{
+    team_node_t *tmp_team = NULL;
+    player_node_t *tmp_player = NULL;
+
+    LIST_FOREACH(tmp_team, game->teams, entries) {
+        if (is_player_in_list(tmp_team->team->players, player))
+            return tmp_team->team;
+    }
+    return NULL;
 }
 
 uint get_team_list_size(team_list_t *head)

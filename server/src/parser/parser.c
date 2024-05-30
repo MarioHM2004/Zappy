@@ -72,19 +72,19 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 
 static void log_arguments(arguments_t *arguments)
 {
-    log_info("Port: %d", arguments->port);
-    log_info("Width: %d", arguments->width);
-    log_info("Height: %d", arguments->height);
-    log_info("ClientNb: %d", arguments->client_nb);
-    log_info("Freq: %d", arguments->freq);
-    log_info("Verbose: %d", arguments->verbose);
-    log_info("Auto-start: %s",
-        arguments->auto_start == 1 ? "OFF" : "ON");
-    log_info("Display-eggs: %s",
-        arguments->display_eggs == 0 ? "FALSE" : "TRUE");
+    log_debug("Port: %d", arguments->port);
+    log_debug("Width: %d", arguments->width);
+    log_debug("Height: %d", arguments->height);
+    log_debug("ClientNb: %d", arguments->client_nb);
     for (int i = 0; arguments->name[i]; i++) {
-        log_info("Name: %s", arguments->name[i]);
+        log_debug("Name: %s", arguments->name[i]);
     }
+    log_debug("Freq: %d", arguments->freq);
+    log_debug("Auto-start: %s",
+        arguments->auto_start == 1 ? "OFF" : "ON");
+    log_debug("Display-eggs: %s",
+        arguments->display_eggs == 0 ? "FALSE" : "TRUE");
+    log_debug("Verbose: %d\n", arguments->verbose);
 }
 
 arguments_t *parser(int argc, char **argv)

@@ -47,6 +47,7 @@ bool add_player(player_list_t *player_list, player_t *player);
 bool add_event_to_player(event_t *event, player_t *player);
 
 uint get_player_list_size(player_list_t *head);
+bool is_player_in_list(player_list_t *head, player_t *player);
 
 void player_tick(game_t *game, player_t *player);
 
