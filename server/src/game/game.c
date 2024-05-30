@@ -8,6 +8,7 @@
 #include "game/game.h"
 #include "game/team.h"
 #include <stdlib.h>
+#include <sys/queue.h>
 #include <time.h>
 
 game_t *create_game(arguments_t *arguments)
@@ -31,7 +32,7 @@ game_t *create_game(arguments_t *arguments)
 void game_destroy(game_t *game)
 {
     destroy_team_list(game->teams);
-    // destroy_map(game->map);
+    destroy_map(game->map);
 }
 
 
@@ -39,10 +40,17 @@ void game_tick(game_t *game)
 {
     static clock_t last_time = 0;
     clock_t elapsed_time = clock();
+    team_node_t *team_node = NULL;
+    player_node_t *player_node = NULL;
 
     if ((elapsed_time - last_time) >= CLOCKS_PER_SEC) {
-        //Run game logic
-        //Check if any command can be executed
+        LIST_FOREACH(team_node, game->teams, entries) {
+            team_t *team = team_node->team;
+            LIST_FOREACH(player_node, team->players, entries) {
+                player_t *player = player_node->player;
+                player_tick(game, player);
+            }
+        }
         printf("One second has passed\n");
     }
 }

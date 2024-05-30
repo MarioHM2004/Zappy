@@ -33,4 +33,8 @@ void destroy_team(team_t *t);
 void destroy_team_node(team_node_t *tn);
 void destroy_team_list(team_list_t *head);
 
+bool add_team(team_list_t *team_list, team_t *team);
+
+uint get_team_list_size(team_list_t *head);
+
 #endif /* !TEAM_H_ */
