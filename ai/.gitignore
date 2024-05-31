@@ -1,0 +1,9 @@
+.cache
+.vscode
+/__pycache__/
+env/
+.env/
+venv/
+.venv/
+.ruff_cache
+# src/secrets.py
