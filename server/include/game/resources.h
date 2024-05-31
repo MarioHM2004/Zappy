@@ -8,6 +8,7 @@
 #ifndef RESOURCES_H_
 #define RESOURCES_H_
 
+#include <stdbool.h>
 #include <sys/types.h>
 
     #define FOOD_DENSITY 0.5
@@ -18,16 +19,16 @@
     #define PHIRAS_DENSITY 0.08
     #define THYSTAME_DENSITY 0.05
 
-
-enum resource_e {
-    FOOD = 1,
-    LINEMATE = 2,
-    DERAUMERE = 3,
-    SIBUR = 4,
-    MENDIANE = 5,
-    PHIRAS = 6,
-    THYSTAME = 7
-};
+typedef enum {
+    FOOD = 0,
+    LINEMATE = 1,
+    DERAUMERE = 2,
+    SIBUR = 3,
+    MENDIANE = 4,
+    PHIRAS = 5,
+    THYSTAME = 6,
+    NONE = 7
+}resource_e;
 
 typedef struct resources_s {
     uint food;
@@ -39,8 +40,15 @@ typedef struct resources_s {
     uint thystame;
 } resources_t;
 
+typedef struct message_to_resource_s {
+    char *message;
+    resource_e resource;
+} message_to_resource_t;
+
 typedef struct map_s map_t;
 
 void spawn_all_resources(map_t *map);
+bool add_resource(resources_t *resource, resource_e item, uint quantity);
+uint *get_resource_ptr(resources_t *resources, resource_e item);
 
 #endif /* !RESOURCES_H_ */

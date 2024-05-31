@@ -5,11 +5,10 @@
 ** game
 */
 
-#include "game/game.h"
+#include "game/map.h"
 #include "game/team.h"
 #include "libs/log.h"
 #include <stdlib.h>
-#include <sys/queue.h>
 #include <time.h>
 
 game_t *create_game(arguments_t *arguments)

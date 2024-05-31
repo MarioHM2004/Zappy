@@ -10,6 +10,7 @@
     #define PLAYER_H_
 
     #include "game.h"
+#include "game/resources.h"
     #include "server/socket.h"
 #include <sys/types.h>
 

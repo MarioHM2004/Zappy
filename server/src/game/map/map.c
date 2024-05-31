@@ -6,23 +6,25 @@
 */
 
 #include "game/map.h"
+#include "game/game.h"
+#include "libs/log.h"
 #include <stdlib.h>
 
 
 
 
-tile_t map_at(map_t* map, int x, int y)
+tile_t map_at(map_t* map, position_t pos)
 {
-    if (x < 0)
-        x = map->width + (x % map->width);
+    if (pos.x < 0)
+        pos.x = map->width + (pos.x % map->width);
     else
-        x = x % map->width;
-    if (y < 0)
-        y = map->height + (y % map->height);
+        pos.x = pos.x % map->width;
+    if (pos.y < 0)
+        pos.y = map->height + (pos.y % map->height);
     else
-        y = y % map->height;
+        pos.y = pos.y % map->height;
 
-    return map->tiles[y][x];
+    return map->tiles[pos.y][pos.x];
 }
 
 void destroy_map(map_t *map)
@@ -40,6 +42,10 @@ map_t *create_map(uint width, uint height)
 
     if (!map)
         return NULL;
+    if (width * height < 7) {
+        log_fatal("Map size is too small, it should be at least 3x3\n");
+        return NULL;
+    }
     map->width = width;
     map->height = height;
     map->tiles = create_tiles(width, height);

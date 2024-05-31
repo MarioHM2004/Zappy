@@ -6,22 +6,16 @@
 */
 
 #include "game/map.h"
+#include "game/resources.h"
 #include <stdlib.h>
 
 tile_t create_tile(void)
 {
     tile_t tile = {0};
 
-    tile.resources = create_resources();
+    tile.resource = create_resources();
     tile.players = 0;
     return tile;
-}
-
-void destroy_tile(tile_t tile)
-{
-    if (tile.resources)
-        destroy_resources(tile.resources);
-
 }
 
 tile_t **create_tiles(uint width, uint height)
@@ -46,9 +40,6 @@ tile_t **create_tiles(uint width, uint height)
 void destroy_tiles(tile_t **tiles, uint width, uint height)
 {
     for (uint i = 0; i < width && tiles[i]; i++) {
-        for (uint j = 0; j < height; j++) {
-            destroy_tile(tiles[i][j]);
-        }
         free(tiles[i]);
     }
     free(tiles);

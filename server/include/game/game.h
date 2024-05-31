@@ -10,7 +10,6 @@
 
     #include <sys/queue.h>
     #include <sys/types.h>
-    #include "map.h"
     #include "parser.h"
 
     #define MAX_TEAM_LENGTH 32
@@ -36,6 +35,7 @@ typedef struct position_s {
 
 typedef struct team_list_s team_list_t;
 typedef struct player_list_s player_list_t;
+typedef struct map_s map_t;
 
 typedef struct game_s {
     bool ended;

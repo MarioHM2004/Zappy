@@ -5,8 +5,10 @@
 ** resources
 */
 
+#include "game/resources.h"
 #include "game/game.h"
 #include "game/map.h"
+#include <stdbool.h>
 #include <stdlib.h>
 
 static uint resources_quantity(float density, uint width, uint height)
@@ -18,48 +20,78 @@ static uint resources_quantity(float density, uint width, uint height)
     return (uint)quantity;
 }
 
-static position_t **random_positions(uint quantity, uint width, uint height)
+static position_t *random_positions(map_t *map, uint quantity, uint width, uint height)
 {
-    position_t **random_position = calloc(quantity + 1, sizeof(position_t *));
+    position_t *random_position = calloc(quantity + 1, sizeof(position_t *));
 
     if (!random_position)
         return NULL;
 
     for (uint i = 0; i < quantity; i++) {
-        random_position[i] = calloc(1, sizeof(position_t));
-        if (!random_position[i])
-            return NULL;
-        random_position[i]->x = rand() % width;
-        random_position[i]->y = rand() % height;
+        random_position[i].x = rand() % width;
+        random_position[i].y = rand() % height;
     }
-    random_position[quantity] = NULL;
     return random_position;
 }
 
-static void spawn_resources(map_t *map, float densitiy) {
+static void spawn_resources(map_t *map, resource_e item, float densitiy) {
     uint quantity = resources_quantity(densitiy, map->width, map->height);
-    position_t **random_position = random_positions(quantity, map->width, map->height);
+    position_t *random_position = random_positions(map, quantity, map->width, map->height);
     uint x = 0;
     uint y = 0;
 
-    for (uint i = 0; random_position[i]; i++) {
-        x = random_position[i]->x;
-        y = random_position[i]->y;
-        map->tiles[x][y].resources->food++;
-        free(random_position[i]);
+
+    for (uint i = 0; i < quantity; i++) {
+        x = random_position[i].x;
+        y = random_position[i].y;
+        add_resource(map->tiles[y][x].resource, item, 1);
     }
     free(random_position);
 }
 
 void spawn_all_resources(map_t * map)
 {
-    spawn_resources(map, FOOD_DENSITY);
-    spawn_resources(map, LINEMATE_DENSITY);
-    spawn_resources(map, DERAUMERE_DENSITY);
-    spawn_resources(map, SIBUR_DENSITY);
-    spawn_resources(map, MENDIANE_DENSITY);
-    spawn_resources(map, PHIRAS_DENSITY);
-    spawn_resources(map, THYSTAME_DENSITY);
+    spawn_resources(map, FOOD, FOOD_DENSITY);
+    spawn_resources(map, LINEMATE, LINEMATE_DENSITY);
+    spawn_resources(map, DERAUMERE, DERAUMERE_DENSITY);
+    spawn_resources(map, SIBUR ,SIBUR_DENSITY);
+    spawn_resources(map, MENDIANE ,MENDIANE_DENSITY);
+    spawn_resources(map, PHIRAS ,PHIRAS_DENSITY);
+    spawn_resources(map, THYSTAME ,THYSTAME_DENSITY);
+}
+
+uint *get_resource_ptr(resources_t *resources, resource_e item)
+{
+    if (!resources)
+        return NULL;
+    switch (item) {
+        case FOOD:
+            return &resources->food;
+        case LINEMATE:
+            return &resources->linemate;
+        case DERAUMERE:
+            return &resources->deraumere;
+        case SIBUR:
+            return &resources->sibur;
+        case MENDIANE:
+            return &resources->mendiane;
+        case PHIRAS:
+            return &resources->phiras;
+        case THYSTAME:
+            return &resources->thystame;
+        default:
+            return NULL;
+    }
+}
+
+bool add_resource(resources_t *resources, resource_e item, uint quantity)
+{
+    uint *resource = get_resource_ptr(resources, item);
+
+    if (resource == NULL)
+        return false;
+    *resource += quantity;
+    return true;
 }
 
 resources_t *create_resources(void)

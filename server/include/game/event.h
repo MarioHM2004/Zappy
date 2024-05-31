@@ -13,6 +13,7 @@
 #include "game/player.h"
 
 #define MAX_BROADCAST_LENGTH 1024
+#define MAX_OBJECT_LENGTH 16
 
 typedef enum {
     FORWARD,
@@ -29,6 +30,12 @@ typedef enum {
     START_INCANTATION
 } event_type_e;
 
+typedef struct object_s {
+    player_t player;
+    char message[MAX_OBJECT_LENGTH];
+} object_t;
+
+
 typedef struct broadcast_s {
     player_t player;
     char message[MAX_BROADCAST_LENGTH];
@@ -37,6 +44,7 @@ typedef struct broadcast_s {
 typedef union {
     player_t player;
     broadcast_t broadcast;
+    object_t object;
 } event_data_u;
 
 typedef struct event_s {
