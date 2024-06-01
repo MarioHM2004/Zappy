@@ -13,7 +13,6 @@
     #include "parser.h"
 
     #define MAX_TEAM_LENGTH 32
-    #define GRAPHIC_NAME "GRAPHIC"
 
 typedef enum {
     NORTH = 1,

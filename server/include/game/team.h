@@ -11,6 +11,8 @@
     #include "game.h"
     #include "player.h"
 
+    #define GRAPHIC_TEAM_NAME "GRAPHIC"
+
 typedef struct team_s {
     char name[MAX_TEAM_LENGTH];
     player_list_t *players;

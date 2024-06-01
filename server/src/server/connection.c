@@ -6,10 +6,35 @@
 */
 
 #include "server/client.h"
+#include "server/packet.h"
 #include "server/server.h"
 #include "server/socket.h"
 #include <sys/queue.h>
 #include <sys/select.h>
+#include "libs/log.h"
+
+static void welcome_message(client_t *client)
+{
+    packet_t *packet = create_packet("WELCOME" CRLF);
+    packet_node_t *node = NULL;
+
+    if (!packet)
+        return;
+    node = create_packet_node(packet);
+    if (!node)
+        return;
+    LIST_INSERT_HEAD(client->response, node, entries);
+    client->socket->mode = WRITE;
+}
+
+static void add_client(client_list_t *clients, client_node_t *node)
+{
+    log_info("New client connected with fd: %d", node->client->socket->fd);
+    if (LIST_FIRST(clients))
+        LIST_INSERT_AFTER(LIST_FIRST(clients), node, entries);
+    else
+        LIST_INSERT_HEAD(clients, node, entries);
+}
 
 void accept_connection(server_t *server)
 {
@@ -25,13 +50,11 @@ void accept_connection(server_t *server)
     client = create_client(socket);
     if (!client)
         return;
+    welcome_message(client);
     node = create_client_node(client);
     if (!node)
         return;
-    if (LIST_FIRST(server->clients))
-        LIST_INSERT_AFTER(LIST_FIRST(server->clients), node, entries);
-    else
-        LIST_INSERT_HEAD(server->clients, node, entries);
+    add_client(server->clients, node);
 }
 
 static void close_client_connection(client_list_t *clients)

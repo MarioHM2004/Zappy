@@ -6,6 +6,9 @@
 */
 
 #include "server/server.h"
+#include "parser.h"
+#include "server/client.h"
+#include "server/socket.h"
 #include <netinet/in.h>
 #include <stdlib.h>
 
@@ -15,10 +18,23 @@ server_t *create_server(arguments_t *arguments)
 
     if (!server)
         return NULL;
-    //server->socket = create_socket(arguments->port, INADDR_ANY);
-    if (!server->socket)
+    server->socket = create_socket(arguments->port, INADDR_ANY);
+    server->clients = create_client_list();
+    server->game = create_game(arguments);
+    free_arguments(arguments);
+    if (!server->socket || !server->clients || !server->game) {
+        destroy_server(server);
         return NULL;
-    server->clients = NULL;
-    server->game = NULL;
+    }
     return server;
+}
+
+void destroy_server(server_t *server)
+{
+    if (!server)
+        return;
+    destroy_socket(server->socket);
+    destroy_client_list(server->clients);
+    destroy_game(server->game);
+    free(server);
 }

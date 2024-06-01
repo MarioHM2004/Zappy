@@ -5,9 +5,12 @@
 ** process_packets
 */
 
+#include "game/team.h"
+#include "server/client.h"
 #include "server/server.h"
 #include <stdlib.h>
 #include <string.h>
+#include <sys/queue.h>
 #include "libs/lib.h"
 #include "zappy.h"
 #include "server/command.h"
@@ -26,6 +29,7 @@ static const client_command_t ai_commands[] = {
     {"Take", NULL},
     {"Set", NULL},
     {"Incantation", NULL},
+    {"", NULL}
 };
 
 // GUI Protocol
@@ -38,14 +42,11 @@ static const client_command_t gui_commands[] = {
     {"plv", NULL},
     {"pin", NULL},
     {"sgt", NULL},
-    {"sst", NULL}
+    {"sst", NULL},
+    {"", NULL}
 };
 
-static const client_command_t pending_commands[] = {
-    {"", NULL},
-}
-
-static bool is_packed_completed(packet_t *packet)
+static bool is_packet_completed(packet_t *packet)
 {
     if (!packet)
         return false;
@@ -69,32 +70,83 @@ char *get_cmd_from_packets(packet_list_t *packets)
     while (current != NULL) {
         tmp = LIST_NEXT(current, entries);
         LIST_REMOVE(current, entries);
-        if (!current->packet || is_packed_completed(current->packet))
+        if (!current->packet || is_packet_completed(current->packet))
             break;
         cmd = safe_strcat(cmd, current->packet->data);
         destroy_packet_node(current);
         current = tmp;
-
     }
     return cmd;
 }
 
+static bool assign_graphic(server_t *server, client_t *client, char *team)
+{
+    if (strcmp(team, GRAPHIC_TEAM_NAME) != 0)
+        return false;
+    client->type = GRAPHIC;
+    // THIS GUI CLIENT
+    // msz
+    // mct
+    // tna
+    // pnw
+    // plv
+    // pin
+    // enw
+    // sgt
+    // eht
+    return true;
+}
+
+static bool assign_team(server_t *server, client_t *client, char *team)
+{
+    team_node_t *node = NULL;
+
+    LIST_FOREACH(node, server->game->teams, entries) {
+        if (strcmp(node->team->name, team) == 0) {
+            client->type = AI;
+            // asing player to team
+            // ALL GUI CLIENTS
+            // pnw
+            // pin
+            // ebo
+            return true;
+        }
+    }
+    return false;
+}
+
+static void assign_client_type(server_t *server, client_t *client, char *cmd)
+{
+    packet_t *packet = NULL;
+    packet_node_t *node = NULL;
+
+    if (assign_graphic(server, client, cmd) || assign_team(server, client, cmd))
+        return;
+    packet = create_packet("ko" CRLF);
+    if (!packet)
+        return;
+    node = create_packet_node(packet);
+    if (!node)
+        return;
+    LIST_INSERT_HEAD(client->response, node, entries);
+    client->socket->mode = WRITE;
+}
+
 static void client_command_ptr(server_t *server, client_t *client, char *cmd)
 {
-    client_command_t commands = NULL;
+    const client_command_t *commands = NULL;
 
     switch (client->type) {
-        case PENDING:
-            commands = pending_commands;
-            break;
         case AI:
             commands = ai_commands;
             break;
         case GRAPHIC:
             commands = gui_commands;
             break;
-    }
-    for (size_t i = 0; commands[i]; i++) {
+        case PENDING:
+            return assign_client_type(server, client, cmd);
+    };
+    for (size_t i = 0; commands[i].name[0]; i++) {
         if (startswith(cmd, commands[i].name))
             commands[i].func(server, client, cmd);
     }
