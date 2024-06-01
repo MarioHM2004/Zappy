@@ -15,13 +15,6 @@
     #define MAX_TEAM_LENGTH 32
 
 typedef enum {
-    NORTH = 1,
-    EAST = 2,
-    SOUTH = 3,
-    WEST = 4
-} direction_e;
-
-typedef enum {
     EGG,
     ALIVE,
     DEAD

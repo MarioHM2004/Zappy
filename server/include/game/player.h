@@ -17,6 +17,14 @@
 typedef struct event_list_s event_list_t;
 typedef struct event_s event_t;
 
+
+typedef enum {
+    NORTH = 1,
+    EAST = 2,
+    SOUTH = 3,
+    WEST = 4
+} direction_e;
+
 typedef struct player_s {
     int fd;
     uint number;

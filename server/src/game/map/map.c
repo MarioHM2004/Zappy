@@ -11,9 +11,7 @@
 #include <stdlib.h>
 
 
-
-
-tile_t map_at(map_t* map, position_t pos)
+position_t pos_at(map_t *map, position_t pos)
 {
     if (pos.x < 0)
         pos.x = map->width + (pos.x % map->width);
@@ -23,8 +21,14 @@ tile_t map_at(map_t* map, position_t pos)
         pos.y = map->height + (pos.y % map->height);
     else
         pos.y = pos.y % map->height;
+    return pos;
+}
 
-    return map->tiles[pos.y][pos.x];
+tile_t map_at(map_t* map, position_t pos)
+{
+    position_t new_pos = pos_at(map, pos);
+
+    return map->tiles[new_pos.y][new_pos.x];
 }
 
 void destroy_map(map_t *map)

@@ -36,21 +36,6 @@ static resource_e string_to_resource(char message[MAX_OBJECT_LENGTH])
     return 0;
 }
 
-static bool move_item(resources_t *src, resources_t *dest, resource_e item)
-{
-    uint *src_resource = get_resource_ptr(src, item);
-    uint *dest_resource = get_resource_ptr(dest, item);
-
-    if (src_resource == NULL || dest_resource == NULL)
-        return false;
-    if (*src_resource == 0)
-        return false;
-    *src_resource -= 1;
-    *dest_resource += 1;
-    return true;
-
-}
-
 void take_object(game_t *game, player_t *player, event_t *event)
 {
     tile_t tile = map_at(game->map, player->pos);

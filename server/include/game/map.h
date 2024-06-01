@@ -31,9 +31,11 @@ tile_t **create_tiles(uint width, uint height);
 void destroy_tiles(tile_t **tiles, uint width, uint height);
 tile_t create_tile(void);
 
-resources_t *create_resources(void);
-void destroy_resources(resources_t *rs);
+bool update_tile(map_t *map, tile_t new_tile, position_t pos);
+bool change_resource_tile(map_t *map, position_t pos, resource_e item, uint quantity);
+bool change_players_tile(map_t *map, position_t pos, int change);
 
 tile_t map_at(map_t* map, position_t pos);
+position_t pos_at(map_t *map, position_t pos);
 
 #endif /* !MAP_H_ */

@@ -5,9 +5,20 @@
 ** tile
 */
 
+#include "game/game.h"
 #include "game/map.h"
 #include "game/resources.h"
 #include <stdlib.h>
+
+bool update_tile(map_t *map, tile_t new_tile, position_t pos)
+{
+    if (!map)
+        return false;
+    if (pos.x >= map->width || pos.y >= map->height)
+        return false;
+    map->tiles[pos.y][pos.x] = new_tile;
+    return true;
+}
 
 tile_t create_tile(void)
 {

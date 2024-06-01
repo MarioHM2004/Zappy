@@ -84,16 +84,6 @@ uint *get_resource_ptr(resources_t *resources, resource_e item)
     }
 }
 
-bool add_resource(resources_t *resources, resource_e item, uint quantity)
-{
-    uint *resource = get_resource_ptr(resources, item);
-
-    if (resource == NULL)
-        return false;
-    *resource += quantity;
-    return true;
-}
-
 resources_t *create_resources(void)
 {
     resources_t *resources = calloc(1, sizeof(resources_t));
