@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "libs/log.h"
+#include <arpa/inet.h>
 
 bool write_socket(socket_t *socket, packet_t *packet)
 {
@@ -32,4 +34,20 @@ packet_t *read_socket(socket_t *socket)
         return NULL;
     packet->data[n] = '\0';
     return packet;
+}
+
+void log_socket(socket_t *socket)
+{
+    char *mode = NULL;
+
+    if (!socket)
+        return;
+    if (socket->mode == READ)
+        mode = "READ";
+    else if (socket->mode == WRITE)
+        mode = "WRITE";
+    else if (socket->mode == EXCEPT)
+        mode = "EXCEPT";
+    log_info("Socket={fd=%d, ip=%s, port=%d, mode=%s}", socket->fd,
+        inet_ntoa(socket->addr.sin_addr), ntohs(socket->addr.sin_port), mode);
 }

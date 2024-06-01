@@ -11,7 +11,6 @@
 #include "server/socket.h"
 #include <sys/queue.h>
 #include <sys/select.h>
-#include "libs/log.h"
 
 static void welcome_message(client_t *client)
 {
@@ -29,7 +28,7 @@ static void welcome_message(client_t *client)
 
 static void add_client(client_list_t *clients, client_node_t *node)
 {
-    log_info("New client connected with fd: %d", node->client->socket->fd);
+    log_socket(node->client->socket);
     if (LIST_FIRST(clients))
         LIST_INSERT_AFTER(LIST_FIRST(clients), node, entries);
     else
@@ -57,21 +56,16 @@ void accept_connection(server_t *server)
     add_client(server->clients, node);
 }
 
-static void close_client_connection(client_list_t *clients)
+void close_connection(server_t *server)
 {
     client_node_t *tmp = NULL;
 
-    if (!clients)
+    if (!server)
         return;
-    LIST_FOREACH(tmp, clients, entries) {
-        if (tmp->client->socket->connected)
+    LIST_FOREACH(tmp, server->clients, entries) {
+        if (!FD_ISSET(tmp->client->socket->fd, &server->except_fds))
             continue;
         LIST_REMOVE(tmp, entries);
         destroy_client(tmp->client);
     }
-}
-
-void close_connection(server_t *server)
-{
-    close_client_connection(server->clients);
 }

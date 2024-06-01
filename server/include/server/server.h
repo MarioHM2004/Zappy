@@ -18,6 +18,7 @@
     #define CRLF "\n"
     #define MAX(a, b) ((a) >= (b) ? (a) : (b))
     #define MIN(a, b) ((a) <= (b) ? (a) : (b))
+    #define MAX_CLIENTS 1024
 
 typedef struct server_s {
     socket_t *socket;
@@ -36,7 +37,8 @@ int select_connection(server_t *server);
 void accept_connection(server_t *server);
 void close_connection(server_t *server);
 void handle_packets(server_t *server);
-void write_packets(socket_t *socket, packet_list_t **packets);
 void process_client_packets(server_t *server, client_t *client);
+void write_packets(socket_t *socket, packet_list_t **packets);
+void read_packets(socket_t *socket, packet_list_t *packets);
 
 #endif /* !SERVER_H_ */

@@ -24,7 +24,6 @@ typedef struct socket_s {
     struct sockaddr_in addr;
     socklen_t addr_len;
     fd_mode_t mode;
-    bool connected;
 } socket_t;
 
 socket_t *create_socket(int port, in_addr_t addr);
@@ -35,5 +34,7 @@ bool listen_socket(socket_t *s, int backlog);
 socket_t *accept_socket(socket_t *s);
 bool write_socket(socket_t *socket, packet_t *packet);
 packet_t *read_socket(socket_t *socket);
+
+void log_socket(socket_t *socket);
 
 #endif /* !SOCKET_H_ */

@@ -16,7 +16,9 @@ void handle_packets(server_t *server)
     LIST_FOREACH(tmp, server->clients, entries) {
         if (FD_ISSET(tmp->client->socket->fd, &server->write_fds))
             write_packets(tmp->client->socket, &tmp->client->response);
-        if (FD_ISSET(tmp->client->socket->fd, &server->read_fds))
+        else if (FD_ISSET(tmp->client->socket->fd, &server->read_fds)) {
+            read_packets(tmp->client->socket, tmp->client->request);
             process_client_packets(server, tmp->client);
+        }
     }
 }

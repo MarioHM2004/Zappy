@@ -36,7 +36,6 @@ socket_t *create_socket(int port, in_addr_t addr)
         return NULL;
     s->fd = socket(AF_INET, SOCK_STREAM, 0);
     s->mode = EXCEPT;
-    s->connected = true;
     if (s->fd < 0) {
         free(s);
         return NULL;
@@ -83,6 +82,5 @@ socket_t *accept_socket(socket_t *s)
         return NULL;
     }
     new_socket->mode = EXCEPT;
-    new_socket->connected = true;
     return new_socket;
 }

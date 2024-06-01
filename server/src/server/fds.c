@@ -19,9 +19,9 @@ void set_fds(server_t *server)
     LIST_FOREACH(tmp, server->clients, entries) {
         if (tmp->client->socket->mode == READ)
             FD_SET(tmp->client->socket->fd, &server->read_fds);
-        if (tmp->client->socket->mode == WRITE)
+        else if (tmp->client->socket->mode == WRITE)
             FD_SET(tmp->client->socket->fd, &server->write_fds);
-        if (tmp->client->socket->mode == EXCEPT)
+        else if (tmp->client->socket->mode == EXCEPT)
             FD_SET(tmp->client->socket->fd, &server->except_fds);
     }
 }

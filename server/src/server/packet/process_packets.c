@@ -12,6 +12,7 @@
 #include <string.h>
 #include <sys/queue.h>
 #include "libs/lib.h"
+#include "server/socket.h"
 #include "zappy.h"
 #include "server/command.h"
 
