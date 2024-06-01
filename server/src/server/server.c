@@ -35,6 +35,6 @@ void destroy_server(server_t *server)
         return;
     destroy_socket(server->socket);
     destroy_client_list(server->clients);
-    // destroy_game(server->game);
+    destroy_game(server->game);
     free(server);
 }

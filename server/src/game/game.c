@@ -29,7 +29,7 @@ game_t *create_game(arguments_t *arguments)
     return game;
 }
 
-void game_destroy(game_t *game)
+void destroy_game(game_t *game)
 {
     destroy_team_list(game->teams);
     destroy_map(game->map);

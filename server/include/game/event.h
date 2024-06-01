@@ -92,7 +92,7 @@ void fork_player(game_t *game, player_t *player, event_t *event);
 void eject(game_t *game, player_t *player, event_t *event);
 void take_object(game_t *game, player_t *player, event_t *event);
 void set_object(game_t *game, player_t *player, event_t *event);
-void start_incantation(game_t *game, player_t *player, event_t *event);
+void incantation(game_t *game, player_t *player, event_t *event);
 
 // GUI
 void handle_gui_event(game_t *game);

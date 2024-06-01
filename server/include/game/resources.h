@@ -51,7 +51,6 @@ resources_t *create_resources(void);
 void destroy_resources(resources_t *rs);
 
 void spawn_all_resources(map_t *map);
-bool add_resource(resources_t *resource, resource_e item, uint quantity);
 uint *get_resource_ptr(resources_t *resources, resource_e item);
 bool move_item(resources_t *src, resources_t *dest, resource_e item);
 bool change_resource(resources_t *resources, resource_e item, uint quantity);
