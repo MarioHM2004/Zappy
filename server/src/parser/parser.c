@@ -109,9 +109,13 @@ arguments_t *parser(int argc, char **argv)
 
 void free_arguments(arguments_t *arguments)
 {
-    for (int i = 0; arguments->name[i]; i++) {
-        free(arguments->name[i]);
+    if (!arguments)
+        return;
+    if (arguments->name) {
+        for (int i = 0; arguments->name[i]; i++) {
+            free(arguments->name[i]);
+        }
+        free(arguments->name);
     }
-    free(arguments->name);
     free(arguments);
 }

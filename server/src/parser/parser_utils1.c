@@ -29,23 +29,54 @@ void handle_height(char *arg, struct argp_state *state, arguments_t *arguments)
     arguments->height = atoi(arg);
 }
 
-void handle_name(char *arg, struct argp_state *state, arguments_t *arguments)
+static void free_arguments_name(arguments_t *arguments)
 {
-    arguments->name = calloc(1, sizeof(char *));
-    arguments->name[0] = arg;
-    for (int i = 1;
-        state->argv[state->next] && state->argv[state->next][0] != '-'; i++) {
-        arguments->name = realloc(arguments->name, sizeof(char *) * (i + 2));
-        arguments->name[i] =
-            calloc(strlen(state->argv[state->next]) + 1, sizeof(char));
-        arguments->name[i] = state->argv[state->next];
+    for (int i = 0; arguments->name[i]; i++) {
+        free(arguments->name[i]);
+    }
+    free(arguments->name);
+}
+
+static int allocate_initial_name(char *arg, arguments_t *arguments) {
+    arguments->name = calloc(2, sizeof(char *));
+    if (!arguments->name)
+        return -1;
+    arguments->name[0] = strdup(arg);
+    if (!arguments->name[0]) {
+        free(arguments->name);
+        return -1;
+    }
+    arguments->name[1] = NULL;
+    return 0;
+}
+
+static void append_additional_names(struct argp_state *state, arguments_t *arguments)
+{
+    int name_count = 1;
+    char **temp = NULL;
+
+    while (state->argv[state->next] && state->argv[state->next][0] != '-') {
+        name_count++;
+        temp = realloc(arguments->name, sizeof(char *) * (name_count + 1));
+        if (!temp)
+            return;
+        arguments->name = temp;
+        arguments->name[name_count - 1] = strdup(state->argv[state->next]);
+        if (!arguments->name[name_count - 1])
+            return;
         if (state->argv[state->next + 1] == NULL ||
-            state->argv[state->next + 1][0] == '-') {
-            arguments->name[i + 1] = NULL;
+            state->argv[state->next + 1][0] == '-')
             break;
-        }
         state->next++;
     }
+    arguments->name[name_count] = NULL;
+}
+
+void handle_name(char *arg, struct argp_state *state, arguments_t *arguments)
+{
+    if (allocate_initial_name(arg, arguments) != 0)
+        return;
+    append_additional_names(state, arguments);
 }
 
 void handle_client_nb(char *arg, struct argp_state *state,
