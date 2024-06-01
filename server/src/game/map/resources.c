@@ -44,7 +44,7 @@ static void spawn_resources(map_t *map, resource_e item, float densitiy) {
     for (uint i = 0; i < quantity; i++) {
         x = random_position[i].x;
         y = random_position[i].y;
-        add_resource(map->tiles[y][x].resource, item, 1);
+        // add_resource(map->tiles[y][x].resource, item, 1);
     }
     free(random_position);
 }

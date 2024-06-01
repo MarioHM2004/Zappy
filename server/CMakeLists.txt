@@ -27,5 +27,4 @@ RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"
 )
 
 # If there are specific libraries your project depends on, link them here
-target_link_libraries(zappy_server ${PROJECT_SOURCE_DIR}/libs/liblog.so)
-target_link_libraries(zappy_server ${PROJECT_SOURCE_DIR}/libs/libmy.a)
+target_link_libraries(zappy_server liblog.so my)
