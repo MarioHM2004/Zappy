@@ -9,6 +9,19 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+team_list_t *init_teams(char **teams)
+{
+    team_list_t *head = create_team_list();
+    team_t *team;
+
+    for (int i = 0; teams[i]; i++) {
+        team = create_team(teams[i]);
+        add_team(head, team);
+    }
+    return head;
+}
+
 team_t *create_team(const char *name)
 {
     team_t *team = calloc(1, sizeof(team_t));

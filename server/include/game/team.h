@@ -27,7 +27,7 @@ typedef struct team_list_s {
     struct team_node_s *lh_first;
 } team_list_t;
 
-
+team_list_t *init_teams(char **teams);
 team_t *create_team(const char *name);
 team_node_t *create_team_node(team_t *t);
 team_list_t *create_team_list(void);
