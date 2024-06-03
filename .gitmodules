@@ -1,0 +1,4 @@
+[submodule "game/library/godot-cpp"]
+	path = game/library/godot-cpp
+	url = https://github.com/godotengine/godot-cpp
+	branch = 4.2

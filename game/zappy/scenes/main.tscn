@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://dl2hs0iexs7nv"]
+
+[ext_resource type="PackedScene" uid="uid://djojohaj424we" path="res://scenes/character.tscn" id="1_n235g"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_88wha"]
+radius = 8.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_5bqjl"]
+radius = 8.0
+height = 16.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_rtxx6"]
+radius = 13.0
+
+[node name="Rework" type="Node3D"]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("SphereShape3D_88wha")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("SphereMesh_5bqjl")
+
+[node name="Area3D" type="Area3D" parent="StaticBody3D"]
+gravity_space_override = 3
+gravity_point = true
+gravity_point_center = Vector3(0, 0, 0)
+gravity_direction = Vector3(0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D/Area3D"]
+shape = SubResource("SphereShape3D_rtxx6")
+
+[node name="Camera3D" type="Camera3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 10)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="StaticBody3D/Camera3D"]
+
+[node name="Dummy" parent="." instance=ExtResource("1_n235g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9, 2.06635)
