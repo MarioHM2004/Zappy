@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 def running_ai(client_socket):
     running = True
 

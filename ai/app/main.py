@@ -1,16 +1,18 @@
-import sys
-from .modules.AIManager.AIManager import AIManager
+import ai.app.modules.AIManager.AIManager as m
 
-def main():
+
+def main(argc: int, argv: list[str]):
+    ai_manager: m.AIManager = None
+
     print("Starting AI...")
-    if len(sys.argv) < 2 or len(sys.argv) > 7:
+    if len(argv) < 2 or len(argv) > 7:
         print("ERROR: bad arguments.")
         print("Try './zappy_ai -help' for more information.")
-        sys.exit(84)
+        exit(84)
 
-    ai_manager = AIManager()
+    ai_manager = m.AIManager()
+
     try:
-        ai_manager.parse_args(sys.argv[1:])
+        ai_manager.parse_args(argv[1:])
     except Exception as e:
         print(e)
-        sys.exit(84)
