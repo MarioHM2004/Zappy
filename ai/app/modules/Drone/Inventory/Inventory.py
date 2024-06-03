@@ -1,4 +1,4 @@
-import ai.app.modules.Drone.Inventory.InventoryHelper as h
+from . import InventoryHelper as h
 
 class Inventory:
     def __init__(self) -> None:
