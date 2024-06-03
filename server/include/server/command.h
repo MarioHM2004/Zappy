@@ -61,6 +61,7 @@ void msz_command(server_t *server, client_t *client, char *cmd);
 void bct_command(server_t *server, client_t *client, char *cmd);
 void mct_command(server_t *server, client_t *client, char *cmd);
 void tna_command(server_t *server, client_t *client, char *cmd);
+void ppo_command(server_t *server, client_t *client, char *cmd);
 char *get_tile_content(server_t *server, int width, int height);
 
 #endif /* !COMMAND_H_ */
