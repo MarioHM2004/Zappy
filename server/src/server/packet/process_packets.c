@@ -36,7 +36,7 @@ static const client_command_t ai_commands[] = {
 
 // GUI Protocol
 static const client_command_t gui_commands[] = {
-    {"msz", NULL},
+    {"msz", &msz_command},
     {"bct", NULL},
     {"mct", NULL},
     {"tna", NULL},
@@ -123,16 +123,9 @@ static void assign_client_type(server_t *server, client_t *client, char *cmd)
     packet_t *packet = NULL;
     packet_node_t *node = NULL;
 
-    log_debug("[%s]", cmd);
     if (assign_graphic(server, client, cmd) || assign_team(server, client, cmd))
         return;
-    packet = create_packet("ko" CRLF);
-    if (!packet)
-        return;
-    node = create_packet_node(packet);
-    if (!node)
-        return;
-    LIST_INSERT_HEAD(client->response, node, entries);
+    packet_error(client);
     client->socket->mode = WRITE;
 }
 
@@ -155,6 +148,7 @@ void process_client_packets(server_t *server, client_t *client)
 
     while (!LIST_EMPTY(client->request)) {
         cmd = get_cmd_from_packets(client->request);
+        log_debug("cmd={%s}", cmd);
         client_command_ptr(server, client, cmd);
     }
 }

@@ -12,7 +12,7 @@
 
     #define MAX_COMMAND_NAME_LENGTH 64
     #define MSZ_REQUEST "msz"
-    #define MSZ_RESPONSE(x, y) "msz" " " x " " y
+    #define MSZ_RESPONSE "msz %d %d"
     #define BCT_REQUEST "bct %d %d"
     #define BCT_RESPONSE "bct %d %d %d %d %d %d %d %d %d"
     #define MCT_REQUEST "mct"
@@ -55,5 +55,8 @@ typedef struct client_command_s {
     char name[MAX_COMMAND_NAME_LENGTH];
     client_command_func_t func;
 } client_command_t;
+
+void packet_error(client_t *client);
+void msz_command(server_t *server, client_t *client, char *cmd);
 
 #endif /* !COMMAND_H_ */
