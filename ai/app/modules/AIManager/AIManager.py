@@ -18,18 +18,27 @@ class AIManager:
         args = self.parser.parse_args(args)
         self.start_ai(args)
 
-    def start_socket(self, host, port, team_name):
-        socket_cl = h.socket.socket(h.socket.AF_INET, h.socket.SOCK_STREAM)
+    def start_socket(self, host: str, port: int, team_name: str) -> h.socket.socket:
+        socket_cl = None
 
         try:
+            socket_cl = h.socket.socket(h.socket.AF_INET, h.socket.SOCK_STREAM)
             socket_cl.connect((host, port))
-            print(f"-- Connected to {host}:{port}")
-            init_msg = f"team_name:{team_name}n"
+            print(f"-- Connected to {host}:{port}") ## DEBUG
+
+            # Recieve Welcome from server
+            print(f"{socket_cl.recv(1024).decode()}")
+
+            # Send team name
+            init_msg = f"{team_name}\n"
             socket_cl.sendall(init_msg.encode())
-            return socket_cl
+
+            # Recieve CLIENT-NUM + MAP: X Y
+            print(f"{socket_cl.recv(1024).decode()}")
+
         except Exception as e:
             print(f"-- Failed to connect to server: {host}:{port}")
-            return None
+        return socket_cl
 
     def start_ai(self, args):
         print(f"-- Starting AI for team {args.n} on {args.h}:{args.p}")
