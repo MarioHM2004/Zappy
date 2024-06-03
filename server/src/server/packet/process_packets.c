@@ -37,7 +37,7 @@ static const client_command_t ai_commands[] = {
 // GUI Protocol
 static const client_command_t gui_commands[] = {
     {"msz", &msz_command},
-    {"bct", NULL},
+    {"bct", &bct_command},
     {"mct", NULL},
     {"tna", NULL},
     {"ppo", NULL},

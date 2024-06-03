@@ -58,5 +58,6 @@ typedef struct client_command_s {
 
 void packet_error(client_t *client);
 void msz_command(server_t *server, client_t *client, char *cmd);
+void bct_command(server_t *server, client_t *client, char *cmd);
 
 #endif /* !COMMAND_H_ */
