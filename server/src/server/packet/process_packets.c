@@ -137,16 +137,9 @@ static void client_command_ptr(server_t *server, client_t *client, char *cmd)
 {
     const client_command_t *commands = NULL;
 
-    switch (client->type) {
-        case AI:
-            commands = ai_commands;
-            break;
-        case GRAPHIC:
-            commands = gui_commands;
-            break;
-        case PENDING:
-            return assign_client_type(server, client, cmd);
-    };
+    if (client->type == PENDING)
+        return assign_client_type(server, client, cmd);
+    commands = (client->type == AI) ? ai_commands : gui_commands;
     for (size_t i = 0; commands[i].name[0]; i++) {
         if (startswith(cmd, commands[i].name))
             commands[i].func(server, client, cmd);

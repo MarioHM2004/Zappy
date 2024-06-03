@@ -6,11 +6,46 @@
 */
 
 #ifndef COMMAND_H_
-#define COMMAND_H_
+    #define COMMAND_H_
 
-#include "server.h"
+    #include "server.h"
 
-#define MAX_COMMAND_NAME_LENGTH 64
+    #define MAX_COMMAND_NAME_LENGTH 64
+    #define MSZ_REQUEST "msz"
+    #define MSZ_RESPONSE "msz %d %d"
+    #define BCT_REQUEST "bct %d %d"
+    #define BCT_RESPONSE "bct %d %d %d %d %d %d %d %d %d"
+    #define MCT_REQUEST "mct"
+    // #define MCT_RESPONSE /* BCT RESPONSE * nbr_tiles */
+    #define TNA_REQUEST "tna"
+    #define TNA_RESPONSE "tna %s" /* * nbr_teams */
+    #define PNW_RESPONSE "pnw %d %d %d %d %d %s"
+    #define PPO_REQUEST "ppo %d"
+    #define PPO_RESPONSE "ppo %d %d %d %d"
+    #define PLV_REQUEST "plv %d"
+    #define PLV_RESPONSE "plv %d %d"
+    #define PIN_REQUEST "pin %d"
+    #define PIN_RESPONSE "pin %d %d %d %d %d %d %d %d %d %d"
+    #define PEX_RESPONSE "pex %d"
+    #define PBC_RESPONSE "pbc %d %s"
+    #define PIC_RESPONSE "pic %d %d %s" /* %s == player_numbers */
+    #define PIE_RESPONSE "pie %d %d %d"
+    #define PFK_RESPONSE "pfk %d"
+    #define PDR_RESPONSE "pdr %d %d"
+    #define PGT_RESPONSE "pgt %d %d"
+    #define PDI_RESPONSE "pdi %d"
+    #define ENW_RESPONSE "enw %d %d %d %d"
+    #define EBO_RESPONSE "ebo %d"
+    #define EDI_RESPONSE "edi %d"
+    #define SGT_REQUEST "sgt"
+    #define SGT_RESPONSE "sgt %d"
+    #define SST_REQUEST "sst %s"
+    #define SST_REPONSE "sst %s"
+    #define SEG_RESPONSE "seg %s"
+    #define SMG_RESPONSE "smg %s"
+    #define SUC_RESPONSE "suc"
+    #define SBP_RESPONSE "sbp"
+    #define EHT_RESPONSE "eht %d"
 
 typedef void (*client_command_func_t)(server_t *, client_t *, char *);
 
