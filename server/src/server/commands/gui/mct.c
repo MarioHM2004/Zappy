@@ -16,12 +16,15 @@ void mct_command(server_t *server, client_t *client, char *cmd)
 {
     char *response = "";
     packet_t *packet = NULL;
+    bool last = false;
 
     sscanf(cmd, MCT_REQUEST);
     for (size_t i = 0; i < server->game->map->height; i++) {
         for (size_t j = 0; j < server->game->map->width; j++) {
+            last = (i == server->game->map->height - 1 &&
+                j == server->game->map->width - 1);
             response = safe_strcat(response, get_tile_content(server, i, j));
-            response = safe_strcat(response, CRLF);
+            response = safe_strcat(response, (last) ? "" : CRLF);
         }
     }
     if (!response)

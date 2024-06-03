@@ -7,7 +7,6 @@
 
 #include "libs/lib.h"
 #include "server/command.h"
-#include "game/map.h"
 #include "game/team.h"
 
 void tna_command(server_t *server, client_t *client, char *cmd)
