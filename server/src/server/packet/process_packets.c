@@ -6,6 +6,7 @@
 */
 
 #include "game/team.h"
+#include "libs/log.h"
 #include "server/client.h"
 #include "server/server.h"
 #include <stdlib.h>
@@ -77,6 +78,7 @@ char *get_cmd_from_packets(packet_list_t *packets)
         destroy_packet_node(current);
         current = tmp;
     }
+    cmd[strlen(cmd) - strlen(CRLF) - 1] = '\0';
     return cmd;
 }
 
@@ -121,6 +123,7 @@ static void assign_client_type(server_t *server, client_t *client, char *cmd)
     packet_t *packet = NULL;
     packet_node_t *node = NULL;
 
+    log_debug("[%s]", cmd);
     if (assign_graphic(server, client, cmd) || assign_team(server, client, cmd))
         return;
     packet = create_packet("ko" CRLF);

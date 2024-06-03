@@ -84,7 +84,7 @@ static void log_arguments(arguments_t *arguments)
         arguments->auto_start == 1 ? "OFF" : "ON");
     log_info("Display-eggs: %s",
         arguments->display_eggs == 0 ? "FALSE" : "TRUE");
-    log_info("Verbose: %d\n", arguments->verbose);
+    log_info("Verbose: %d", arguments->verbose);
 }
 
 arguments_t *parser(int argc, char **argv)
