@@ -32,4 +32,6 @@ void destroy_packet(packet_t *p);
 void destroy_packet_node(packet_node_t *pn);
 void destroy_packet_list(packet_list_t *head);
 
+void add_packet(packet_list_t *packets, packet_t *packet);
+
 #endif /* !PACKET_H_ */

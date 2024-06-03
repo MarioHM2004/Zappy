@@ -12,7 +12,7 @@
 
     #define MAX_COMMAND_NAME_LENGTH 64
     #define MSZ_REQUEST "msz"
-    #define MSZ_RESPONSE "msz %d %d"
+    #define MSZ_RESPONSE(x, y) "msz" " " x " " y
     #define BCT_REQUEST "bct %d %d"
     #define BCT_RESPONSE "bct %d %d %d %d %d %d %d %d %d"
     #define MCT_REQUEST "mct"
@@ -46,6 +46,8 @@
     #define SUC_RESPONSE "suc"
     #define SBP_RESPONSE "sbp"
     #define EHT_RESPONSE "eht %d"
+
+    #define ERROR_RESPONSE "ko"
 
 typedef void (*client_command_func_t)(server_t *, client_t *, char *);
 

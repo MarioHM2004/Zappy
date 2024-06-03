@@ -5,7 +5,9 @@
 ** send_packets
 */
 
+#include "server/packet.h"
 #include "server/server.h"
+#include <string.h>
 #include <sys/queue.h>
 
 void write_packets(socket_t *socket, packet_list_t **packets)
@@ -27,10 +29,18 @@ void write_packets(socket_t *socket, packet_list_t **packets)
 void read_packets(socket_t *socket, packet_list_t *packets)
 {
     packet_t *packet = read_socket(socket);
-    packet_node_t *node = NULL;
 
     if (!packet)
         return;
+    add_packet(packets, packet);
+    socket->mode = WRITE;
+}
+
+void add_packet(packet_list_t *packets, packet_t *packet)
+{
+    packet_node_t *node = NULL;
+
+    strcat(packet->data, CRLF);
     node = create_packet_node(packet);
     if (!node)
         return;
@@ -38,5 +48,4 @@ void read_packets(socket_t *socket, packet_list_t *packets)
         LIST_INSERT_AFTER(LIST_FIRST(packets), node, entries);
     else
         LIST_INSERT_HEAD(packets, node, entries);
-    socket->mode = WRITE;
 }
