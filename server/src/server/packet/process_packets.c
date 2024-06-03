@@ -39,7 +39,7 @@ static const client_command_t gui_commands[] = {
     {"msz", &msz_command},
     {"bct", &bct_command},
     {"mct", &mct_command},
-    {"tna", NULL},
+    {"tna", &tna_command},
     {"ppo", NULL},
     {"plv", NULL},
     {"pin", NULL},
