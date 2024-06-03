@@ -18,7 +18,8 @@ void tna_command(server_t *server, client_t *client, char *cmd)
 
     LIST_FOREACH(tmp, server->game->teams, entries) {
         response = safe_strcat(response, formatstr(TNA_RESPONSE, tmp->team->name));
-        response = safe_strcat(response, CRLF);
+        if (LIST_NEXT(tmp, entries))
+            response = safe_strcat(response, CRLF);
     }
     if (!response)
         return packet_error(client);
