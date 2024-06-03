@@ -7,12 +7,15 @@
 
 #include "parser.h"
 #include "server/server.h"
+#include <stdlib.h>
+#include <time.h>
 
 int main(int argc, char **argv)
 {
     arguments_t *arguments = parser(argc, argv);
     server_t *server = NULL;
 
+    srand(time(NULL));
     server = create_server(arguments);
     if (!server)
         return 84;
