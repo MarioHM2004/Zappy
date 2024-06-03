@@ -1,6 +1,0 @@
-#!/usr/bin/env python3
-
-import ai.app.main as h
-
-if __name__ == "__main__":
-    h.main()
