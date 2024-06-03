@@ -41,4 +41,7 @@ void destroy_client(client_t *c);
 void destroy_client_node(client_node_t *cn);
 void destroy_client_list(client_list_t *head);
 
+client_t *get_client_by_fd(client_list_t *clients, int fd);
+void log_client(client_t *client);
+
 #endif /* !CLIENT_H_ */

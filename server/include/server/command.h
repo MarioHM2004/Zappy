@@ -39,8 +39,8 @@
     #define EDI_RESPONSE "edi %d"
     #define SGT_REQUEST "sgt"
     #define SGT_RESPONSE "sgt %d"
-    #define SST_REQUEST "sst %s"
-    #define SST_REPONSE "sst %s"
+    #define SST_REQUEST "sst %d"
+    #define SST_REPONSE "sst %d"
     #define SEG_RESPONSE "seg %s"
     #define SMG_RESPONSE "smg %s"
     #define SUC_RESPONSE "suc"
@@ -64,6 +64,10 @@ void tna_command(server_t *server, client_t *client, char *cmd);
 void ppo_command(server_t *server, client_t *client, char *cmd);
 void plv_command(server_t *server, client_t *client, char *cmd);
 void pin_command(server_t *server, client_t *client, char *cmd);
+void sgt_command(server_t *server, client_t *client, char *cmd);
+void sst_command(server_t *server, client_t *client, char *cmd);
+
 char *get_tile_content(server_t *server, int width, int height);
+char *get_cmd_from_packets(packet_list_t *packets);
 
 #endif /* !COMMAND_H_ */

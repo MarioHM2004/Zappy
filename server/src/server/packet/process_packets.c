@@ -14,7 +14,6 @@
 #include <sys/queue.h>
 #include "libs/lib.h"
 #include "server/socket.h"
-#include "zappy.h"
 #include "server/command.h"
 
 // AI Protocol
@@ -43,44 +42,10 @@ static const client_command_t gui_commands[] = {
     {"ppo", &ppo_command},
     {"plv", &plv_command},
     {"pin", &pin_command},
-    {"sgt", NULL},
-    {"sst", NULL},
+    {"sgt", &sgt_command},
+    {"sst", &sst_command},
     {"", NULL}
 };
-
-static bool is_packet_completed(packet_t *packet)
-{
-    if (!packet)
-        return false;
-    for (size_t i = 0; packet->data[i]; i++) {
-        if (strstr(packet->data, CRLF))
-            return true;
-    }
-    return false;
-}
-
-char *get_cmd_from_packets(packet_list_t *packets)
-{
-    char *cmd = calloc(MAX_COMMAND_LENGTH, sizeof(char));
-    packet_node_t *tmp = NULL;
-    packet_node_t *current = NULL;
-
-    if (!packets)
-        return NULL;
-    strcpy(cmd, packets->lh_first->packet->data);
-    current = LIST_FIRST(packets);
-    while (current != NULL) {
-        tmp = LIST_NEXT(current, entries);
-        LIST_REMOVE(current, entries);
-        if (!current->packet || is_packet_completed(current->packet))
-            break;
-        cmd = safe_strcat(cmd, current->packet->data);
-        destroy_packet_node(current);
-        current = tmp;
-    }
-    cmd[strlen(cmd) - strlen(CRLF) - 1] = '\0';
-    return cmd;
-}
 
 static bool assign_graphic(server_t *server, client_t *client, char *team)
 {
@@ -88,14 +53,15 @@ static bool assign_graphic(server_t *server, client_t *client, char *team)
         return false;
     client->type = GRAPHIC;
     // THIS GUI CLIENT
-    // msz
-    // mct
-    // tna
+    msz_command(server, client, "msz");
+    mct_command(server, client, "mct");
+    tna_command(server, client, "tna");
     // pnw
-    // plv
-    // pin
+    // plv /* all players? */
+    // pin /* all players? */
     // enw
     // sgt
+    sgt_command(server, client, "sgt");
     // eht
     return true;
 }
@@ -124,7 +90,7 @@ static void assign_client_type(server_t *server, client_t *client, char *cmd)
     packet_node_t *node = NULL;
 
     if (assign_graphic(server, client, cmd) || assign_team(server, client, cmd))
-        return;
+        return log_client(client);
     packet_error(client);
     client->socket->mode = WRITE;
 }
