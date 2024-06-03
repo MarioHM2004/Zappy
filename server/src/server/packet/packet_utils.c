@@ -49,3 +49,12 @@ void add_packet(packet_list_t *packets, packet_t *packet)
     else
         LIST_INSERT_HEAD(packets, node, entries);
 }
+
+// void add_packet_by_fd(server_t *server, int fd, packet_t *packet)
+// {
+//     client_t *client = get_client_by_fd(server->clients, fd);
+
+//     if (!client)
+//         return;
+//     add_packet(client->packets, packet);
+// }

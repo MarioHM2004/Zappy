@@ -10,20 +10,26 @@
     #define PLAYER_H_
 
     #include "game.h"
-#include "game/resources.h"
+#include "game/map.h"
+    #include "game/resources.h"
     #include "server/socket.h"
-#include <sys/types.h>
+    #include <sys/types.h>
 
+    #define MAX_LEVEL 8
 typedef struct event_list_s event_list_t;
 typedef struct event_s event_t;
 
 
-typedef enum {
-    NORTH = 1,
-    EAST = 2,
-    SOUTH = 3,
-    WEST = 4
-} direction_e;
+typedef struct incantation_s {
+    uint level;
+    uint players;
+    uint linemate;
+    uint deraumere;
+    uint sibur;
+    uint mendiane;
+    uint phiras;
+    uint thystame;
+} incantation_t;
 
 typedef struct player_s {
     int fd;
@@ -59,5 +65,6 @@ uint get_player_list_size(player_list_t *head);
 bool is_player_in_list(player_list_t *head, player_t *player);
 
 void player_tick(game_t *game, player_t *player);
+bool move_player(map_t *map,player_t *player, position_t new_pos);
 
 #endif /* !PLAYER_H_ */

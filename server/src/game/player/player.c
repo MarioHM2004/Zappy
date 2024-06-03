@@ -10,6 +10,18 @@
 #include "libs/log.h"
 #include <sys/queue.h>
 
+
+bool move_player(map_t *map,player_t *player, position_t new_pos)
+{
+    if (!change_players_tile(map, player->pos, -1))
+        return false;
+    if (!change_players_tile(map, player->pos, 1)) {
+        change_players_tile(map, player->pos, 1);
+        return false;
+    }
+    player->pos = new_pos;
+}
+
 void player_tick(game_t *game, player_t *player)
 {
     event_node_t *event_node = LIST_FIRST(player->events);

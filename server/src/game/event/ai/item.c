@@ -15,7 +15,7 @@
 #include <string.h>
 
 
-message_to_resource_t msg_to_resource[] = {
+message_to_resource_t msg_to_resource[TOTAL_RESOURCES] = {
     { "food", FOOD },
     { "linemate", LINEMATE },
     { "deraumere", DERAUMERE },
@@ -23,12 +23,11 @@ message_to_resource_t msg_to_resource[] = {
     { "mendiane", MENDIANE },
     { "phiras", PHIRAS },
     { "thystame", THYSTAME },
-    { NULL, 0 }
 };
 
 static resource_e string_to_resource(char message[MAX_OBJECT_LENGTH])
 {
-    for (int i = 0; msg_to_resource[i].message != NULL; i++) {
+    for (int i = 0; i < TOTAL_RESOURCES; i++) {
         if (strcmp(msg_to_resource[i].message, message) == 0) {
             return msg_to_resource[i].resource;
         }

@@ -7,10 +7,10 @@
 
 #include "game/event.h"
 #include "game/game.h"
+#include "game/map.h"
 #include "game/player.h"
 #include <stdbool.h>
 #include <sys/queue.h>
-
 
 bool add_player(player_list_t *player_list, player_t *player)
 {
