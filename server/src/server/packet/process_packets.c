@@ -41,8 +41,8 @@ static const client_command_t gui_commands[] = {
     {"mct", &mct_command},
     {"tna", &tna_command},
     {"ppo", &ppo_command},
-    {"plv", NULL},
-    {"pin", NULL},
+    {"plv", &plv_command},
+    {"pin", &pin_command},
     {"sgt", NULL},
     {"sst", NULL},
     {"", NULL}
