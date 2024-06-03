@@ -5,6 +5,7 @@
 ** server_loop
 */
 
+#include "game/game.h"
 #include "server/server.h"
 
 void run(server_t *server)
@@ -15,6 +16,7 @@ void run(server_t *server)
             break;
         accept_connection(server);
         handle_packets(server);
+        game_tick(server);
         close_connection(server);
     }
 }

@@ -14,6 +14,8 @@
 
     #define MAX_TEAM_LENGTH 32
 
+typedef struct server_s server_t;
+
 typedef enum {
     EGG,
     ALIVE,
@@ -44,5 +46,6 @@ game_t *create_game(arguments_t *arguments);
 void set_auto_start(game_t *g, bool auto_start);
 void set_display_eggs(game_t *g, bool display_eggs);
 void destroy_game(game_t *g);
+void game_tick(server_t *server);
 
 #endif /* !GAME_H_ */

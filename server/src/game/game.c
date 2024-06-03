@@ -8,6 +8,7 @@
 #include "game/map.h"
 #include "game/team.h"
 #include "libs/log.h"
+#include "server/server.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -46,18 +47,18 @@ static bool valid_tick() {
     return false;
 }
 
-void game_tick(game_t *game)
+void game_tick(server_t *server)
 {
     team_node_t *team_node = NULL;
     player_node_t *player_node = NULL;
 
     if (!valid_tick())
         return;
-    LIST_FOREACH(team_node, game->teams, entries) {
+    LIST_FOREACH(team_node, server->game->teams, entries) {
         team_t *team = team_node->team;
         LIST_FOREACH(player_node, team->players, entries) {
             player_t *player = player_node->player;
-            player_tick(game, player);
+            player_tick(server->game, player);
         }
     }
 }
