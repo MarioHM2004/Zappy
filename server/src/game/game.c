@@ -20,7 +20,7 @@ game_t *create_game(arguments_t *arguments)
     game->map = create_map(arguments->width, arguments->height);
     if (!game->map)
         return NULL;
-    game->teams = NULL;
+    game->teams = init_teams(arguments->name);
     game->ended = false;
     game->freq = arguments->freq;
     game->players_per_team = arguments->client_nb;
