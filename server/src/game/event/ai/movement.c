@@ -10,36 +10,25 @@
 #include "game/game.h"
 #include "game/map.h"
 #include "game/player.h"
+#include "game/resources.h"
 #include "libs/log.h"
-
-static position_t dir_at(map_t *map, position_t pos, direction_e dir)
-{
-    position_t new_pos = {pos.x, pos.y};
-
-    switch (dir) {
-        case NORTH:
-            new_pos.y--;
-            break;
-        case EAST:
-            new_pos.x++;
-            break;
-        case SOUTH:
-            new_pos.y++;
-            break;
-        case WEST:
-            new_pos.x--;
-            break;
-    }
-    return pos_at(map, new_pos);
-}
+#include <stdlib.h>
 
 void forward(game_t *game, player_t *player, event_t *event)
 {
-    change_players_tile(game->map, player->pos, -1);
-    player->pos = dir_at(game->map, player->pos, player->dir);
+    position_t new_pos = dir_at(game->map, player->pos, player->dir);
+
+    move_player(game->map, player, new_pos);
     log_debug("Player %d moved to %d %d", player->number, player->pos.x,
         player->pos.y);
-    change_players_tile(game->map, player->pos, 1);
+}
+
+static direction_e right_dir(direction_e dir)
+{
+    if (dir < 4)
+        dir++;
+    else
+        dir = 1;
 }
 
 void turn_right(game_t *game, player_t *player, event_t *event)
@@ -48,10 +37,15 @@ void turn_right(game_t *game, player_t *player, event_t *event)
     (void)event;
     if (player->dir < 1 || player->dir > 4)
         return;
-    if (player->dir < 4)
-        player->dir++;
+    player->dir = right_dir(player->dir);
+}
+
+static direction_e left_dir(direction_e dir)
+{
+    if (dir > 1)
+        dir--;
     else
-        player->dir = 1;
+        dir = 4;
 }
 
 void turn_left(game_t *game, player_t *player, event_t *event)
@@ -60,15 +54,58 @@ void turn_left(game_t *game, player_t *player, event_t *event)
     (void)event;
     if (player->dir < 1 || player->dir > 4)
         return;
-    if (player->dir > 1)
-        player->dir--;
-    else
-        player->dir = 4;
+    player->dir = left_dir(player->dir);
 }
+
+static position_t first_position_in_row(game_t *game, direction_e player_dir,
+    position_t row_pos, uint tiles_in_row)
+{
+    direction_e left_direction = left_dir(player_dir);
+
+    for (int i = 0; i < (tiles_in_row / 2); i++) {
+        row_pos = dir_at(game->map, row_pos, left_direction);
+    }
+    return row_pos;
+}
+
+static char *get_look_content(resources_t **look_resources)
+{
+    char *look_content = NULL;
+
+    return look_content;
+}
+
+static uint look_total_tiles(uint level)
+{
+    uint total_tiles = 1;
+
+    for (int i = 1; i <= level; i++) {
+        total_tiles += (i * 2) + 1;
+    }
+    return total_tiles;
+}
+
 
 void look(game_t *game, player_t *player, event_t *event)
 {
-    (void)game;
-    (void)event;
-    (void)player;
+    position_t row_pos = player->pos;
+    position_t tile_pos = {0};
+    direction_e right_direction = right_dir(player->dir);
+    resources_t **look_resources = calloc(1, sizeof(resources_t *) *
+        (look_total_tiles(player->level) + 1));
+    uint count = 0;
+    char *look_content = NULL;
+
+    for (int i = 0; i < player->level; i++) {
+        tile_pos = first_position_in_row(game, player->dir,
+            row_pos, (i * 2) + 1);
+        for (int j = 0; j < (i * 2) + 1; j++) {
+            look_resources[count] = map_at(game->map, tile_pos).resource;
+            tile_pos = dir_at(game->map, tile_pos, right_direction);
+            count++;
+        }
+        row_pos = dir_at(game->map, row_pos, player->dir);
+    }
+    look_resources[count] = NULL;
+    look_content = get_look_content(look_resources);
 }

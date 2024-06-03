@@ -13,9 +13,18 @@
 
     #include <sys/types.h>
 
+
+typedef enum {
+    NORTH = 1,
+    EAST = 2,
+    SOUTH = 3,
+    WEST = 4
+} direction_e;
+
 typedef struct tile_s {
     resources_t *resource;
     uint players;
+    uint eggs;
 } tile_t;
 
 typedef struct map_s {
@@ -34,8 +43,10 @@ tile_t create_tile(void);
 bool update_tile(map_t *map, tile_t new_tile, position_t pos);
 bool change_resource_tile(map_t *map, position_t pos, resource_e item, uint quantity);
 bool change_players_tile(map_t *map, position_t pos, int change);
+player_list_t *get_players_on_tile(player_list_t *player_list, position_t pos);
 
 tile_t map_at(map_t* map, position_t pos);
 position_t pos_at(map_t *map, position_t pos);
+position_t dir_at(map_t *map, position_t pos, direction_e dir);
 
 #endif /* !MAP_H_ */

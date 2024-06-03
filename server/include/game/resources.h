@@ -18,6 +18,7 @@
     #define MENDIANE_DENSITY 0.1
     #define PHIRAS_DENSITY 0.08
     #define THYSTAME_DENSITY 0.05
+    #define TOTAL_RESOURCES 7
 
 typedef enum {
     FOOD = 0,
@@ -55,4 +56,5 @@ uint *get_resource_ptr(resources_t *resources, resource_e item);
 bool move_item(resources_t *src, resources_t *dest, resource_e item);
 bool change_resource(resources_t *resources, resource_e item, uint quantity);
 
+message_to_resource_t msg_to_resource[TOTAL_RESOURCES];
 #endif /* !RESOURCES_H_ */
