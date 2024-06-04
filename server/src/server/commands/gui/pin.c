@@ -38,7 +38,8 @@ void pin_command(server_t *server, client_t *client, char *cmd)
     packet_t *packet = NULL;
     player_node_t *tmp = NULL;
 
-    sscanf(cmd, PIN_REQUEST, &player);
+    if (sscanf(cmd, PIN_REQUEST, &player) == -1)
+        return packet_error(client);
     if (!player || !server->game->players)
         return packet_error(client);
     response = get_pin(server, player);

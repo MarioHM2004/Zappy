@@ -18,7 +18,8 @@ void mct_command(server_t *server, client_t *client, char *cmd)
     packet_t *packet = NULL;
     bool last = false;
 
-    sscanf(cmd, MCT_REQUEST);
+    if (sscanf(cmd, MCT_REQUEST) == -1)
+        return packet_error(client);
     for (size_t i = 0; i < server->game->map->height; i++) {
         for (size_t j = 0; j < server->game->map->width; j++) {
             last = (i == server->game->map->height - 1 &&

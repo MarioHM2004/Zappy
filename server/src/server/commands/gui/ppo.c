@@ -30,8 +30,7 @@ void ppo_command(server_t *server, client_t *client, char *cmd)
     packet_t *packet = NULL;
     player_node_t *tmp = NULL;
 
-    sscanf(cmd, PPO_REQUEST, &player);
-    if (!player || !server->game->players)
+    if (sscanf(cmd, PPO_REQUEST, &player) == -1 || !server->game->players)
         return packet_error(client);
     response = get_pp(server, player);
     if (!response)

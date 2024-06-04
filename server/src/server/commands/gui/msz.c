@@ -15,7 +15,8 @@ void msz_command(server_t *server, client_t *client, char *cmd)
         (int)server->game->map->width, (int)server->game->map->height);
     packet_t *packet = NULL;
 
-    sscanf(cmd, MSZ_REQUEST);
+    if (sscanf(cmd, MSZ_REQUEST) == -1)
+        return packet_error(client);
     if (!response)
         return;
     packet = create_packet(response);

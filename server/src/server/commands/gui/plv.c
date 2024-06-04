@@ -28,8 +28,7 @@ void plv_command(server_t *server, client_t *client, char *cmd)
     packet_t *packet = NULL;
     player_node_t *tmp = NULL;
 
-    sscanf(cmd, PLV_REQUEST, &player);
-    if (!player || !server->game->players)
+    if (sscanf(cmd, PLV_REQUEST, &player) == -1 || !server->game->players)
         return packet_error(client);
     response = get_plv(server, player);
     if (!response)

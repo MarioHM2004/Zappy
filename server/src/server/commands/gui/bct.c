@@ -31,7 +31,8 @@ void bct_command(server_t *server, client_t *client, char *cmd)
     char *response = NULL;
     packet_t *packet = NULL;
 
-    sscanf(cmd, BCT_REQUEST, &width, &height);
+    if (sscanf(cmd, BCT_REQUEST, &width, &height) == -1)
+        return packet_error(client);
     if (width >= server->game->map->width || height >= server->game->map->height)
         return packet_error(client);
     response = get_tile_content(server, width, height);

@@ -13,7 +13,8 @@ void sst_command(server_t *server, client_t *client, char *cmd)
     char *response = NULL;
     int freq = 0;
 
-    sscanf(cmd, SST_REQUEST, &freq);
+    if (sscanf(cmd, SST_REQUEST, &freq) == -1)
+        return packet_error(client);
     server->game->freq = freq;
     response = formatstr(SST_REPONSE, freq);
     if (!response)

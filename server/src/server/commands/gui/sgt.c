@@ -12,7 +12,8 @@ void sgt_command(server_t *server, client_t *client, char *cmd)
 {
     char *response = NULL;
 
-    sscanf(cmd, SGT_REQUEST);
+    if (sscanf(cmd, SGT_REQUEST) == -1)
+        return packet_error(client);
     response = formatstr(SGT_RESPONSE, (int)server->game->freq);
     if (!response)
         return packet_error(client);
