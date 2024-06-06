@@ -11,9 +11,6 @@
 
 void edi_command(server_t *server, client_t *client, player_t *player)
 {
-    packet_t *packet = NULL;
-    char *response = NULL;
-
     if (!player)
         return packet_message(client, ERROR_MESSAGE);
     add_response(client, formatstr(EDI_RESPONSE, (int)player->number));

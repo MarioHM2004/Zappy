@@ -12,18 +12,8 @@
 void enw_command(server_t *server, client_t *client, player_t *player,
     player_t *egg)
 {
-    packet_t *packet = NULL;
-    char *response = NULL;
-
     if (!player || !egg)
         return packet_message(client, ERROR_MESSAGE);
-    response = formatstr(ENW_RESPONSE, (int)egg->number,
-        player->number, egg->pos.x, egg->pos.y);
-    if (!response)
-        return packet_message(client, ERROR_MESSAGE);
-    packet = create_packet(response);
-    free(response);
-    if (!packet)
-        return packet_message(client, ERROR_MESSAGE);
-    add_packet(client->response, packet);
+    add_response(client, formatstr(ENW_RESPONSE, (int)egg->number,
+        player->number, egg->pos.x, egg->pos.y));
 }

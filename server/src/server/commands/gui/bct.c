@@ -28,7 +28,6 @@ void bct_command(server_t *server, client_t *client, char *cmd)
 {
     int width = 0;
     int height = 0;
-    packet_t *packet = NULL;
 
     if (sscanf(cmd, BCT_REQUEST, &width, &height) == -1)
         return packet_message(client, INVALID_PARAMETERS);
