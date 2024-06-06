@@ -10,15 +10,15 @@
     #define PLAYER_H_
 
     #include "game.h"
-#include "game/map.h"
+    #include "game/map.h"
     #include "game/resources.h"
     #include "server/socket.h"
     #include <sys/types.h>
 
     #define MAX_LEVEL 8
+
 typedef struct event_list_s event_list_t;
 typedef struct event_s event_t;
-
 
 typedef struct incantation_s {
     uint level;
