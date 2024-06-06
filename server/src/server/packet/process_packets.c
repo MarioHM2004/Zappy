@@ -19,7 +19,7 @@
 
 // AI Protocol
 static const client_command_t ai_commands[] = {
-    {"Forward", NULL},
+    {"Forward", &forward_command},
     {"Right", NULL},
     {"Left", NULL},
     {"Look", NULL},
