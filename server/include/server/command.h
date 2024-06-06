@@ -75,8 +75,13 @@ void pdi_command(server_t *server, client_t *client, player_t *player);
 void edi_command(server_t *server, client_t *client, player_t *player);
 void pfk_command(server_t *server, client_t *client, player_t *player);
 void eht_command(server_t *server, client_t *client, player_t *player);
+void ebo_command(server_t *server, client_t *client, player_t *player);
+void smg_command(server_t *server, client_t *client, char *msg);
 void enw_command(server_t *server, client_t *client, player_t *player,
     player_t *egg);
+void pic_command(server_t *server, client_t *client,
+    player_t *player, int *p_number);
+
 
 char *get_tile_content(server_t *server, int width, int height);
 char *get_cmd_from_packets(packet_list_t *packets);
