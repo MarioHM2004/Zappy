@@ -7,6 +7,7 @@
 
 #include "libs/lib.h"
 #include "server/command.h"
+#include "server/packet.h"
 #include "zappy.h"
 #include <stdlib.h>
 #include <string.h>
@@ -45,3 +46,15 @@ char *get_cmd_from_packets(packet_list_t *packets)
     return cmd;
 }
 
+void add_response(client_t *client, char *response)
+{
+    packet_t *packet = NULL;
+
+    if (!client || !response)
+        return;
+    packet = create_packet(response);
+    free(response);
+    if (!packet)
+        return;
+    add_packet(client->response, packet);
+}

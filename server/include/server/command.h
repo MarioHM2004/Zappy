@@ -112,11 +112,11 @@ void enw_command(server_t *server, client_t *client, player_t *player,
 void pic_command(server_t *server, client_t *client,
     player_t *player, int *p_number);
 
+// AI
+void forward_command(server_t *server, client_t *client, char *cmd);
 
 char *get_tile_content(server_t *server, int width, int height);
 char *get_cmd_from_packets(packet_list_t *packets);
-
-// AI
-void forward_command(server_t *server, client_t *client, char *cmd);
+void add_response(client_t *client, char *response);
 
 #endif /* !COMMAND_H_ */
