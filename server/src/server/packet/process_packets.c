@@ -56,7 +56,7 @@ static void send_gui_player_info(server_t *server, client_t *client)
     if (!server->game->players)
         return;
     LIST_FOREACH(node, server->game->players, entries) {
-        pnw_command(server, client, node->player->number);
+        pnw_command(server, client, node->player);
         command = formatstr("plv %d", (int)node->player->number);
         plv_command(server, client, command);
         free(command);
@@ -94,7 +94,7 @@ static void send_guis_player_info(server_t *server, client_t *client)
     LIST_FOREACH(node, server->clients, entries) {
         if (node->client->type != GRAPHIC)
             continue;
-        pnw_command(server, node->client, player->number);
+        pnw_command(server, node->client, player);
         pin_command(server, node->client, command);
         // ebo
     }
