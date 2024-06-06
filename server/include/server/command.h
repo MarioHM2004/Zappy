@@ -106,11 +106,16 @@ void edi_command(server_t *server, client_t *client, player_t *player);
 void pfk_command(server_t *server, client_t *client, player_t *player);
 void eht_command(server_t *server, client_t *client, player_t *player);
 void ebo_command(server_t *server, client_t *client, player_t *player);
+void pex_command(server_t *server, client_t *client, player_t *player);
 void smg_command(server_t *server, client_t *client, char *msg);
 void enw_command(server_t *server, client_t *client, player_t *player,
     player_t *egg);
+void pbc_command(server_t *server, client_t *client,
+    player_t *player, char *msg);
 void pic_command(server_t *server, client_t *client,
     player_t *player, int *p_number);
+void pie_command(server_t *server, client_t *client,
+    player_t *player, bool res);
 
 // AI
 void forward_command(server_t *server, client_t *client, char *cmd);
