@@ -50,10 +50,11 @@ void add_response(client_t *client, char *response)
 {
     packet_t *packet = NULL;
 
-    if (!client || !response)
+    if (!client)
         return;
-    packet = create_packet(response);
-    free(response);
+    packet = create_packet(response ? response : ERROR_MESSAGE);
+    if (response)
+        free(response);
     if (!packet)
         return;
     add_packet(client->response, packet);

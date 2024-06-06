@@ -16,12 +16,5 @@ void eht_command(server_t *server, client_t *client, player_t *player)
 
     if (!player)
         return packet_message(client, ERROR_MESSAGE);
-    response = formatstr(EHT_RESPONSE, (int)player->number);
-    if (!response)
-        return packet_message(client, ERROR_MESSAGE);
-    packet = create_packet(response);
-    free(response);
-    if (!packet)
-        return packet_message(client, ERROR_MESSAGE);
-    add_packet(client->response, packet);
+    add_response(client, formatstr(EHT_RESPONSE, (int)player->number));
 }
