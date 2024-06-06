@@ -68,6 +68,7 @@ void plv_command(server_t *server, client_t *client, char *cmd);
 void pin_command(server_t *server, client_t *client, char *cmd);
 void sgt_command(server_t *server, client_t *client, char *cmd);
 void sst_command(server_t *server, client_t *client, char *cmd);
+void seg_command(server_t *server, client_t *client);
 
 char *get_tile_content(server_t *server, int width, int height);
 char *get_cmd_from_packets(packet_list_t *packets);
