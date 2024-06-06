@@ -56,7 +56,7 @@ static void send_gui_player_info(server_t *server, client_t *client)
     if (!server->game->players)
         return;
     LIST_FOREACH(node, server->game->players, entries) {
-        // pnw
+        pnw_command(server, client, node->player->number);
         command = formatstr("plv %d", (int)node->player->number);
         plv_command(server, client, command);
         free(command);
@@ -87,40 +87,33 @@ static void send_guis_player_info(server_t *server, client_t *client)
 {
     client_node_t *node = NULL;
     player_t *player = get_player_by_fd(server->game->players, client->socket->fd);
-    char *command = NULL;
+    char *command = formatstr("pin %d", player->number);
 
     if (!player)
         return;
     LIST_FOREACH(node, server->clients, entries) {
         if (node->client->type != GRAPHIC)
             continue;
-        // pnw
-        command = formatstr("pin %d", player->number);
+        pnw_command(server, node->client, player->number);
         pin_command(server, node->client, command);
-        free(command);
         // ebo
     }
+    free(command);
 }
+
 
 static bool assign_team(server_t *server, client_t *client, char *team)
 {
     team_node_t *node = NULL;
     player_t *player = NULL;
-    player_node_t *player_node = NULL;
 
     LIST_FOREACH(node, server->game->teams, entries) {
         if (strcmp(node->team->name, team) != 0)
             continue;
-        player = create_player(client->socket, 0, 0, 0);
-        player_node = create_player_node(player);
-        if (!player || !player_node)
-            return false;
         client->type = AI;
+        player = create_player(client->socket, 0, 0, 0);
         add_player(server->game->players, player);
-        if (LIST_FIRST(node->team->players))
-            LIST_INSERT_AFTER(LIST_FIRST(node->team->players), player_node, entries);
-        else
-            LIST_INSERT_HEAD(node->team->players, player_node, entries);
+        add_player_to_team(node->team, player);
         send_guis_player_info(server, client);
         return true;
     }
@@ -134,7 +127,7 @@ static void assign_client_type(server_t *server, client_t *client, char *cmd)
 
     if (assign_graphic(server, client, cmd) || assign_team(server, client, cmd))
         return log_client(client);
-    packet_message(client, "UNKNOWN TEAM");
+    packet_message(client, ERROR_MESSAGE);
     client->socket->mode = WRITE;
 }
 
