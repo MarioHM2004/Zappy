@@ -43,3 +43,14 @@ bool change_players_tile(map_t *map, position_t pos, int change)
     update_tile(map, tile, pos);
     return true;
 }
+
+bool change_eggs_tile(map_t *map, position_t pos, int change)
+{
+    tile_t tile = map_at(map, pos);
+
+    if (tile.players + change < 0)
+        return false;
+    tile.eggs += change;
+    update_tile(map, tile, pos);
+    return true;
+}

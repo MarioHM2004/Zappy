@@ -5,6 +5,7 @@
 ** game_create
 */
 
+#include "game/event.h"
 #include "game/map.h"
 #include "game/player.h"
 #include <stdlib.h>
@@ -24,7 +25,7 @@ player_t *create_player(socket_t *socket, uint number, uint x, uint y)
     player->level = 1;
     player->state = ALIVE;
     player->inventory = create_resources();
-    // player->events = create_event_list();
+    player->events = create_event_list();
     if (player->inventory == NULL) {
         free(player);
         return NULL;
@@ -48,5 +49,6 @@ player_list_t *create_player_list(void)
 
     if (!head)
         return NULL;
+    LIST_INIT(head);
     return head;
 }

@@ -11,6 +11,7 @@
 #include "game/game.h"
 #include "game/map.h"
 #include "game/resources.h"
+#include "game/team.h"
 #include "libs/log.h"
 #include <sys/queue.h>
 #include <time.h>
@@ -88,9 +89,20 @@ void broadcast(game_t *game, player_t *player, event_t *event)
 
 void fork_player(game_t *game, player_t *player, event_t *event)
 {
-    (void)game;
-    (void)event;
-    (void)player;
+    team_t *team = get_team_by_player(game, player);
+    position_t egg_pos = {0};
+    tile_t egg_tile = {0};
+
+    if (!team) {
+        log_error("%d: Player not in a team\n", player->fd);
+        return;
+    }
+    team->players++;
+    egg_pos = get_random_pos(game->map);
+    change_eggs_tile(game->map, egg_pos, 1);
+    log_info("%d: An egg is laid in %d %d\n",
+        player->fd, egg_pos.x, egg_pos.y);
+
 }
 
 void eject(game_t *game, player_t *player, event_t *event)

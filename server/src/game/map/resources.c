@@ -5,10 +5,7 @@
 ** resources
 */
 
-#include "game/resources.h"
-#include "game/game.h"
 #include "game/map.h"
-#include <stdbool.h>
 #include <stdlib.h>
 
 static uint resources_quantity(float density, uint width, uint height)
@@ -26,10 +23,8 @@ static position_t *random_positions(map_t *map, uint quantity, uint width, uint 
 
     if (!random_position)
         return NULL;
-
     for (uint i = 0; i < quantity; i++) {
-        random_position[i].x = rand() % width;
-        random_position[i].y = rand() % height;
+        random_position[i] = get_random_pos(map);
     }
     return random_position;
 }

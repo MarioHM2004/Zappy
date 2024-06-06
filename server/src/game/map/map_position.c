@@ -7,6 +7,8 @@
 
 #include "game/game.h"
 #include "game/player.h"
+#include <stdlib.h>
+#include <time.h>
 
 position_t dir_at(map_t *map, position_t pos, direction_e dir)
 {
@@ -47,4 +49,14 @@ tile_t map_at(map_t* map, position_t pos)
     position_t new_pos = pos_at(map, pos);
 
     return map->tiles[new_pos.y][new_pos.x];
+}
+
+position_t get_random_pos(map_t *map)
+{
+    position_t pos = {0};
+
+    srand(time(0));
+    pos.x = rand() % map->width;
+    pos.y = rand() % map->height;
+    return pos;
 }

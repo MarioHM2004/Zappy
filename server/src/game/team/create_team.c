@@ -53,5 +53,6 @@ team_list_t *create_team_list(void)
 
     if (!head)
         return NULL;
+    LIST_INIT(head);
     return head;
 }
