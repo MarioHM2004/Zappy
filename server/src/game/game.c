@@ -42,7 +42,7 @@ static bool valid_tick() {
     static clock_t last_time = 0;
     clock_t elapsed_time = clock();
     if ((elapsed_time - last_time) >= CLOCKS_PER_SEC) {
-        log_info("Game tick n: %d", elapsed_time / CLOCKS_PER_SEC);
+        log_info("tick={%d}", elapsed_time / CLOCKS_PER_SEC);
         last_time = elapsed_time;
         return true;
     }
@@ -57,11 +57,8 @@ void game_tick(server_t *server)
     if (!valid_tick())
         return;
     LIST_FOREACH(team_node, server->game->teams, entries) {
-        team_t *team = team_node->team;
-        LIST_FOREACH(player_node, team->players, entries) {
-            player_t *player = player_node->player;
-            player_tick(server->game, player);
-        }
+        LIST_FOREACH(player_node, team_node->team->players, entries)
+            player_tick(server->game, player_node->player);
     }
 }
 

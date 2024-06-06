@@ -10,7 +10,7 @@
 
     #include <sys/queue.h>
 
-    #define MAX_PACKET_SIZE 1024 * 10
+    #define MAX_PACKET_SIZE 1024 * 5
 
 typedef struct server_s server_t;
 
