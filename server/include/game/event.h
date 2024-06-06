@@ -76,7 +76,6 @@ void destroy_event_node(event_node_t *en);
 void destroy_event_list(event_list_t *head);
 
 bool add_event(event_list_t *event_list, event_t *event);
-
 uint get_event_list_size(event_list_t *head);
 
 // AI
@@ -93,8 +92,5 @@ void eject(game_t *game, player_t *player, event_t *event);
 void take_object(game_t *game, player_t *player, event_t *event);
 void set_object(game_t *game, player_t *player, event_t *event);
 void incantation(game_t *game, player_t *player, event_t *event);
-
-// GUI
-void handle_gui_event(game_t *game);
 
 #endif /* !EVENT_H_ */

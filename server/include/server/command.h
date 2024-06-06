@@ -12,6 +12,9 @@
     #include "server.h"
 
     #define MAX_COMMAND_NAME_LENGTH 64
+    #define ERROR_MESSAGE "ko"
+
+    // GUI
     #define MSZ_REQUEST "msz"
     #define MSZ_RESPONSE "msz %d %d"
     #define BCT_REQUEST "bct %d %d"
@@ -47,10 +50,35 @@
     #define SUC_RESPONSE "suc"
     #define SBP_RESPONSE "sbp"
     #define EHT_RESPONSE "eht %d"
-
-    #define ERROR_MESSAGE "ko"
     #define UNKNOWN_COMMAND "suc"
     #define INVALID_PARAMETERS "sbp"
+
+    // AI
+    #define FORWARD_REQUEST "Forward"
+    #define FORWARD_RESPONSE "ok"
+    #define RIGHT_REQUEST "Right"
+    #define RIGHT_RESPONSE "ok"
+    #define LEFT_REQUEST "Left"
+    #define LEFT_RESPONSE "ok"
+    #define LOOK_REQUEST "Look"
+    // #define LOOK_RESPONSE "[%s, %s]" /* csv of tile info (tile info is space separated) */
+    #define INVENTORY_REQUEST "Inventory"
+    #define INVENTORY_RESPONSE "[linemate %d, deraumere %d, sibur %d, mendiane %d, phiras %d, thystame %d]"
+    #define BROADCAST_REQUEST "Broadcast %s"
+    #define BROADCAST_RESPONSE "ok"
+    #define CONNECT_NBR_REQUEST "Connect_nbr"
+    #define CONNECT_NBR_RESPONSE "%d"
+    #define FORK_REQUEST "Fork"
+    #define FORK_RESPONSE "ok"
+    #define EJECT_REQUEST "Eject"
+    #define EJECT_RESPONSE "ok"
+    #define DEATH_RESPONSE "dead"
+    #define TAKE_OBJECT_REQUEST "Take %s"
+    #define TAKE_OBJECT_RESPONSE "ok"
+    #define SET_OBJECT_REQUEST "Set %s"
+    #define SET_OBJECT_RESPONSE "ok"
+    #define START_INCANTATION_REQUEST "Incantation"
+    #define START_INCANTATION_RESPONSE "Elevation underway"
 
 typedef void (*client_command_func_t)(server_t *, client_t *, char *);
 
@@ -60,6 +88,8 @@ typedef struct client_command_s {
 } client_command_t;
 
 void packet_message(client_t *client, const char *message);
+
+// GUI
 void msz_command(server_t *server, client_t *client, char *cmd);
 void bct_command(server_t *server, client_t *client, char *cmd);
 void mct_command(server_t *server, client_t *client, char *cmd);
@@ -90,5 +120,8 @@ void pie_command(server_t *server, client_t *client,
 
 char *get_tile_content(server_t *server, int width, int height);
 char *get_cmd_from_packets(packet_list_t *packets);
+
+// AI
+void forward_command(server_t *server, client_t *client, char *cmd);
 
 #endif /* !COMMAND_H_ */

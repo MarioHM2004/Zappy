@@ -41,7 +41,9 @@ void destroy_game(game_t *game)
 static bool valid_tick() {
     static clock_t last_time = 0;
     clock_t elapsed_time = clock();
-    if ((elapsed_time - last_time) >= CLOCKS_PER_SEC) {
+    clock_t diff = elapsed_time - last_time;
+
+    if (diff >= CLOCKS_PER_SEC) {
         log_info("tick={%d}", elapsed_time / CLOCKS_PER_SEC);
         last_time = elapsed_time;
         return true;
