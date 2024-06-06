@@ -116,6 +116,10 @@ void pic_command(server_t *server, client_t *client,
     player_t *player, int *p_number);
 void pie_command(server_t *server, client_t *client,
     player_t *player, bool res);
+void pdr_command(server_t *server, client_t *client,
+    player_t *player, resource_e resource);
+void pgt_command(server_t *server, client_t *client,
+    player_t *player, resource_e resource);
 
 // AI
 void forward_command(server_t *server, client_t *client, char *cmd);

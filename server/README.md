@@ -124,8 +124,8 @@ By default f=100.
 |<span style="font-weight: bold; color: Green">Done</span>|             pic X Y L n n ...\n            |           | start of an incantation (by the first player) | | AI incantation action |
 |<span style="font-weight: bold; color: Green">Done</span>|                 pie X Y R\n                |           |             end of an incantation             | | AI incatation end |
 |<span style="font-weight: bold; color: Green">Done</span>|                   pfk n\n                  |           |            egg laying by the player           | | AI fork action |
-||                  pdr n i\n                 |           |               resource dropping               | | AI set action |
-||                  pgt n i\n                 |           |              resource collecting              | | AI take action |
+|<span style="font-weight: bold; color: Green">Done</span>|                  pdr n i\n                 |           |               resource dropping               | | AI set action |
+|<span style="font-weight: bold; color: Green">Done</span>|                  pgt n i\n                 |           |              resource collecting              | | AI take action |
 |<span style="font-weight: bold; color: Green">Done</span>|                   pdi n\n                  |           |               death of a player               | | AI client disconnection or AI lost all it's food |
 |<span style="font-weight: bold; color: Green">Done</span>|                enw e n X Y\n               |           |          an egg was laid by a player          | new GUI client connection | AI fork action end (after 42/f) |
 |<span style="font-weight: bold; color: Green">Done</span>|                   ebo e\n                  |           |          player connection for an egg         | | new AI client connection |
