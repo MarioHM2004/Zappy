@@ -5,8 +5,9 @@
 ** process_packets
 */
 
+#include "game/game.h"
+#include "game/player.h"
 #include "game/team.h"
-#include "libs/log.h"
 #include "server/client.h"
 #include "server/server.h"
 #include <stdlib.h>
@@ -14,12 +15,11 @@
 #include <sys/queue.h>
 #include "libs/lib.h"
 #include "server/socket.h"
-#include "zappy.h"
 #include "server/command.h"
 
 // AI Protocol
 static const client_command_t ai_commands[] = {
-    {"Forward", NULL},
+    {"Forward", &forward_command},
     {"Right", NULL},
     {"Left", NULL},
     {"Look", NULL},
@@ -39,47 +39,31 @@ static const client_command_t gui_commands[] = {
     {"msz", &msz_command},
     {"bct", &bct_command},
     {"mct", &mct_command},
-    {"tna", NULL},
-    {"ppo", NULL},
-    {"plv", NULL},
-    {"pin", NULL},
-    {"sgt", NULL},
-    {"sst", NULL},
+    {"tna", &tna_command},
+    {"ppo", &ppo_command},
+    {"plv", &plv_command},
+    {"pin", &pin_command},
+    {"sgt", &sgt_command},
+    {"sst", &sst_command},
     {"", NULL}
 };
 
-static bool is_packet_completed(packet_t *packet)
+static void send_gui_player_info(server_t *server, client_t *client)
 {
-    if (!packet)
-        return false;
-    for (size_t i = 0; packet->data[i]; i++) {
-        if (strstr(packet->data, CRLF))
-            return true;
-    }
-    return false;
-}
+    player_node_t *node = NULL;
+    char *command = NULL;
 
-char *get_cmd_from_packets(packet_list_t *packets)
-{
-    char *cmd = calloc(MAX_COMMAND_LENGTH, sizeof(char));
-    packet_node_t *tmp = NULL;
-    packet_node_t *current = NULL;
-
-    if (!packets)
-        return NULL;
-    strcpy(cmd, packets->lh_first->packet->data);
-    current = LIST_FIRST(packets);
-    while (current != NULL) {
-        tmp = LIST_NEXT(current, entries);
-        LIST_REMOVE(current, entries);
-        if (!current->packet || is_packet_completed(current->packet))
-            break;
-        cmd = safe_strcat(cmd, current->packet->data);
-        destroy_packet_node(current);
-        current = tmp;
+    if (!server->game->players)
+        return;
+    LIST_FOREACH(node, server->game->players, entries) {
+        pnw_command(server, client, node->player);
+        command = formatstr("plv %d", (int)node->player->number);
+        plv_command(server, client, command);
+        free(command);
+        command = formatstr("pin %d", (int)node->player->number);
+        pin_command(server, client, command);
+        free(command);
     }
-    cmd[strlen(cmd) - strlen(CRLF) - 1] = '\0';
-    return cmd;
 }
 
 static bool assign_graphic(server_t *server, client_t *client, char *team)
@@ -88,32 +72,50 @@ static bool assign_graphic(server_t *server, client_t *client, char *team)
         return false;
     client->type = GRAPHIC;
     // THIS GUI CLIENT
-    // msz
-    // mct
-    // tna
-    // pnw
-    // plv
-    // pin
+    msz_command(server, client, "msz");
+    mct_command(server, client, "mct");
+    tna_command(server, client, "tna");
+    send_gui_player_info(server, client);
+    sgt_command(server, client, "sgt");
+    // eggs?
     // enw
-    // sgt
     // eht
     return true;
 }
 
+static void send_guis_player_info(server_t *server, client_t *client)
+{
+    client_node_t *node = NULL;
+    player_t *player = get_player_by_fd(server->game->players, client->socket->fd);
+    char *command = formatstr("pin %d", player->number);
+
+    if (!player)
+        return;
+    LIST_FOREACH(node, server->clients, entries) {
+        if (node->client->type != GRAPHIC)
+            continue;
+        pnw_command(server, node->client, player);
+        pin_command(server, node->client, command);
+        // ebo
+    }
+    free(command);
+}
+
+
 static bool assign_team(server_t *server, client_t *client, char *team)
 {
     team_node_t *node = NULL;
+    player_t *player = NULL;
 
     LIST_FOREACH(node, server->game->teams, entries) {
-        if (strcmp(node->team->name, team) == 0) {
-            client->type = AI;
-            // asing player to team
-            // ALL GUI CLIENTS
-            // pnw
-            // pin
-            // ebo
-            return true;
-        }
+        if (strcmp(node->team->name, team) != 0)
+            continue;
+        client->type = AI;
+        player = create_player(client->socket, 0, 0, 0);
+        add_player(server->game->players, player);
+        add_player_to_team(node->team, player);
+        send_guis_player_info(server, client);
+        return true;
     }
     return false;
 }
@@ -124,8 +126,8 @@ static void assign_client_type(server_t *server, client_t *client, char *cmd)
     packet_node_t *node = NULL;
 
     if (assign_graphic(server, client, cmd) || assign_team(server, client, cmd))
-        return;
-    packet_error(client);
+        return log_client(client);
+    packet_message(client, ERROR_MESSAGE);
     client->socket->mode = WRITE;
 }
 
@@ -138,8 +140,9 @@ static void client_command_ptr(server_t *server, client_t *client, char *cmd)
     commands = (client->type == AI) ? ai_commands : gui_commands;
     for (size_t i = 0; commands[i].name[0]; i++) {
         if (startswith(cmd, commands[i].name))
-            commands[i].func(server, client, cmd);
+            return commands[i].func(server, client, cmd);
     }
+    packet_message(client, UNKNOWN_COMMAND);
 }
 
 void process_client_packets(server_t *server, client_t *client)
@@ -148,7 +151,6 @@ void process_client_packets(server_t *server, client_t *client)
 
     while (!LIST_EMPTY(client->request)) {
         cmd = get_cmd_from_packets(client->request);
-        log_debug("cmd={%s}", cmd);
         client_command_ptr(server, client, cmd);
     }
 }

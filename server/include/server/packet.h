@@ -12,8 +12,10 @@
 
     #define MAX_PACKET_SIZE 1024 * 5
 
+typedef struct server_s server_t;
+
 typedef struct packet_s {
-    char data[MAX_PACKET_SIZE];
+    char *data;
 } packet_t;
 
 typedef struct packet_node_s {
@@ -33,5 +35,6 @@ void destroy_packet_node(packet_node_t *pn);
 void destroy_packet_list(packet_list_t *head);
 
 void add_packet(packet_list_t *packets, packet_t *packet);
+void add_packet_by_fd(server_t *server, int fd, packet_t *packet);
 
 #endif /* !PACKET_H_ */

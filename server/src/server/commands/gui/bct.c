@@ -26,19 +26,12 @@ char *get_tile_content(server_t *server, int width, int height)
 
 void bct_command(server_t *server, client_t *client, char *cmd)
 {
-    int width;
-    int height;
-    char *response = NULL;
-    packet_t *packet = NULL;
+    int width = 0;
+    int height = 0;
 
-    sscanf(cmd, BCT_REQUEST, &width, &height);
+    if (sscanf(cmd, BCT_REQUEST, &width, &height) == -1)
+        return packet_message(client, INVALID_PARAMETERS);
     if (width >= server->game->map->width || height >= server->game->map->height)
-        return packet_error(client);
-    response = get_tile_content(server, width, height);
-    if (!response)
-        return packet_error(client);
-    packet = create_packet(response);
-    if (!packet)
-        return packet_error(client);
-    add_packet(client->response, packet);
+        return packet_message(client, INVALID_PARAMETERS);
+    add_response(client, get_tile_content(server, width, height));
 }

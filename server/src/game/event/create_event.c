@@ -40,6 +40,7 @@ event_list_t *create_event_list(void)
 
     if (!list)
         return NULL;
+    LIST_INIT(list);
     return list;
 }
 

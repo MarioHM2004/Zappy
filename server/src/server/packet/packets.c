@@ -15,6 +15,11 @@ packet_t *create_packet(const char *data)
 
     if (!packet)
         return NULL;
+    packet->data = calloc(strlen(data) + 1, sizeof(char));
+    if (!packet->data) {
+        free(packet);
+        return NULL;
+    }
     strcpy(packet->data, data);
     return packet;
 }

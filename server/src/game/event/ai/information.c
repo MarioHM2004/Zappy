@@ -13,17 +13,18 @@
 
 static void log_inventory(player_t *player)
 {
-    log_debug("Player with fd %d requested inventory", player->fd);
-    log_debug("[");
-    log_debug("food %d, ", player->inventory->food);
-    log_debug("linemate %d, ", player->inventory->linemate);
-    log_debug("deraumere %d, ", player->inventory->deraumere);
-    log_debug("sibur %d, ", player->inventory->sibur);
-    log_debug("mendiane %d, ", player->inventory->mendiane);
-    log_debug("phiras %d, ", player->inventory->phiras);
-    log_debug("thystame %d", player->inventory->thystame);
-    log_debug("]\n");
+    log_debug("Player with fd %d requested inventory [food %d, linemate %d, "
+              "deraumere %d, sibur %d, mendiane %d, phiras %d, thystame %d]\n",
+              player->fd,
+              player->inventory->food,
+              player->inventory->linemate,
+              player->inventory->deraumere,
+              player->inventory->sibur,
+              player->inventory->mendiane,
+              player->inventory->phiras,
+              player->inventory->thystame);
 }
+
 
 void inventory(game_t *game, player_t *player, event_t *event)
 {

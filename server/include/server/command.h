@@ -8,9 +8,14 @@
 #ifndef COMMAND_H_
     #define COMMAND_H_
 
+    #include "game/player.h"
+    #include "game/team.h"
     #include "server.h"
 
     #define MAX_COMMAND_NAME_LENGTH 64
+    #define ERROR_MESSAGE "ko"
+
+    // GUI
     #define MSZ_REQUEST "msz"
     #define MSZ_RESPONSE "msz %d %d"
     #define BCT_REQUEST "bct %d %d"
@@ -39,15 +44,42 @@
     #define EDI_RESPONSE "edi %d"
     #define SGT_REQUEST "sgt"
     #define SGT_RESPONSE "sgt %d"
-    #define SST_REQUEST "sst %s"
-    #define SST_REPONSE "sst %s"
+    #define SST_REQUEST "sst %d"
+    #define SST_REPONSE "sst %d"
     #define SEG_RESPONSE "seg %s"
     #define SMG_RESPONSE "smg %s"
     #define SUC_RESPONSE "suc"
     #define SBP_RESPONSE "sbp"
     #define EHT_RESPONSE "eht %d"
+    #define UNKNOWN_COMMAND "suc"
+    #define INVALID_PARAMETERS "sbp"
 
-    #define ERROR_RESPONSE "ko"
+    // AI
+    #define FORWARD_REQUEST "Forward"
+    #define FORWARD_RESPONSE "ok"
+    #define RIGHT_REQUEST "Right"
+    #define RIGHT_RESPONSE "ok"
+    #define LEFT_REQUEST "Left"
+    #define LEFT_RESPONSE "ok"
+    #define LOOK_REQUEST "Look"
+    // #define LOOK_RESPONSE "[%s, %s]" /* csv of tile info (tile info is space separated) */
+    #define INVENTORY_REQUEST "Inventory"
+    #define INVENTORY_RESPONSE "[linemate %d, deraumere %d, sibur %d, mendiane %d, phiras %d, thystame %d]"
+    #define BROADCAST_REQUEST "Broadcast %s"
+    #define BROADCAST_RESPONSE "ok"
+    #define CONNECT_NBR_REQUEST "Connect_nbr"
+    #define CONNECT_NBR_RESPONSE "%d"
+    #define FORK_REQUEST "Fork"
+    #define FORK_RESPONSE "ok"
+    #define EJECT_REQUEST "Eject"
+    #define EJECT_RESPONSE "ok"
+    #define DEATH_RESPONSE "dead"
+    #define TAKE_OBJECT_REQUEST "Take %s"
+    #define TAKE_OBJECT_RESPONSE "ok"
+    #define SET_OBJECT_REQUEST "Set %s"
+    #define SET_OBJECT_RESPONSE "ok"
+    #define START_INCANTATION_REQUEST "Incantation"
+    #define START_INCANTATION_RESPONSE "Elevation underway"
 
 typedef void (*client_command_func_t)(server_t *, client_t *, char *);
 
@@ -56,10 +88,45 @@ typedef struct client_command_s {
     client_command_func_t func;
 } client_command_t;
 
-void packet_error(client_t *client);
+void packet_message(client_t *client, const char *message);
+
+// GUI
 void msz_command(server_t *server, client_t *client, char *cmd);
 void bct_command(server_t *server, client_t *client, char *cmd);
 void mct_command(server_t *server, client_t *client, char *cmd);
+void tna_command(server_t *server, client_t *client, char *cmd);
+void ppo_command(server_t *server, client_t *client, char *cmd);
+void plv_command(server_t *server, client_t *client, char *cmd);
+void pin_command(server_t *server, client_t *client, char *cmd);
+void sgt_command(server_t *server, client_t *client, char *cmd);
+void sst_command(server_t *server, client_t *client, char *cmd);
+void seg_command(server_t *server, client_t *client, team_t *team);
+void pnw_command(server_t *server, client_t *client, player_t *player);
+void pdi_command(server_t *server, client_t *client, player_t *player);
+void edi_command(server_t *server, client_t *client, player_t *player);
+void pfk_command(server_t *server, client_t *client, player_t *player);
+void eht_command(server_t *server, client_t *client, player_t *player);
+void ebo_command(server_t *server, client_t *client, player_t *player);
+void pex_command(server_t *server, client_t *client, player_t *player);
+void smg_command(server_t *server, client_t *client, char *msg);
+void enw_command(server_t *server, client_t *client, player_t *player,
+    player_t *egg);
+void pbc_command(server_t *server, client_t *client,
+    player_t *player, char *msg);
+void pic_command(server_t *server, client_t *client,
+    player_t *player, int *p_number);
+void pie_command(server_t *server, client_t *client,
+    player_t *player, bool res);
+void pdr_command(server_t *server, client_t *client,
+    player_t *player, resource_e resource);
+void pgt_command(server_t *server, client_t *client,
+    player_t *player, resource_e resource);
+
+// AI
+void forward_command(server_t *server, client_t *client, char *cmd);
+
 char *get_tile_content(server_t *server, int width, int height);
+char *get_cmd_from_packets(packet_list_t *packets);
+void add_response(client_t *client, char *response);
 
 #endif /* !COMMAND_H_ */

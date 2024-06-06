@@ -6,6 +6,7 @@
 */
 
 #include "game/map.h"
+#include "game/player.h"
 #include "game/team.h"
 #include "libs/log.h"
 #include "server/server.h"
@@ -22,6 +23,7 @@ game_t *create_game(arguments_t *arguments)
     if (!game->map)
         return NULL;
     game->teams = init_teams(arguments->name);
+    game->players = create_player_list();
     game->ended = false;
     game->freq = arguments->freq;
     game->players_per_team = arguments->client_nb;
@@ -39,8 +41,10 @@ void destroy_game(game_t *game)
 static bool valid_tick() {
     static clock_t last_time = 0;
     clock_t elapsed_time = clock();
-    if (elapsed_time - last_time >= CLOCKS_PER_SEC) {
-        log_info("Game tick n: %d", elapsed_time / CLOCKS_PER_SEC);
+    clock_t diff = elapsed_time - last_time;
+
+    if (diff >= CLOCKS_PER_SEC) {
+        log_info("tick={%d}", elapsed_time / CLOCKS_PER_SEC);
         last_time = elapsed_time;
         return true;
     }
@@ -55,11 +59,8 @@ void game_tick(server_t *server)
     if (!valid_tick())
         return;
     LIST_FOREACH(team_node, server->game->teams, entries) {
-        team_t *team = team_node->team;
-        LIST_FOREACH(player_node, team->players, entries) {
-            player_t *player = player_node->player;
-            player_tick(server->game, player);
-        }
+        LIST_FOREACH(player_node, team_node->team->players, entries)
+            player_tick(server->game, player_node->player);
     }
 }
 

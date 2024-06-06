@@ -50,3 +50,15 @@ uint get_team_list_size(team_list_t *head)
         size++;
     return size;
 }
+
+void add_player_to_team(team_t *team, player_t *player)
+{
+    player_node_t *player_node = create_player_node(player);
+
+    if (!player_node || !team)
+        return;
+    if (LIST_FIRST(team->players))
+        LIST_INSERT_AFTER(LIST_FIRST(team->players), player_node, entries);
+    else
+        LIST_INSERT_HEAD(team->players, player_node, entries);
+}
