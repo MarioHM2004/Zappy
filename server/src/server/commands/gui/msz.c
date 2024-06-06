@@ -16,7 +16,7 @@ void msz_command(server_t *server, client_t *client, char *cmd)
     packet_t *packet = NULL;
 
     if (sscanf(cmd, MSZ_REQUEST) == -1)
-        return packet_error(client);
+        return packet_message(client, INVALID_PARAMETERS);
     if (!response)
         return;
     packet = create_packet(response);

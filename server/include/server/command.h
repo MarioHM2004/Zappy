@@ -47,7 +47,9 @@
     #define SBP_RESPONSE "sbp"
     #define EHT_RESPONSE "eht %d"
 
-    #define ERROR_RESPONSE "ko"
+    #define ERROR_MESSAGE "ko"
+    #define UNKNOWN_COMMAND "suc"
+    #define INVALID_PARAMETERS "sbp"
 
 typedef void (*client_command_func_t)(server_t *, client_t *, char *);
 
@@ -56,7 +58,7 @@ typedef struct client_command_s {
     client_command_func_t func;
 } client_command_t;
 
-void packet_error(client_t *client);
+void packet_message(client_t *client, const char *message);
 void msz_command(server_t *server, client_t *client, char *cmd);
 void bct_command(server_t *server, client_t *client, char *cmd);
 void mct_command(server_t *server, client_t *client, char *cmd);

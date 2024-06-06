@@ -7,9 +7,9 @@
 
 #include "server/command.h"
 
-void packet_error(client_t *client)
+void packet_message(client_t *client, const char *message)
 {
-    packet_t *packet = create_packet(ERROR_RESPONSE);
+    packet_t *packet = create_packet(message);
 
     if (!packet)
         return;

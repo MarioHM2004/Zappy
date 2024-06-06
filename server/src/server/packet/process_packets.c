@@ -6,7 +6,6 @@
 */
 
 #include "game/team.h"
-#include "libs/log.h"
 #include "server/client.h"
 #include "server/server.h"
 #include <stdlib.h>
@@ -60,7 +59,6 @@ static bool assign_graphic(server_t *server, client_t *client, char *team)
     // plv /* all players? */
     // pin /* all players? */
     // enw
-    // sgt
     sgt_command(server, client, "sgt");
     // eht
     return true;
@@ -91,7 +89,7 @@ static void assign_client_type(server_t *server, client_t *client, char *cmd)
 
     if (assign_graphic(server, client, cmd) || assign_team(server, client, cmd))
         return log_client(client);
-    packet_error(client);
+    packet_message(client, "UNKNOWN TEAM");
     client->socket->mode = WRITE;
 }
 
@@ -104,8 +102,9 @@ static void client_command_ptr(server_t *server, client_t *client, char *cmd)
     commands = (client->type == AI) ? ai_commands : gui_commands;
     for (size_t i = 0; commands[i].name[0]; i++) {
         if (startswith(cmd, commands[i].name))
-            commands[i].func(server, client, cmd);
+            return commands[i].func(server, client, cmd);
     }
+    packet_message(client, UNKNOWN_COMMAND);
 }
 
 void process_client_packets(server_t *server, client_t *client)
@@ -114,7 +113,6 @@ void process_client_packets(server_t *server, client_t *client)
 
     while (!LIST_EMPTY(client->request)) {
         cmd = get_cmd_from_packets(client->request);
-        log_debug("cmd={%s}", cmd);
         client_command_ptr(server, client, cmd);
     }
 }

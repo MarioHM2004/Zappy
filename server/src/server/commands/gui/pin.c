@@ -13,6 +13,8 @@ static char *get_pin(server_t *server, int player)
 {
     player_node_t *tmp = NULL;
 
+    if (!server->game->players)
+        return NULL;
     LIST_FOREACH(tmp, server->game->players, entries) {
         if ((int)tmp->player->number != player)
             continue;
@@ -39,15 +41,13 @@ void pin_command(server_t *server, client_t *client, char *cmd)
     player_node_t *tmp = NULL;
 
     if (sscanf(cmd, PIN_REQUEST, &player) == -1)
-        return packet_error(client);
-    if (!player || !server->game->players)
-        return packet_error(client);
+        return packet_message(client, INVALID_PARAMETERS);
     response = get_pin(server, player);
     if (!response)
-        return packet_error(client);
+        return packet_message(client, ERROR_MESSAGE);
     packet = create_packet(response);
     free(response);
     if (!packet)
-        return packet_error(client);
+        return packet_message(client, ERROR_MESSAGE);
     add_packet(client->response, packet);
 }

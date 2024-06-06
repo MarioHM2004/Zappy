@@ -16,16 +16,16 @@ void tna_command(server_t *server, client_t *client, char *cmd)
     packet_t *packet = NULL;
 
     if (sscanf(cmd, TNA_REQUEST) == -1)
-        return packet_error(client);
+        return packet_message(client, INVALID_PARAMETERS);
     LIST_FOREACH(tmp, server->game->teams, entries) {
         response = safe_strcat(response, formatstr(TNA_RESPONSE, tmp->team->name));
         if (LIST_NEXT(tmp, entries))
             response = safe_strcat(response, CRLF);
     }
     if (!response)
-        return packet_error(client);
+        return packet_message(client, ERROR_MESSAGE);
     packet = create_packet(response);
     if (!packet)
-        return packet_error(client);
+        return packet_message(client, ERROR_MESSAGE);
     add_packet(client->response, packet);
 }

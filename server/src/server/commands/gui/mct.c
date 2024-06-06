@@ -19,7 +19,7 @@ void mct_command(server_t *server, client_t *client, char *cmd)
     bool last = false;
 
     if (sscanf(cmd, MCT_REQUEST) == -1)
-        return packet_error(client);
+        return packet_message(client, INVALID_PARAMETERS);
     for (size_t i = 0; i < server->game->map->height; i++) {
         for (size_t j = 0; j < server->game->map->width; j++) {
             last = (i == server->game->map->height - 1 &&
@@ -29,9 +29,9 @@ void mct_command(server_t *server, client_t *client, char *cmd)
         }
     }
     if (!response)
-        return packet_error(client);
+        return packet_message(client, ERROR_MESSAGE);
     packet = create_packet(response);
     if (!packet)
-        return packet_error(client);
+        return packet_message(client, ERROR_MESSAGE);
     add_packet(client->response, packet);
 }
