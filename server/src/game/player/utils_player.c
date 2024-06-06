@@ -7,7 +7,6 @@
 
 #include "game/event.h"
 #include "game/game.h"
-#include "game/map.h"
 #include "game/player.h"
 #include <stdbool.h>
 #include <sys/queue.h>
@@ -59,4 +58,15 @@ bool is_player_in_list(player_list_t *head, player_t *player)
             return true;
     }
     return false;
+}
+
+player_t *get_player_by_fd(player_list_t *players, int fd)
+{
+    player_node_t *node = NULL;
+
+    LIST_FOREACH(node, players, entries) {
+        if (node->player->fd == fd)
+            return node->player;
+    }
+    return NULL;
 }

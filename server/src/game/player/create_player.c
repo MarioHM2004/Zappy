@@ -24,6 +24,7 @@ player_t *create_player(socket_t *socket, uint number, uint x, uint y)
     player->level = 1;
     player->state = ALIVE;
     player->inventory = create_resources();
+    // player->events = create_event_list();
     if (player->inventory == NULL) {
         free(player);
         return NULL;

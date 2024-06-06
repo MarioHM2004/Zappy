@@ -20,6 +20,7 @@ bool move_player(map_t *map,player_t *player, position_t new_pos)
         return false;
     }
     player->pos = new_pos;
+    return true;
 }
 
 void player_tick(game_t *game, player_t *player)

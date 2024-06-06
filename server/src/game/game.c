@@ -6,6 +6,7 @@
 */
 
 #include "game/map.h"
+#include "game/player.h"
 #include "game/team.h"
 #include "libs/log.h"
 #include "server/server.h"
@@ -22,6 +23,7 @@ game_t *create_game(arguments_t *arguments)
     if (!game->map)
         return NULL;
     game->teams = init_teams(arguments->name);
+    game->players = create_player_list();
     game->ended = false;
     game->freq = arguments->freq;
     game->players_per_team = arguments->client_nb;

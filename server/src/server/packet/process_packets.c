@@ -5,6 +5,8 @@
 ** process_packets
 */
 
+#include "game/game.h"
+#include "game/player.h"
 #include "game/team.h"
 #include "server/client.h"
 #include "server/server.h"
@@ -46,6 +48,24 @@ static const client_command_t gui_commands[] = {
     {"", NULL}
 };
 
+static void send_gui_player_info(server_t *server, client_t *client)
+{
+    player_node_t *node = NULL;
+    char *command = NULL;
+
+    if (!server->game->players)
+        return;
+    LIST_FOREACH(node, server->game->players, entries) {
+        // pnw
+        command = formatstr("plv %d", (int)node->player->number);
+        plv_command(server, client, command);
+        free(command);
+        command = formatstr("pin %d", (int)node->player->number);
+        pin_command(server, client, command);
+        free(command);
+    }
+}
+
 static bool assign_graphic(server_t *server, client_t *client, char *team)
 {
     if (strcmp(team, GRAPHIC_TEAM_NAME) != 0)
@@ -55,29 +75,54 @@ static bool assign_graphic(server_t *server, client_t *client, char *team)
     msz_command(server, client, "msz");
     mct_command(server, client, "mct");
     tna_command(server, client, "tna");
-    // pnw
-    // plv /* all players? */
-    // pin /* all players? */
-    // enw
+    send_gui_player_info(server, client);
     sgt_command(server, client, "sgt");
+    // eggs?
+    // enw
     // eht
     return true;
+}
+
+static void send_guis_player_info(server_t *server, client_t *client)
+{
+    client_node_t *node = NULL;
+    player_t *player = get_player_by_fd(server->game->players, client->socket->fd);
+    char *command = NULL;
+
+    if (!player)
+        return;
+    LIST_FOREACH(node, server->clients, entries) {
+        if (node->client->type != GRAPHIC)
+            continue;
+        // pnw
+        command = formatstr("pin %d", player->number);
+        pin_command(server, node->client, command);
+        free(command);
+        // ebo
+    }
 }
 
 static bool assign_team(server_t *server, client_t *client, char *team)
 {
     team_node_t *node = NULL;
+    player_t *player = NULL;
+    player_node_t *player_node = NULL;
 
     LIST_FOREACH(node, server->game->teams, entries) {
-        if (strcmp(node->team->name, team) == 0) {
-            client->type = AI;
-            // asing player to team
-            // ALL GUI CLIENTS
-            // pnw
-            // pin
-            // ebo
-            return true;
-        }
+        if (strcmp(node->team->name, team) != 0)
+            continue;
+        player = create_player(client->socket, 0, 0, 0);
+        player_node = create_player_node(player);
+        if (!player || !player_node)
+            return false;
+        client->type = AI;
+        add_player(server->game->players, player);
+        if (LIST_FIRST(node->team->players))
+            LIST_INSERT_AFTER(LIST_FIRST(node->team->players), player_node, entries);
+        else
+            LIST_INSERT_HEAD(node->team->players, player_node, entries);
+        send_guis_player_info(server, client);
+        return true;
     }
     return false;
 }
