@@ -15,7 +15,7 @@
 typedef struct server_s server_t;
 
 typedef struct packet_s {
-    char data[MAX_PACKET_SIZE];
+    char *data;
 } packet_t;
 
 typedef struct packet_node_s {

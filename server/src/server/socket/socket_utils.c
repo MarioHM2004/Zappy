@@ -24,15 +24,18 @@ bool write_socket(socket_t *socket, packet_t *packet)
 
 packet_t *read_socket(socket_t *socket)
 {
+    packet_t *packet = NULL;
+    char *data = calloc(MAX_PACKET_SIZE, sizeof(char));
     ssize_t n = 0;
-    packet_t *packet = create_packet("");
 
-    if (!socket || !packet)
+    if (!socket || !data)
         return NULL;
-    n = read(socket->fd, packet->data, MAX_PACKET_SIZE);
+    n = read(socket->fd, data, MAX_PACKET_SIZE);
     if (n <= 0)
         return NULL;
-    packet->data[n] = '\0';
+    data[n] = '\0';
+    packet = create_packet(data);
+    free(data);
     return packet;
 }
 

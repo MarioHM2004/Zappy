@@ -12,6 +12,7 @@ void destroy_packet(packet_t *packet)
 {
     if (!packet)
         return;
+    free(packet->data);
     free(packet);
 }
 

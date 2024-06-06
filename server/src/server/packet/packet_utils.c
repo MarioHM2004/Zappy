@@ -6,6 +6,7 @@
 */
 
 #include "server/packet.h"
+#include "libs/lib.h"
 #include "server/server.h"
 #include <string.h>
 #include <sys/queue.h>
@@ -40,7 +41,7 @@ void add_packet(packet_list_t *packets, packet_t *packet)
 {
     packet_node_t *node = NULL;
 
-    strcat(packet->data, CRLF);
+    packet->data = safe_strcat(packet->data, CRLF);
     node = create_packet_node(packet);
     if (!node)
         return;
