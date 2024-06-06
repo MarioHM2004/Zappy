@@ -121,7 +121,7 @@ By default f=100.
 |<span style="font-weight: bold; color: Green">Done</span>|      pin n X Y q0 q1 q2 q3 q4 q5 q6\n      |  pin #n\n |               player’s inventory              | new GUI client connection or pin command | new AI client connection or AI set, take action or AI lost food |
 ||                   pex n\n                  |           |                   expulsion                   | | AI eject action |
 ||                  pbc n M\n                 |           |                   broadcast                   | | AI broadcast action |
-||             pic X Y L n n ...\n            |           | start of an incantation (by the first player) | | AI incantation action |
+|<span style="font-weight: bold; color: Green">Done</span>|             pic X Y L n n ...\n            |           | start of an incantation (by the first player) | | AI incantation action |
 ||                 pie X Y R\n                |           |             end of an incantation             | | AI incatation end |
 |<span style="font-weight: bold; color: Green">Done</span>|                   pfk n\n                  |           |            egg laying by the player           | | AI fork action |
 ||                  pdr n i\n                 |           |               resource dropping               | | AI set action |
