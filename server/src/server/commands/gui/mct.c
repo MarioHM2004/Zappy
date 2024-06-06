@@ -15,7 +15,6 @@
 void mct_command(server_t *server, client_t *client, char *cmd)
 {
     char *response = "";
-    packet_t *packet = NULL;
     bool last = false;
 
     if (sscanf(cmd, MCT_REQUEST) == -1)
@@ -28,10 +27,5 @@ void mct_command(server_t *server, client_t *client, char *cmd)
             response = safe_strcat(response, (last) ? "" : CRLF);
         }
     }
-    if (!response)
-        return packet_message(client, ERROR_MESSAGE);
-    packet = create_packet(response);
-    if (!packet)
-        return packet_message(client, ERROR_MESSAGE);
-    add_packet(client->response, packet);
+    add_response(client, response);
 }

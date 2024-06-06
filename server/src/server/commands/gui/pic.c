@@ -12,8 +12,6 @@
 void pic_command(server_t *server, client_t *client,
     player_t *player, int *p_number)
 {
-    packet_t *packet = NULL;
-    char *response;
     char *p_nb_list;
 
     if (!player || !p_number)
@@ -23,13 +21,6 @@ void pic_command(server_t *server, client_t *client,
         if (p_number[i + 1])
             p_nb_list = safe_strcat(p_nb_list, " ");
     }
-    response = formatstr(PIC_RESPONSE, player->pos.x, player->pos.y,
-    p_nb_list);
-    if (!response)
-        return packet_message(client, ERROR_MESSAGE);
-    packet = create_packet(response);
-    free(response);
-    if (!packet)
-        return packet_message(client, ERROR_MESSAGE);
-    add_packet(client->response, packet);
+    add_response(client, formatstr(PIC_RESPONSE,
+        (int)player->pos.x, (int)player.pos.y, p_nb_list));
 }

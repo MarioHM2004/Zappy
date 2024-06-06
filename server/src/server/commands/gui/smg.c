@@ -11,14 +11,7 @@
 
 void smg_command(server_t *server, client_t *client, char *msg)
 {
-    packet_t *packet = NULL;
-    char *response = formatstr(SMG_RESPONSE, msg);
-
-    if (!response)
+    if (!msg)
         return packet_message(client, ERROR_MESSAGE);
-    packet = create_packet(response);
-    free(response);
-    if (!packet)
-        return packet_message(client, ERROR_MESSAGE);
-    add_packet(client->response, packet);
+    add_response(client, formatstr(SMG_RESPONSE, msg));
 }

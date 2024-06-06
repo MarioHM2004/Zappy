@@ -25,19 +25,9 @@ static char *get_plv(server_t *server, int player)
 
 void plv_command(server_t *server, client_t *client, char *cmd)
 {
-    int player;
-    char *response = NULL;
-    packet_t *packet = NULL;
-    player_node_t *tmp = NULL;
+    int player = 0;
 
     if (sscanf(cmd, PLV_REQUEST, &player) == -1)
         return packet_message(client, INVALID_PARAMETERS);
-    response = get_plv(server, player);
-    if (!response)
-        return packet_message(client, ERROR_MESSAGE);
-    packet = create_packet(response);
-    free(response);
-    if (!packet)
-        return packet_message(client, ERROR_MESSAGE);
-    add_packet(client->response, packet);
+    add_response(client, get_plv(server, player));
 }

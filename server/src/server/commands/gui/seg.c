@@ -9,21 +9,9 @@
 #include "server/command.h"
 #include "game/team.h"
 
-void seg_command(server_t *server, client_t *client)
+void seg_command(server_t *server, client_t *client, team_t *team)
 {
-    team_node_t *last_team = NULL;
-    char *response = NULL;
-    packet_t *packet = NULL;
-
-    if (!server->game->ended || LIST_EMPTY(server->game->teams))
+    if (!server->game->ended || !team)
         return packet_message(client, ERROR_MESSAGE);;
-    last_team = LIST_FIRST(server->game->teams);
-    response = formatstr(SEG_RESPONSE, last_team->team->name);
-    if (!response)
-        return packet_message(client, ERROR_MESSAGE);
-    packet = create_packet(response);
-    free(response);
-    if (!packet)
-        return packet_message(client, ERROR_MESSAGE);
-    add_packet(client->response, packet);
+    add_response(client, formatstr(SEG_RESPONSE, team->name));
 }
