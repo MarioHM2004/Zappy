@@ -9,6 +9,7 @@
     #define COMMAND_H_
 
     #include "game/player.h"
+    #include "game/team.h"
     #include "server.h"
 
     #define MAX_COMMAND_NAME_LENGTH 64
@@ -99,7 +100,7 @@ void plv_command(server_t *server, client_t *client, char *cmd);
 void pin_command(server_t *server, client_t *client, char *cmd);
 void sgt_command(server_t *server, client_t *client, char *cmd);
 void sst_command(server_t *server, client_t *client, char *cmd);
-void seg_command(server_t *server, client_t *client);
+void seg_command(server_t *server, client_t *client, team_t *team);
 void pnw_command(server_t *server, client_t *client, player_t *player);
 void pdi_command(server_t *server, client_t *client, player_t *player);
 void edi_command(server_t *server, client_t *client, player_t *player);

@@ -22,5 +22,5 @@ void pic_command(server_t *server, client_t *client,
             p_nb_list = safe_strcat(p_nb_list, " ");
     }
     add_response(client, formatstr(PIC_RESPONSE,
-        (int)player->pos.x, (int)player.pos.y, p_nb_list));
+        (int)player->pos.x, (int)player->pos.y, p_nb_list));
 }
