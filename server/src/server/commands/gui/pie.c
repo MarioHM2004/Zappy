@@ -15,7 +15,7 @@ void pie_command(server_t *server, client_t *client,
     packet_t *packet = NULL;
     char *response = NULL;
 
-    if (!player || !msg)
+    if (!player)
         return packet_message(client, ERROR_MESSAGE);
     response = formatstr(PIE_RESPONSE, (int)player->pos.x,
         (int)player->pos.y, (int)res);
