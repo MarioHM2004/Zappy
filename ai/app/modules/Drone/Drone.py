@@ -8,24 +8,3 @@ class Drone:
         self.view: list[str] = []
 
         # self.frozen: bool = False
-
-    def run(socket_cl):
-        running = True
-
-        if socket_cl is None:
-            running = False
-            return
-
-        while running:
-            try:
-                data = socket_cl.recv(1024).decode()
-                if not data:
-                    break
-                print(f"Received: {data}")
-            except Exception as e:
-                print(f"-- Error: {e}")
-                running = False
-                break
-
-        print("-- Connection closed")
-        socket_cl.close()
