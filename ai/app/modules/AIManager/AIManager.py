@@ -23,7 +23,6 @@ class AIManager:
         self.port = args.p
         self.host = args.h
         self.team = args.n
-        self.start_ai()
 
     def start_socket(self, host: str, port: int, team_name: str) -> socket.socket:
         socket_cl = None
@@ -60,7 +59,7 @@ class AIManager:
             running = False
             return
 
-        while running:
+        while running is True:
             self.run()
         print("-- Connection closed")
         self.socket.close()
@@ -68,7 +67,7 @@ class AIManager:
     def run(self):
         try:
             data = self.socket.recv(1024).decode()
-            if not data:
+            if data is None:
                 return True
             print(f"Received: {data}")
         except Exception as e:

@@ -14,5 +14,6 @@ def main(argc: int, argv: list[str]):
 
     try:
         ai_manager.parse_args(argv[1:])
+        ai_manager.start_ai()
     except Exception as e:
         print(e)
