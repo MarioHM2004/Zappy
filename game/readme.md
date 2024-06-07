@@ -15,19 +15,25 @@ Created with `Godot` and its `C++` bindings.
 git clone --recurse-submodules $URL $TARGET
 ```
 
-2. Create a build directory and navigate to it:
+2. Configure the project:
 
 ```bash
-mkdir build && cd build
+cmake -B build -G Ninja
 ```
 
-3. Build the shared library:
+3. Build the project:
 
 ```bash
-cmake .. -GNinja && ninja generate_bindings
+cmake --build build
 ```
 
-4. Open the project in `Godot`
+4. Run the mock server:
+
+```bash
+./build/server 4242&
+```
+
+5. Open the editor:
 
 ```bash
 godot

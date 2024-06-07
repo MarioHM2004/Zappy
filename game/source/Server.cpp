@@ -1,40 +1,36 @@
-#include <asm-generic/socket.h>
+#include <arpa/inet.h>
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
-#include <iostream>
 #include <cstring>
+#include <iostream>
+#include <netinet/in.h>
 #include <random>
 #include <sstream>
 #include <string>
 #include <sys/select.h>
-#include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <system_error>
+#include <sys/types.h>
 #include <unistd.h>
 #include <vector>
 
 #include "../include/Server.hpp"
 
-using namespace server;
-
-void Server::setServerSocket(int serverSocket)
+void zappy::Server::setServerSocket(int serverSocket)
 {
     _serverSocket = serverSocket;
 }
 
-int Server::getServerSocket()
+int zappy::Server::getServerSocket()
 {
     return _serverSocket;
 }
 
-void Server::setMapSize(int x, int y)
+void zappy::Server::setMapSize(int x, int y)
 {
 }
 
-int Server::createServerSocket(int port)
+int zappy::Server::createServerSocket(int port)
 {
     struct sockaddr_in serverAddr;
 
@@ -44,18 +40,20 @@ int Server::createServerSocket(int port)
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(port);
     serverAddr.sin_addr.s_addr = INADDR_ANY;
-    if (bind(_serverSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == -1)
+    if (bind(
+            _serverSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr))
+        == -1)
         std::cerr << "bind\n";
     listen(_serverSocket, 1024);
     return _serverSocket;
-
 }
 
-void Server::newClient()
+void zappy::Server::newClient()
 {
     socklen_t addrSize = sizeof(_clientAddr);
 
-    int newSocket = accept(_serverSocket, (struct sockaddr *)&_clientAddr, &addrSize);
+    int newSocket =
+        accept(_serverSocket, (struct sockaddr *) &_clientAddr, &addrSize);
     if (newSocket < 0)
         std::cerr << "accept error\n";
     std::cout << "A new bot has connected" << std::endl;
@@ -68,7 +66,7 @@ void Server::newClient()
     }
 }
 
-std::string Server::generate(int x, int y)
+std::string zappy::Server::generate(int x, int y)
 {
     std::stringstream msg;
     msg << "mct " << x << " " << y;
@@ -81,7 +79,7 @@ std::string Server::generate(int x, int y)
     return msg.str() + "\n";
 }
 
-void Server::clientInteractions()
+void zappy::Server::clientInteractions()
 {
     if (_inputs.empty()) {
         std::cerr << "input should be not empty";
@@ -90,7 +88,8 @@ void Server::clientInteractions()
         std::stringstream msg;
         msg << "msz " << _x << " " << _y << std::endl;
         std::string message = msg.str();
-        ssize_t bytesSent = send(_clientSocket, message.c_str(), message.size(), 0);
+        ssize_t bytesSent =
+            send(_clientSocket, message.c_str(), message.size(), 0);
         if (bytesSent < 0) {
             std::cerr << "Error sending data to client.\n";
         }
@@ -99,33 +98,46 @@ void Server::clientInteractions()
         for (int i = 0; i <= _x; i++) {
             for (int j = 0; j <= _y; j++) {
                 std::string msg = generate(i, j);
-                ssize_t bytesSent = send(_clientSocket, msg.c_str(), msg.size(), 0);
+                ssize_t bytesSent =
+                    send(_clientSocket, msg.c_str(), msg.size(), 0);
                 if (bytesSent < 0) {
                     std::cerr << "Error sending data to client.\n";
                 }
             }
         }
     }
+    if (_inputs[0] == "echo") {
+        std::string message = _clientResponse + "\n";
+        message.erase(0, message.find(" ") + 1);
+        ssize_t bytesSent =
+            send(_clientSocket, message.c_str(), message.size(), 0);
+        if (bytesSent < 0) {
+            std::cerr << "Error sending data to client.\n";
+        }
+    }
 }
 
-void Server::trim(std::string &s)
+void zappy::Server::trim(std::string &s)
 {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
         return !std::isspace(ch);
     }));
-    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
-        return !std::isspace(ch);
-    }).base(), s.end());
+    s.erase(std::find_if(s.rbegin(), s.rend(),
+                [](unsigned char ch) {
+                    return !std::isspace(ch);
+                })
+                .base(),
+        s.end());
 }
 
-void Server::responseParser()
+void zappy::Server::responseParser()
 {
     _inputs.clear();
     trim(_clientResponse);
     std::istringstream iss(_clientResponse);
     std::string input;
 
-    while (std::getline(iss, input, ' ') ) {
+    while (std::getline(iss, input, ' ')) {
         if (!input.empty())
             _inputs.push_back(input);
     }
@@ -133,7 +145,7 @@ void Server::responseParser()
     _clientResponse.clear();
 }
 
-void Server::clientHandler(int bytes)
+void zappy::Server::clientHandler(int bytes)
 {
     if (bytes <= 0) {
         if (bytes < 0)
@@ -141,12 +153,12 @@ void Server::clientHandler(int bytes)
         close(_clientSocket);
         FD_CLR(_clientSocket, &_currentSockets);
     } else {
-        std::cout << "response is -->" << _clientResponse << std::endl;
+        std::cout << "response is --> " << _clientResponse << std::endl;
         responseParser();
     }
 }
 
-void Server::clientConnection(int clientSocket)
+void zappy::Server::clientConnection(int clientSocket)
 {
     int bytes = 0;
     char buffer[1024];
@@ -163,8 +175,7 @@ void Server::clientConnection(int clientSocket)
     clientHandler(bytes);
 }
 
-
-void Server::clientActivity()
+void zappy::Server::clientActivity()
 {
     int clientSocket = 0;
 
@@ -175,7 +186,7 @@ void Server::clientActivity()
     }
 }
 
-void Server::runServer()
+void zappy::Server::runServer()
 {
     FD_ZERO(&_currentSockets);
     FD_SET(_serverSocket, &_currentSockets);
@@ -192,7 +203,7 @@ void Server::runServer()
 }
 int main(int ac, char **av)
 {
-    Server server;
+    zappy::Server server;
     server.setMapSize(10, 10);
     int serverSocket = server.createServerSocket(std::atoi(av[1]));
     server.setServerSocket(serverSocket);

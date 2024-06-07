@@ -1,40 +1,38 @@
-[gd_scene load_steps=5 format=3 uid="uid://dl2hs0iexs7nv"]
+[gd_scene load_steps=6 format=3 uid="uid://dl2hs0iexs7nv"]
 
-[ext_resource type="PackedScene" uid="uid://djojohaj424we" path="res://scenes/character.tscn" id="1_n235g"]
+[ext_resource type="Script" path="res://scripts/character.gd" id="2_cvbl6"]
+[ext_resource type="PackedScene" uid="uid://b3c14ck3yhdlu" path="res://assets/tile.gltf" id="2_jh01w"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_88wha"]
-radius = 8.0
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cjvip"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_5bqjl"]
-radius = 8.0
-height = 16.0
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_x6sgx"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_rtxx6"]
-radius = 13.0
+[sub_resource type="BoxShape3D" id="BoxShape3D_r46td"]
 
-[node name="Rework" type="Node3D"]
+[node name="Main" type="Node3D"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+script = ExtResource("2_cvbl6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_cjvip")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_x6sgx")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
+[node name="Tile" parent="StaticBody3D" instance=ExtResource("2_jh01w")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+skeleton = NodePath("")
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-shape = SubResource("SphereShape3D_88wha")
+shape = SubResource("BoxShape3D_r46td")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
-mesh = SubResource("SphereMesh_5bqjl")
+[node name="Genesis" type="Genesis" parent="."]
+process_mode = 4
+transform = Transform3D(1, 0, 0, 0, 0.886204, 0.463296, 0, -0.463296, 0.886204, 0, 3, 4)
 
-[node name="Area3D" type="Area3D" parent="StaticBody3D"]
-gravity_space_override = 3
-gravity_point = true
-gravity_point_center = Vector3(0, 0, 0)
-gravity_direction = Vector3(0, 0, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D/Area3D"]
-shape = SubResource("SphereShape3D_rtxx6")
-
-[node name="Camera3D" type="Camera3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 10)
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="StaticBody3D/Camera3D"]
-
-[node name="Dummy" parent="." instance=ExtResource("1_n235g")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9, 2.06635)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Genesis"]
+transform = Transform3D(1, 0, 0, 0, 0.886204, 0.463296, 0, -0.463296, 0.886204, 0, 3, 4)
