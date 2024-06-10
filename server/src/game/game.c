@@ -51,16 +51,16 @@ static bool valid_tick() {
     return false;
 }
 
-void game_tick(server_t *server)
+void game_tick(game_t *game)
 {
     team_node_t *team_node = NULL;
     player_node_t *player_node = NULL;
 
     if (!valid_tick())
         return;
-    LIST_FOREACH(team_node, server->game->teams, entries) {
+    LIST_FOREACH(team_node, game->teams, entries) {
         LIST_FOREACH(player_node, team_node->team->players, entries)
-            player_tick(server->game, player_node->player);
+            player_tick(game, player_node->player);
     }
 }
 

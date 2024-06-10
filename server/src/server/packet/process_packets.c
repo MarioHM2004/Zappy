@@ -6,18 +6,15 @@
 */
 
 #include "game/game.h"
-#include "game/player.h"
-#include "game/team.h"
 #include "server/client.h"
 #include "server/server.h"
 #include <stdlib.h>
 #include <string.h>
 #include <sys/queue.h>
 #include "libs/lib.h"
-#include "server/socket.h"
 #include "server/command.h"
 
-// AI Protocol
+// AI Protocol - response comes from the game
 static const client_command_t ai_commands[] = {
     {"forward", &forward_command},
     {"right", &right_command},

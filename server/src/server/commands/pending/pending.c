@@ -36,7 +36,6 @@ static bool assign_graphic(server_t *server, client_t *client, char *team)
     if (strcmp(team, GRAPHIC_TEAM_NAME) != 0)
         return false;
     client->type = GRAPHIC;
-    // THIS GUI CLIENT
     msz_command(server, client, "msz");
     mct_command(server, client, "mct");
     tna_command(server, client, "tna");
