@@ -35,7 +35,6 @@ typedef struct object_s {
     char name[MAX_OBJECT_LENGTH];
 } object_t;
 
-
 typedef struct broadcast_s {
     player_t player;
     char text[MAX_BROADCAST_LENGTH];
