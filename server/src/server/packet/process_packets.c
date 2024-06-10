@@ -25,7 +25,7 @@ static const client_command_t ai_commands[] = {
     {"look", &look_command},
     {"inventory", &inventory_command},
     {"broadcast", &broadcast_command},
-    {"connect_nbr", NULL},
+    {"connect_nbr", &connect_nbr_command},
     {"fork", &fork_command},
     {"eject", &eject_command},
     {"take", &take_object_command},

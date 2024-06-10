@@ -130,6 +130,7 @@ void look_command(server_t *server, client_t *client, char *cmd);
 void fork_command(server_t *server, client_t *client, char *cmd);
 void eject_command(server_t *server, client_t *client, char *cmd);
 void inventory_command(server_t *server, client_t *client, char *cmd);
+void connect_nbr_command(server_t *server, client_t *client, char *cmd);
 void incantation_command(server_t *server, client_t *client, char *cmd);
 void take_object_command(server_t *server, client_t *client, char *cmd);
 void set_object_command(server_t *server, client_t *client, char *cmd);
