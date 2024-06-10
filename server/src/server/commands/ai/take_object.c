@@ -20,7 +20,7 @@ void take_object_command(server_t *server, client_t *client, char *cmd)
     if (sscanf(cmd, "take %15s", cmd_object) == -1)
         return packet_message(client, ERROR_MESSAGE);
     object = create_object(player, cmd_object);
-    if (!player)
+    if (!player || !object)
         return packet_message(client, ERROR_MESSAGE);
     event = create_event(TAKE_OBJECT, (void *)object, sizeof(object_t));
     if (!event)

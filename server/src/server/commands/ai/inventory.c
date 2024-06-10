@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-BAR-4-1-zappy-joan-pau.merida-ruiz
 ** File description:
-** set_object
+** inventory
 */
 
 #include "game/event.h"
@@ -10,19 +10,14 @@
 #include "game/player.h"
 #include "server/command.h"
 
-void set_object_command(server_t *server, client_t *client, char *cmd)
+void inventory_command(server_t *server, client_t *client, char *cmd)
 {
     player_t *player = get_player_by_fd(server->game->players, client->socket->fd);
-    object_t *object = NULL;
     event_t *event = NULL;
-    char cmd_object[MAX_OBJECT_LENGTH];
 
-    if (sscanf(cmd, "take %15s", cmd_object) == -1)
+    if (!player)
         return packet_message(client, ERROR_MESSAGE);
-    object = create_object(player, cmd_object);
-    if (!player || !object)
-        return packet_message(client, ERROR_MESSAGE);
-    event = create_event(SET_OBJECT, (void *)object, sizeof(object_t));
+    event = create_event(INVENTORY, (void *)player, sizeof(player_t));
     if (!event)
         return packet_message(client, ERROR_MESSAGE);
     add_event(player->events, event);
