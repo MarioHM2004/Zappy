@@ -126,6 +126,9 @@ void pgt_command(server_t *server, client_t *client,
 void forward_command(server_t *server, client_t *client, char *cmd);
 void right_command(server_t *server, client_t *client, char *cmd);
 void left_command(server_t *server, client_t *client, char *cmd);
+void look_command(server_t *server, client_t *client, char *cmd);
+void fork_command(server_t *server, client_t *client, char *cmd);
+void eject_command(server_t *server, client_t *client, char *cmd);
 void take_object_command(server_t *server, client_t *client, char *cmd);
 
 char *get_tile_content(server_t *server, int width, int height);
