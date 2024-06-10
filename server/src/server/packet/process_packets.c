@@ -96,7 +96,8 @@ static void send_guis_player_info(server_t *server, client_t *client)
             continue;
         pnw_command(server, node->client, player);
         pin_command(server, node->client, command);
-        // ebo
+        ebo_command(server, node->client, player);
+        node->client->socket->mode = WRITE;
     }
     free(command);
 }
