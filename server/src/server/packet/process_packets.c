@@ -20,15 +20,15 @@
 // AI Protocol
 static const client_command_t ai_commands[] = {
     {"Forward", &forward_command},
-    {"Right", NULL},
-    {"Left", NULL},
+    {"Right", &right_command},
+    {"Left", &left_command},
     {"Look", NULL},
     {"Inventory", NULL},
     {"Broadcast", NULL},
     {"Connect_nbr", NULL},
     {"Fork", NULL},
     {"Eject", NULL},
-    {"Take", NULL},
+    {"Take", &take_object_command},
     {"Set", NULL},
     {"Incantation", NULL},
     {"", NULL}
