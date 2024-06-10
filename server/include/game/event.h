@@ -32,13 +32,13 @@ typedef enum {
 
 typedef struct object_s {
     player_t player;
-    char message[MAX_OBJECT_LENGTH];
+    char name[MAX_OBJECT_LENGTH];
 } object_t;
 
 
 typedef struct broadcast_s {
     player_t player;
-    char message[MAX_BROADCAST_LENGTH];
+    char text[MAX_BROADCAST_LENGTH];
 } broadcast_t;
 
 typedef union {
