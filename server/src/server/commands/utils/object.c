@@ -36,3 +36,10 @@ object_t *create_object(player_t *player, const char *name)
     return NULL;
 }
 
+void destroy_object(object_t *object)
+{
+    if (!object)
+        return;
+    free(object);
+}
+

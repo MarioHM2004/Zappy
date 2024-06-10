@@ -20,3 +20,10 @@ broadcast_t *create_broadcast(player_t *player, const char *text)
     return NULL;
 }
 
+void delete_broadcast(broadcast_t *broadcast)
+{
+    if (!broadcast)
+        return;
+    free(broadcast);
+}
+
