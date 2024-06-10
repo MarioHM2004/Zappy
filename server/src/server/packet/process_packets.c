@@ -19,18 +19,18 @@
 
 // AI Protocol
 static const client_command_t ai_commands[] = {
-    {"Forward", &forward_command},
-    {"Right", &right_command},
-    {"Left", &left_command},
-    {"Look", &look_command},
-    {"Inventory", NULL},
-    {"Broadcast", NULL},
-    {"Connect_nbr", NULL},
-    {"Fork", &fork_command},
-    {"Eject", &eject_command},
-    {"Take", &take_object_command},
-    {"Set", &set_object_command},
-    {"Incantation", &incantation_command},
+    {"forward", &forward_command},
+    {"right", &right_command},
+    {"left", &left_command},
+    {"look", &look_command},
+    {"inventory", NULL},
+    {"broadcast", NULL},
+    {"connect_nbr", NULL},
+    {"fork", &fork_command},
+    {"eject", &eject_command},
+    {"take", &take_object_command},
+    {"set", &set_object_command},
+    {"incantation", &incantation_command},
     {"", NULL}
 };
 
