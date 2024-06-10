@@ -29,8 +29,8 @@ static const client_command_t ai_commands[] = {
     {"fork", &fork_command},
     {"eject", &eject_command},
     {"take", &take_object_command},
-    {"set", NULL},
-    {"incantation", NULL},
+    {"set", &set_object_command},
+    {"incantation", &incantation_command},
     {"", NULL}
 };
 
