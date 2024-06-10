@@ -10,9 +10,11 @@
 
 void run(server_t *server)
 {
+    struct timeval timeout = { .tv_sec = 0, .tv_usec = 100 };
+
     while (true) {
         set_fds(server);
-        if (select_connection(server) < 0)
+        if (select_connection(server, &timeout) < 0)
             break;
         accept_connection(server);
         handle_packets(server);
