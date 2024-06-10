@@ -91,6 +91,7 @@ void incantation(game_t *game, player_t *player, event_t *event);
 
 // utils
 object_t *create_object(player_t *player, const char *name);
+broadcast_t *create_broadcast(player_t *player, const char *text);
 bool add_event(event_list_t *event_list, event_t *event);
 uint get_event_list_size(event_list_t *head);
 
