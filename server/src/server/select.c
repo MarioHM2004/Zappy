@@ -18,13 +18,13 @@ static int get_biggest_fd(server_t *server)
     return biggest;
 }
 
-int select_connection(server_t *server)
+int select_connection(server_t *server, struct timeval *timeout)
 {
     int biggest_fd = get_biggest_fd(server);
     int activity = 0;
 
     activity = select(biggest_fd + 1, &server->read_fds, &server->write_fds,
-        &server->except_fds, NULL);
+        &server->except_fds, timeout);
     if (activity < 0)
         return -1;
     return activity;

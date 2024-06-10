@@ -124,6 +124,20 @@ void pgt_command(server_t *server, client_t *client,
 
 // AI
 void forward_command(server_t *server, client_t *client, char *cmd);
+void right_command(server_t *server, client_t *client, char *cmd);
+void left_command(server_t *server, client_t *client, char *cmd);
+void look_command(server_t *server, client_t *client, char *cmd);
+void fork_command(server_t *server, client_t *client, char *cmd);
+void eject_command(server_t *server, client_t *client, char *cmd);
+void inventory_command(server_t *server, client_t *client, char *cmd);
+void connect_nbr_command(server_t *server, client_t *client, char *cmd);
+void incantation_command(server_t *server, client_t *client, char *cmd);
+void take_object_command(server_t *server, client_t *client, char *cmd);
+void set_object_command(server_t *server, client_t *client, char *cmd);
+void broadcast_command(server_t *server, client_t *client, char *cmd);
+
+// PENDING
+void assign_client_type(server_t *server, client_t *client, char *cmd);
 
 char *get_tile_content(server_t *server, int width, int height);
 char *get_cmd_from_packets(packet_list_t *packets);

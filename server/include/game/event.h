@@ -32,13 +32,12 @@ typedef enum {
 
 typedef struct object_s {
     player_t player;
-    char message[MAX_OBJECT_LENGTH];
+    char name[MAX_OBJECT_LENGTH];
 } object_t;
-
 
 typedef struct broadcast_s {
     player_t player;
-    char message[MAX_BROADCAST_LENGTH];
+    char text[MAX_BROADCAST_LENGTH];
 } broadcast_t;
 
 typedef union {
@@ -75,9 +74,6 @@ void destroy_event(event_t *e);
 void destroy_event_node(event_node_t *en);
 void destroy_event_list(event_list_t *head);
 
-bool add_event(event_list_t *event_list, event_t *event);
-uint get_event_list_size(event_list_t *head);
-
 // AI
 void handle_ai_event(game_t *game, player_t *player, event_t *event);
 void forward(game_t *game, player_t *player, event_t *event);
@@ -92,5 +88,13 @@ void eject(game_t *game, player_t *player, event_t *event);
 void take_object(game_t *game, player_t *player, event_t *event);
 void set_object(game_t *game, player_t *player, event_t *event);
 void incantation(game_t *game, player_t *player, event_t *event);
+
+// utils
+object_t *create_object(player_t *player, const char *name);
+void destroy_object(object_t *object);
+broadcast_t *create_broadcast(player_t *player, const char *text);
+void delete_broadcast(broadcast_t *broadcast);
+bool add_event(event_list_t *event_list, event_t *event);
+uint get_event_list_size(event_list_t *head);
 
 #endif /* !EVENT_H_ */

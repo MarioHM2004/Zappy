@@ -33,7 +33,7 @@ server_t *create_server(arguments_t *arguments);
 void destroy_server(server_t *s);
 void run(server_t *server);
 void set_fds(server_t *server);
-int select_connection(server_t *server);
+int select_connection(server_t *server, struct timeval *timeout);
 void accept_connection(server_t *server);
 void close_connection(server_t *server);
 void handle_packets(server_t *server);
