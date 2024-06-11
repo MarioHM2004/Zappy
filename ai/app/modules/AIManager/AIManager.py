@@ -1,5 +1,6 @@
 import argparse
 import socket
+from typing import List
 
 import ai.app.modules.Drone.Drone as d
 
@@ -15,6 +16,8 @@ class AIManager:
         self.port: int
         self.host: str
         self.team: str
+        self.client_id: int
+        self.map_size: List[int] = []
         # self.frequency: int = frequency
         self.socket = None
 
@@ -23,6 +26,14 @@ class AIManager:
         self.port = args.p
         self.host = args.h
         self.team = args.n
+
+    def send_data(self, socket, data: str):
+        to_send = f"{data}\n"
+        socket.sendall(to_send.encode())
+
+    def recv_data(self, socket) -> str:
+        data = socket.recv(1024).decode()
+        return data
 
     def start_socket(self, host: str, port: int, team_name: str) -> socket.socket:
         socket_cl = None
@@ -33,18 +44,39 @@ class AIManager:
             print(f"-- Connected to {host}:{port}")  ## DEBUG
 
             # Recieve Welcome from server
-            print(f"{socket_cl.recv(1024).decode()}")
+            data = self.recv_data(socket_cl)
+            print(f"{data}")
 
             # Send team name
-            init_msg = f"{team_name}\n"
-            socket_cl.sendall(init_msg.encode())
+            self.send_data(socket_cl, team_name)
 
             # Recieve CLIENT-NUM + MAP: X Y
-            print(f"{socket_cl.recv(1024).decode()}")
+            data = self.recv_data(socket_cl)
+            print(f"{data}")
+            parts = data.split()
+            print(f"parts: {parts}")
+            if len(parts) != 3:
+                print("-- Failed to connect to server: Invalid response")
+                return None
+            self.client_id = int(parts[0])
+            self.map_size.extend([int(parts[1]), int(parts[2])])
+
+            # Test, will be deleted
+            self.send_data(socket_cl, "msz")
+            data = self.recv_data(socket_cl)
+            print(f"msz: {data}")
+
+            self.send_data(socket_cl, "ppo {self.client_id}")
+            data = self.recv_data(socket_cl)
+            print(f"ppo: {data}")
 
         except Exception as e:
             print(f"-- Failed to connect to server: {host}:{port}, {e}")
         return socket_cl
+
+    def close_socket(self, socket):
+        print("-- Connection closed")
+        socket.close()
 
     def start_ai(self):
         print(f"-- Starting AI for team {self.team} on {self.host}:{self.port}")
@@ -60,18 +92,39 @@ class AIManager:
             return
 
         while running is True:
-            self.run()
-        print("-- Connection closed")
-        self.socket.close()
+            running = self.run()
+        self.close_socket(self.socket)
 
     def run(self):
         try:
-            data = self.socket.recv(1024).decode()
-            if data is None:
+            data = self.recv_data(self.socket)
+            if data is None or len(data) == 0:
                 return True
-            print(f"Received: {data}")
+            print(f"len: {len(data)}")
+            return self.handleData(data)
         except Exception as e:
             print(f"-- Error: {e}")
             return False
         return True
+
+    # pnw = Player new
+    # pdi = Player death
+    def handleData(self, data: str):
+        print(f"Data: {data}")
+        if data.startswith("pnw"):
+            self.handle_pnw(data)
+        elif data.startswith("dead"):
+            self.handle_pdi(data)
+            return False
+        return True
+
+    def handle_pnw(self, data):
+        parts = data.split()
+        player_id = parts[1]
+        x, y = int(parts[2]), int(parts[3])
+        print(f"New player {player_id} at position ({x}, {y})")
+
+    def handle_pdi(self, data):
+        print("Player has died.")
+
 
