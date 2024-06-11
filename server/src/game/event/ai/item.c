@@ -45,11 +45,11 @@ void take_object(game_t *game, player_t *player, event_t *event)
         return;
     item = string_to_resource(event->data.object.name);
     if (move_item(tile.resource, player->inventory, item)) {
-        log_debug("Player with fd %d took %s from the floor",
-        player->fd, item);
+        log_debug("Player %d took %s from the floor",
+        player->number, item);
     } else {
-        log_debug("Player with fd %d couldn't take %s from the floor",
-        player->fd, item);
+        log_debug("Player %d couldn't take %s from the floor",
+        player->number, item);
     }
 }
 
@@ -63,11 +63,11 @@ void set_object(game_t *game, player_t *player, event_t *event)
         return;
     item = string_to_resource(event->data.object.name);
     if (move_item(player->inventory, tile.resource, item)) {
-        log_debug("Player with fd %d set %s on the floor",
-        player->fd, item);
+        log_debug("Player %d set %s on the floor",
+        player->number, item);
     } else {
-        log_debug("Player with fd %d couldn't set %s on the floor",
-        player->fd, item);
+        log_debug("Player %d couldn't set %s on the floor",
+        player->number, item);
     }
 
 }

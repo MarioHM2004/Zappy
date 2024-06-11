@@ -65,17 +65,17 @@ void incantation(game_t *game, player_t *player, event_t *event)
 
     (void)event;
     if (!valid_incantation_tile(tile, incantations[player->level - 1])) {
-        log_debug("%d: Invalid incantation\n", player->fd);
+        log_debug("%d: Invalid incantation\n", player->number);
         return;
     }
     players = get_players_on_tile(game->players, player->pos);
     if (players == NULL)
         return;
     LIST_FOREACH(tmp, players, entries) {
-        if (tmp->player->level ==  player->level)
+        if (tmp->player->level == player->level)
             tmp->player->level++;
     }
-    log_debug("%d: Incantation with %d players, level %d\n", player->fd,
+    log_debug("%d: Incantation with %d players, level %d\n", player->number,
         player->number, get_player_list_size(players), player->level + 1);
     remove_incantation_items(tile.resource, player->level);
 }
@@ -94,14 +94,14 @@ void fork_player(game_t *game, player_t *player, event_t *event)
     tile_t egg_tile = {0};
 
     if (!team) {
-        log_error("%d: Player not in a team\n", player->fd);
+        log_error("%d: Player not in a team\n", player->number);
         return;
     }
     team->players++;
     egg_pos = get_random_pos(game->map);
     change_eggs_tile(game->map, egg_pos, 1);
     log_info("%d: An egg is laid in %d %d\n",
-        player->fd, egg_pos.x, egg_pos.y);
+        player->number, egg_pos.x, egg_pos.y);
 
 }
 
@@ -114,16 +114,16 @@ void eject(game_t *game, player_t *player, event_t *event)
 
     (void)event;
     if (tile.players == 1) {
-        log_debug("%d: No players to eject\n", player->fd);
+        log_debug("%d: No players to eject\n", player->number);
         return;
     }
     players = get_players_on_tile(game->players, player->pos);
     if (players == NULL)
         return;
     LIST_FOREACH(tmp, players, entries) {
-        if (tmp->player->fd == player->fd)
+        if (tmp->player->number == player->number)
             continue;
         move_player(game->map, tmp->player, new_pos);
-        log_debug("%d: Ejecting player %d\n", player->fd, tmp->player->fd);
+        log_debug("%d: Ejecting player %d\n", player->number, tmp->player->number);
     }
 }

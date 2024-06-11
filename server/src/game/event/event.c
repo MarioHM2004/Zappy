@@ -33,8 +33,3 @@ void handle_ai_event(game_t *game, player_t *player, event_t *event)
         }
     }
 }
-
-void handle_gui_event(game_t *game)
-{
-    (void)game;
-}

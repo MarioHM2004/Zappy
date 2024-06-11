@@ -11,14 +11,17 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-player_t *create_player(socket_t *socket, uint number, uint x, uint y)
+player_t *create_player(socket_t *socket, uint x, uint y)
 {
     player_t *player = calloc(1, sizeof(player_t));
+    static int player_count = 0;
 
     if (!player)
         return NULL;
+
     player->fd = socket->fd;
-    player->number = number;
+    player->number = player_count;
+    player_count++;
     player->pos.x = x;
     player->pos.y = y;
     player->dir = NORTH;

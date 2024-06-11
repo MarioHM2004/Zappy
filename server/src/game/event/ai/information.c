@@ -13,9 +13,9 @@
 
 static void log_inventory(player_t *player)
 {
-    log_debug("Player with fd %d requested inventory [food %d, linemate %d, "
+    log_debug("PLayer %d requested inventory [food %d, linemate %d, "
               "deraumere %d, sibur %d, mendiane %d, phiras %d, thystame %d]\n",
-              player->fd,
+              player->number,
               player->inventory->food,
               player->inventory->linemate,
               player->inventory->deraumere,
@@ -40,7 +40,7 @@ void connect_nbr(game_t *game, player_t *player, event_t *event)
         return;
 
     size = get_player_list_size(team->players);
-    log_debug("Player with fd %d requested connect_nbr", player->fd);
+    log_debug("Player %d requested connect_nbr", player->number);
     log_debug("Team %s has %d unused slots", team->name, size);
     printf("%d\n", size);
 }

@@ -6,6 +6,7 @@
 */
 
 #include "game/game.h"
+#include "libs/log.h"
 #include "server/client.h"
 #include "server/server.h"
 #include "game/player.h"
@@ -76,7 +77,8 @@ static bool assign_team(server_t *server, client_t *client, char *team)
         if (strcmp(node->team->name, team) != 0)
             continue;
         client->type = AI;
-        player = create_player(client->socket, 0, 0, 0);
+        player = create_player(client->socket, 0, 0);
+        log_info("Player %d joined team %s", player->number, team);
         add_player(server->game->players, player);
         add_player_to_team(node->team, player);
         send_guis_player_info(server, client);
