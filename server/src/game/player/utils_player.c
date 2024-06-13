@@ -8,6 +8,7 @@
 #include "game/event.h"
 #include "game/game.h"
 #include "game/player.h"
+#include "libs/log.h"
 #include <stdbool.h>
 #include <sys/queue.h>
 
@@ -65,7 +66,7 @@ player_t *get_player_by_fd(player_list_t *players, int fd)
     player_node_t *node = NULL;
 
     LIST_FOREACH(node, players, entries) {
-        if (node->player->number == fd)
+        if (node->player->fd == fd)
             return node->player;
     }
     return NULL;

@@ -26,16 +26,16 @@ void player_tick(game_t *game, player_t *player)
 {
     event_node_t *event_node = LIST_FIRST(player->events);
 
-    log_debug("Player %d, ", player->number);
+    //log_debug("Player %d, ", player->number);
     if (event_node == NULL)
-        return log_debug("has no events");
-    log_debug("has event %d ", event_node->event->type);
+        return; // log_debug("has no events");
+    //log_debug("has event %d ", event_node->event->type);
     if (event_node->wait_time > 0) {
-        log_debug("but needs to wait %d ticks\n", event_node->wait_time);
+        //log_debug("but needs to wait %d ticks", event_node->wait_time);
         event_node->wait_time--;
         return;
     }
-    log_debug("and is executing it\n");
+    //log_debug("and is executing it");
     handle_ai_event(game, player, event_node->event);
     LIST_REMOVE(event_node, entries);
 }

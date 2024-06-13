@@ -8,6 +8,7 @@
 #include "game/game.h"
 #include "game/player.h"
 #include "game/team.h"
+#include <string.h>
 #include <sys/queue.h>
 
 bool add_team(team_list_t *team_list, team_t *team)
@@ -39,6 +40,18 @@ team_t *get_team_by_player(game_t *game, player_t *player)
             return tmp_team->team;
     }
     return NULL;
+}
+
+team_t *get_team_by_name(game_t *game, char *team_name)
+{
+    team_node_t *tmp = NULL;
+
+    LIST_FOREACH(tmp, game->teams, entries) {
+        if (strcmp(tmp->team->name, team_name) == 0)
+            return tmp->team;
+    }
+    return NULL;
+
 }
 
 uint get_team_list_size(team_list_t *head)

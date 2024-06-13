@@ -51,7 +51,8 @@ typedef struct player_list_s {
     struct player_node_s *lh_first;
 } player_list_t;
 
-player_t *create_player(socket_t *socket, uint x, uint y);
+player_t *assign_player(socket_t *socket, server_t *server, char *team_name);
+player_t *create_player(map_t *map);
 player_node_t *create_player_node(player_t *p);
 player_list_t *create_player_list(void);
 void destroy_player(player_t *p);

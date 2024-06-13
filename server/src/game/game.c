@@ -13,7 +13,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-game_t *create_game(arguments_t *arguments)
+
+game_t *create_game(arguments_t *arguments, server_t *server)
 {
     game_t *game = calloc(1, sizeof(game_t));
 
@@ -29,6 +30,8 @@ game_t *create_game(arguments_t *arguments)
     game->players_per_team = arguments->client_nb;
     game->auto_start = arguments->auto_start == 1 ? true : false;
     game->display_eggs = arguments->display_eggs == 0 ? true : false;
+    game->server = server;
+    spawn_eggs(game->map, game);
     return game;
 }
 
@@ -44,7 +47,7 @@ static bool valid_tick() {
     clock_t diff = elapsed_time - last_time;
 
     if (diff >= CLOCKS_PER_SEC) {
-        log_info("tick={%d}", elapsed_time / CLOCKS_PER_SEC);
+        //log_info("tick={%d}", elapsed_time / CLOCKS_PER_SEC);
         last_time = elapsed_time;
         return true;
     }

@@ -40,5 +40,6 @@ void add_player_to_team(team_t *team, player_t *player);
 
 uint get_team_list_size(team_list_t *head);
 team_t *get_team_by_player(game_t *game, player_t *player);
+team_t *get_team_by_name(game_t *game, char *team_name);
 
 #endif /* !TEAM_H_ */
