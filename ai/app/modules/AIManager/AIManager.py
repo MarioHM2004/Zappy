@@ -50,16 +50,24 @@ class AIManager:
             # Send team name
             self.send_data(socket_cl, team_name)
 
-            # Recieve CLIENT-NUM + MAP: X Y
+            # Recieve CLIENT-NUM
             data = self.recv_data(socket_cl)
             print(f"{data}")
-            parts = data.split()
-            print(f"[TEST] parts: {parts}")
-            if len(parts) != 3:
+            client_id = data.split()
+
+            # Recieve MAP-SIZE: msz X Y
+            data = self.recv_data(socket_cl)
+            map = data.split()
+            if len(map) != 3 and map[0] != "msz":
                 print("-- Failed to connect to server: Invalid response")
                 return None
-            self.client_id = int(parts[0])
-            self.map_size.extend([int(parts[1]), int(parts[2])])
+            print(f"{map[1]} {map[2]}")
+
+            self.client_id = int(client_id[0])
+            self.map_size.extend([int(map[1]), int(map[2])])
+
+            print(f"[TEST] Client ID: {self.client_id}")
+            print(f"[TEST] Map Size: {self.map_size[0]}x{self.map_size[1]}")
 
         except Exception as e:
             print(f"-- Failed to connect to server: {host}:{port}, {e}")
