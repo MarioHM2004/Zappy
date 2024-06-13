@@ -54,21 +54,12 @@ class AIManager:
             data = self.recv_data(socket_cl)
             print(f"{data}")
             parts = data.split()
-            print(f"parts: {parts}")
+            print(f"[TEST] parts: {parts}")
             if len(parts) != 3:
                 print("-- Failed to connect to server: Invalid response")
                 return None
             self.client_id = int(parts[0])
             self.map_size.extend([int(parts[1]), int(parts[2])])
-
-            # Test, will be deleted
-            self.send_data(socket_cl, "msz")
-            data = self.recv_data(socket_cl)
-            print(f"msz: {data}")
-
-            self.send_data(socket_cl, "ppo {self.client_id}")
-            data = self.recv_data(socket_cl)
-            print(f"ppo: {data}")
 
         except Exception as e:
             print(f"-- Failed to connect to server: {host}:{port}, {e}")
@@ -95,36 +86,27 @@ class AIManager:
             running = self.run()
         self.close_socket(self.socket)
 
-    def run(self):
+    def run(self) -> bool:
         try:
             data = self.recv_data(self.socket)
             if data is None or len(data) == 0:
                 return True
-            print(f"len: {len(data)}")
+            print(f"[TEST] len: {len(data)}")
             return self.handleData(data)
         except Exception as e:
             print(f"-- Error: {e}")
             return False
         return True
 
-    # pnw = Player new
-    # pdi = Player death
-    def handleData(self, data: str):
-        print(f"Data: {data}")
-        if data.startswith("pnw"):
-            self.handle_pnw(data)
-        elif data.startswith("dead"):
-            self.handle_pdi(data)
-            return False
-        return True
-
-    def handle_pnw(self, data):
-        parts = data.split()
-        player_id = parts[1]
-        x, y = int(parts[2]), int(parts[3])
-        print(f"New player {player_id} at position ({x}, {y})")
+    def handleData(self, data: str) -> bool:
+        print(f"[TEST] Data: {data}")
+        ret = True
+        if data.startswith("dead"):
+            ret = self.handle_pdi(data)
+        return ret
 
     def handle_pdi(self, data):
         print("Player has died.")
+        return False
 
 
