@@ -74,9 +74,8 @@ static bool assign_team(server_t *server, client_t *client, char *team)
     player_t *player = NULL;
 
     LIST_FOREACH(node, server->game->teams, entries) {
+        log_debug("Comparing %s with %s", node->team->name, team);
         if (strcmp(node->team->name, team) != 0)
-            continue;
-        if (!player)
             continue;
         client->type = AI;
         player = assign_player(client->socket, server, team);
