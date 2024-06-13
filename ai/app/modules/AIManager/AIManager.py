@@ -3,6 +3,7 @@ import socket
 from typing import List
 
 import ai.app.modules.Drone.Drone as d
+import ai.app.modules.Cmds.Cmds as c
 
 
 class AIManager:
@@ -96,17 +97,26 @@ class AIManager:
 
     def run(self) -> bool:
         try:
+            # cmd = take_decision TO DO
+            # cmd = "forward" exemple to run
+            cmd = ""
+            if cmd != "":
+                c.exec_cmd(cmd)
+                self.send_data(self.socket, cmd)
+
+            # Recieve data from server
             data = self.recv_data(self.socket)
             if data is None or len(data) == 0:
                 return True
             print(f"[TEST] len: {len(data)}")
-            return self.handleData(data)
+            return self.handle_data(data)
+
         except Exception as e:
             print(f"-- Error: {e}")
             return False
         return True
 
-    def handleData(self, data: str) -> bool:
+    def handle_data(self, data: str) -> bool:
         print(f"[TEST] Data: {data}")
         ret = True
         if data.startswith("dead"):
@@ -116,5 +126,3 @@ class AIManager:
     def handle_pdi(self, data):
         print("Player has died.")
         return False
-
-
