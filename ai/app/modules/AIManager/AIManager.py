@@ -4,7 +4,6 @@ from typing import List
 
 import ai.app.modules.Drone.Drone as d
 
-
 class AIManager:
     # def __init__(self, frequency: int) -> None:
     def __init__(self):
@@ -20,12 +19,14 @@ class AIManager:
         self.map_size: List[int] = []
         # self.frequency: int = frequency
         self.socket = None
+        self.drone: d.Drone = None
 
     def parse_args(self, args):
         args = self.parser.parse_args(args)
         self.port = args.p
         self.host = args.h
         self.team = args.n
+        self.drone = d.Drone(0, 0, self.team)
 
     def send_data(self, socket, data: str):
         to_send = f"{data}\n"
@@ -96,17 +97,26 @@ class AIManager:
 
     def run(self) -> bool:
         try:
+            # cmd = take_decision TO DO
+            # cmd = "forward"
+            cmd = ""
+            if cmd != "":
+                self.drone.exec_cmd(cmd)
+                self.send_data(self.socket, cmd)
+
+            # Recieve data from server
             data = self.recv_data(self.socket)
             if data is None or len(data) == 0:
                 return True
             print(f"[TEST] len: {len(data)}")
-            return self.handleData(data)
+            return self.handle_data(data)
+
         except Exception as e:
             print(f"-- Error: {e}")
             return False
         return True
 
-    def handleData(self, data: str) -> bool:
+    def handle_data(self, data: str) -> bool:
         print(f"[TEST] Data: {data}")
         ret = True
         if data.startswith("dead"):
@@ -116,5 +126,3 @@ class AIManager:
     def handle_pdi(self, data):
         print("Player has died.")
         return False
-
-
