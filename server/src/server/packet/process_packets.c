@@ -6,6 +6,7 @@
 */
 
 #include "game/game.h"
+#include "libs/log.h"
 #include "server/client.h"
 #include "server/server.h"
 #include <stdlib.h>
@@ -65,6 +66,7 @@ void process_client_packets(server_t *server, client_t *client)
 
     while (!LIST_EMPTY(client->request)) {
         cmd = get_cmd_from_packets(client->request);
+        log_info("Received cmd \"%s\" ", cmd);
         client_command_ptr(server, client, cmd);
     }
 }
