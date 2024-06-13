@@ -9,6 +9,7 @@
 
 #include "game/game.h"
 #include "game/map.h"
+#include "game/player.h"
 #include "game/resources.h"
 #include "game/event.h"
 #include "libs/lib.h"
@@ -74,6 +75,7 @@ static char *get_look_content(tile_t *look_tiles, uint total_tiles)
             look_content = formatstr("%s,%s", look_content,
                 tile_content ? tile_content : "");
     }
+    log_debug("Look content: %s", look_content);
     return look_content;
 }
 
@@ -87,15 +89,21 @@ static uint look_total_tiles(uint level)
     return total_tiles;
 }
 
+static void send_look_packet(game_t *game, player_t *player, char *look_content)
+{
+    client_t *client = get_client_by_fd(game->server->clients, player->fd);
+
+    if (client)
+        add_response(client, look_content);
+}
 
 void look(game_t *game, player_t *player, event_t *event)
 {
     position_t row_pos = player->pos;
     position_t tile_pos = {0};
-    client_t *client = NULL;
+    uint total_tiles = look_total_tiles(player->level);
     direction_e right_direction = right_dir(player->dir);
-    tile_t *look_tiles = calloc(1, sizeof(tile_t) *
-        (look_total_tiles(player->level)));
+    tile_t *look_tiles = calloc(1, sizeof(tile_t) * total_tiles);
     uint count = 1;
 
     log_debug("Player %d looked", player->number);
@@ -110,8 +118,5 @@ void look(game_t *game, player_t *player, event_t *event)
         }
         row_pos = dir_at(game->map, row_pos, player->dir);
     }
-    client = get_client_by_fd(game->server->clients, player->fd);
-    if (client)
-       packet_message(client,
-        get_look_content(look_tiles, look_total_tiles(player->level)));
+    send_look_packet(game, player, get_look_content(look_tiles, total_tiles));
 }
