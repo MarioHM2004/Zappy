@@ -65,7 +65,7 @@ player_t *get_player_by_fd(player_list_t *players, int fd)
     player_node_t *node = NULL;
 
     LIST_FOREACH(node, players, entries) {
-        if (node->player->number == fd)
+        if (node->player->fd == fd)
             return node->player;
     }
     return NULL;
