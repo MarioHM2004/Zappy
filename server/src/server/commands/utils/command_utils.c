@@ -53,8 +53,6 @@ void add_response(client_t *client, char *response)
     if (!client)
         return;
     packet = create_packet(response ? response : ERROR_MESSAGE);
-    if (response)
-        free(response);
     if (!packet)
         return;
     add_packet(client->response, packet);

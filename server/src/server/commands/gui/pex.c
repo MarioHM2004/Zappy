@@ -11,8 +11,11 @@
 
 void pex_command(server_t *server, client_t *client, player_t *player)
 {
-    if (!player)
-        return packet_message(client, ERROR_MESSAGE);
-    add_response(client, formatstr(PEX_RESPONSE, (int)player->number));
+    char *response = formatstr(PEX_RESPONSE, (int)player->number);
 
+    if (!player || !response)
+        return packet_message(client, ERROR_MESSAGE);
+    add_response(client, response);
+    free(response);
 }
+

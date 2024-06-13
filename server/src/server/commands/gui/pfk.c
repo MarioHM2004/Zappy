@@ -11,7 +11,10 @@
 
 void pfk_command(server_t *server, client_t *client, player_t *player)
 {
-    if (!player)
+    char *response = formatstr(PFK_RESPONSE, (int)player->number);
+
+    if (!player || !response)
         return packet_message(client, ERROR_MESSAGE);
-    add_response(client, formatstr(PFK_RESPONSE, (int)player->number));
+    add_response(client, response);
+    free(response);
 }

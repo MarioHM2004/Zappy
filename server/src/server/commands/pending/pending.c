@@ -6,7 +6,6 @@
 */
 
 #include "game/game.h"
-#include "libs/log.h"
 #include "server/client.h"
 #include "server/server.h"
 #include "game/player.h"
@@ -67,6 +66,17 @@ static void send_guis_player_info(server_t *server, player_t *player)
     free(command);
 }
 
+static player_t *assign_player(server_t *server, client_t *client, team_t *team)
+{
+    // do we create a new player or assing to an egg?
+    player_t *player = create_player(client->socket, 0, 0);
+
+    if (!player)
+        return NULL;
+    add_player(server->game->players, player);
+    add_player_to_team(team, player);
+    return player;
+}
 
 static bool assign_team(server_t *server, client_t *client, char *team)
 {
@@ -76,13 +86,11 @@ static bool assign_team(server_t *server, client_t *client, char *team)
     LIST_FOREACH(node, server->game->teams, entries) {
         if (strcmp(node->team->name, team) != 0)
             continue;
+        player = assign_player(server, client, node->team);
+        if (!player)
+            continue;
         client->type = AI;
-        // do all player assignation in one function
-        player = create_player(client->socket, 0, 0);
-        log_info("Player %d joined team %s", player->number, team);
-        add_player(server->game->players, player);
-        add_player_to_team(node->team, player);
-        add_response(client, formatstr("%d", player->number));
+        pnw_command(server, client, player);
         msz_command(server, client, "msz");
         send_guis_player_info(server, player);
         return true;

@@ -28,10 +28,14 @@ void bct_command(server_t *server, client_t *client, char *cmd)
 {
     int width = 0;
     int height = 0;
+    char *response = NULL;
 
     if (sscanf(cmd, BCT_REQUEST, &width, &height) == -1)
         return packet_message(client, INVALID_PARAMETERS);
     if (width >= server->game->map->width || height >= server->game->map->height)
         return packet_message(client, INVALID_PARAMETERS);
-    add_response(client, get_tile_content(server, width, height));
+    response = get_tile_content(server, width, height);
+    add_response(client, response);
+    if (response)
+        free(response);
 }

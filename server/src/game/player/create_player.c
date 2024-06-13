@@ -14,11 +14,10 @@
 player_t *create_player(socket_t *socket, uint x, uint y)
 {
     player_t *player = calloc(1, sizeof(player_t));
-    static int player_count = 0;
+    static int player_count = 1;
 
     if (!player)
         return NULL;
-
     player->fd = socket->fd;
     player->number = player_count;
     player_count++;

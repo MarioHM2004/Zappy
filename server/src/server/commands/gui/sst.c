@@ -10,10 +10,14 @@
 
 void sst_command(server_t *server, client_t *client, char *cmd)
 {
+    char *response = NULL;
     int freq = 0;
 
     if (sscanf(cmd, SST_REQUEST, &freq) == -1)
         return packet_message(client, INVALID_PARAMETERS);
     server->game->freq = freq;
-    add_response(client, formatstr(SST_REPONSE, freq));
+    response = formatstr(SST_REPONSE, freq);
+    add_response(client, response);
+    if (response)
+        free(response);
 }

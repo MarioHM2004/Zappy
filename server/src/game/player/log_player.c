@@ -8,10 +8,12 @@
 #include "game/game.h"
 #include "game/map.h"
 #include "game/player.h"
+#include "game/team.h"
 #include "libs/log.h"
 
 void log_player(player_t *player)
 {
+    team_t *team = NULL;
     char *dir = NULL;
     char *state = NULL;
 
