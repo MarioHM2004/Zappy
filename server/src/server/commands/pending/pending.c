@@ -48,14 +48,14 @@ static bool assign_graphic(server_t *server, client_t *client, char *team)
     return true;
 }
 
-static void send_guis_player_info(server_t *server, client_t *client)
+static void send_guis_player_info(server_t *server, player_t *player)
 {
     client_node_t *node = NULL;
-    player_t *player = get_player_by_fd(server->game->players, client->socket->fd);
-    char *command = formatstr("pin %d", player->number);
+    char *command = NULL;
 
     if (!player)
         return;
+    command = formatstr("pin %d", player->number);
     LIST_FOREACH(node, server->clients, entries) {
         if (node->client->type != GRAPHIC)
             continue;
@@ -77,11 +77,14 @@ static bool assign_team(server_t *server, client_t *client, char *team)
         if (strcmp(node->team->name, team) != 0)
             continue;
         client->type = AI;
+        // do all player assignation in one function
         player = create_player(client->socket, 0, 0);
         log_info("Player %d joined team %s", player->number, team);
         add_player(server->game->players, player);
         add_player_to_team(node->team, player);
-        send_guis_player_info(server, client);
+        add_response(client, formatstr("%d", player->number));
+        msz_command(server, client, "msz");
+        send_guis_player_info(server, player);
         return true;
     }
     return false;

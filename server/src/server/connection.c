@@ -63,7 +63,8 @@ void close_connection(server_t *server)
     if (!server)
         return;
     LIST_FOREACH(tmp, server->clients, entries) {
-        if (!FD_ISSET(tmp->client->socket->fd, &server->except_fds))
+        if (!FD_ISSET(tmp->client->socket->fd, &server->except_fds)
+            && tmp->client->socket->mode != EXCEPT)
             continue;
         LIST_REMOVE(tmp, entries);
         destroy_client(tmp->client);

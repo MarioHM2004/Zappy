@@ -6,6 +6,8 @@
 */
 
 #include "server/server.h"
+#include "server/socket.h"
+#include <sys/select.h>
 
 void handle_packets(server_t *server)
 {
