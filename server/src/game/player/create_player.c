@@ -49,7 +49,7 @@ player_t *assign_player(socket_t *socket, server_t *server, char *team_name)
 player_t *create_player(map_t *map)
 {
     player_t *player = calloc(1, sizeof(player_t));
-    static int player_count = 0;
+    static int player_count = 1;
 
     if (!player)
         return NULL;

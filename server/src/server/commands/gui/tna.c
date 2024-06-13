@@ -22,4 +22,6 @@ void tna_command(server_t *server, client_t *client, char *cmd)
             response = safe_strcat(response, CRLF);
     }
     add_response(client, response);
+    if (response)
+        free(response);
 }

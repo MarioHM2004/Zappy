@@ -27,9 +27,13 @@ static char *get_pp(server_t *server, int player)
 
 void ppo_command(server_t *server, client_t *client, char *cmd)
 {
+    char *response = NULL;
     int player = 0;
 
     if (sscanf(cmd, PPO_REQUEST, &player) == -1)
         return packet_message(client, INVALID_PARAMETERS);
-    add_response(client, get_pp(server, player));
+    response = get_pp(server, player);
+    add_response(client, response);
+    if (response)
+        free(response);
 }

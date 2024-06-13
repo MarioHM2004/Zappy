@@ -27,14 +27,15 @@ void write_packets(socket_t *socket, packet_list_t **packets)
     socket->mode = READ;
 }
 
-void read_packets(socket_t *socket, packet_list_t *packets)
+bool read_packets(socket_t *socket, packet_list_t *packets)
 {
     packet_t *packet = read_socket(socket);
 
     if (!packet)
-        return;
+        return false;
     add_packet(packets, packet);
     socket->mode = WRITE;
+    return true;
 }
 
 void add_packet(packet_list_t *packets, packet_t *packet)

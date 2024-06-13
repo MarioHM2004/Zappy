@@ -6,6 +6,7 @@
 */
 
 #include "server/packet.h"
+#include "server/server.h"
 #include "server/socket.h"
 #include <stdlib.h>
 #include <string.h>
@@ -31,11 +32,15 @@ packet_t *read_socket(socket_t *socket)
     if (!socket || !data)
         return NULL;
     n = read(socket->fd, data, MAX_PACKET_SIZE);
-    if (n <= 0) {
+    if (n <= strlen(CRLF)) {
         socket->mode = EXCEPT;
         return NULL;
     }
-    data[n] = '\0';
+    data[n - strlen(CRLF)] = '\0';
+    if (strlen(data) == 0) {
+        free(data);
+        return NULL;
+    }
     packet = create_packet(data);
     free(data);
     return packet;

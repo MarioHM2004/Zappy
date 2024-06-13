@@ -42,7 +42,7 @@ char *get_cmd_from_packets(packet_list_t *packets)
         destroy_packet_node(current);
         current = tmp;
     }
-    cmd[strlen(cmd) - strlen(CRLF) - 1] = '\0';
+    cmd[strlen(cmd) - 1] = '\0';
     return cmd;
 }
 
@@ -53,8 +53,6 @@ void add_response(client_t *client, char *response)
     if (!client)
         return;
     packet = create_packet(response ? response : ERROR_MESSAGE);
-    if (response)
-        free(response);
     if (!packet)
         return;
     add_packet(client->response, packet);

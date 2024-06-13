@@ -49,10 +49,9 @@ static bool assign_graphic(server_t *server, client_t *client, char *team)
     return true;
 }
 
-static void send_guis_player_info(server_t *server, client_t *client)
+static void send_guis_player_info(server_t *server, player_t *player)
 {
     client_node_t *node = NULL;
-    player_t *player = get_player_by_fd(server->game->players, client->socket->fd);
     char *command = NULL;
 
     if (!player)
@@ -69,7 +68,6 @@ static void send_guis_player_info(server_t *server, client_t *client)
     free(command);
 }
 
-
 static bool assign_team(server_t *server, client_t *client, char *team)
 {
     team_node_t *node = NULL;
@@ -77,6 +75,8 @@ static bool assign_team(server_t *server, client_t *client, char *team)
 
     LIST_FOREACH(node, server->game->teams, entries) {
         if (strcmp(node->team->name, team) != 0)
+            continue;
+        if (!player)
             continue;
         client->type = AI;
         player = assign_player(client->socket, server, team);
@@ -86,7 +86,9 @@ static bool assign_team(server_t *server, client_t *client, char *team)
         }
         log_info("Player %d joined team %s", player->number, team);
         log_debug("Pos x: %d, y: %d", player->pos.x, player->pos.y);
-        send_guis_player_info(server, client);
+        pnw_command(server, client, player);
+        msz_command(server, client, "msz");
+        send_guis_player_info(server, player);
         return true;
     }
     return false;

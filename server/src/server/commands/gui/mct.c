@@ -10,7 +10,6 @@
 #include "game/map.h"
 #include "game/resources.h"
 #include "server/packet.h"
-#include <string.h>
 
 void mct_command(server_t *server, client_t *client, char *cmd)
 {
@@ -28,4 +27,6 @@ void mct_command(server_t *server, client_t *client, char *cmd)
         }
     }
     add_response(client, response);
+    if (response)
+        free(response);
 }

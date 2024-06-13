@@ -11,7 +11,10 @@
 
 void seg_command(server_t *server, client_t *client, team_t *team)
 {
-    if (!server->game->ended || !team)
+    char *response = formatstr(SEG_RESPONSE, team->name);
+
+    if (!server->game->ended || !team || !response)
         return packet_message(client, ERROR_MESSAGE);;
-    add_response(client, formatstr(SEG_RESPONSE, team->name));
+    add_response(client, response);
+    free(response);
 }

@@ -1,5 +1,12 @@
+**__pycache__**
+env/
+.env/
+._zappy_gui
+.vscode/
+._zappy_server
+.ruff_cache
+.cache
 zappy_server
-
 server/build/
 .vscode/
 .cache/
