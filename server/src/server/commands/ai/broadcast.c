@@ -25,5 +25,5 @@ void broadcast_command(server_t *server, client_t *client, char *cmd)
     event = create_event(BROADCAST, (void *)broadcast, sizeof(broadcast_t));
     if (!event)
         return packet_message(client, ERROR_MESSAGE);
-    add_event(player->events, event);
+    add_event(player->events, event, 7.0);
 }

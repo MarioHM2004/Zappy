@@ -31,28 +31,16 @@ void inventory(game_t *game, player_t *player, event_t *event)
     add_response_to_player(game->server->clients, player, inventory);
 }
 
-static uint get_team_unused_spots(player_list_t *head)
-{
-    uint size = 0;
-    player_node_t *tmp = NULL;
+// void connect_nbr(game_t *game, player_t *player, event_t *event)
+// {
+//     team_t *team = get_team_by_player(game, player);
+//     uint size = 0;
 
-    LIST_FOREACH(tmp, head, entries) {
-        if (tmp->player->state == EGG)
-            size++;
-    }
-    return size;
-}
-
-void connect_nbr(game_t *game, player_t *player, event_t *event)
-{
-    team_t *team = get_team_by_player(game, player);
-    uint size = 0;
-
-    if (!team)
-        return;
-    size = get_team_unused_spots(team->players);
-    log_debug("Player %d requested connect_nbr", player->number);
-    log_debug("Team %s has %d unused slots", team->name, size);
-    add_response_to_player(game->server->clients, player,
-        formatstr("%d", size));
-}
+//     if (!team)
+//         return;
+//     size = get_team_unused_spots(team->players);
+//     log_debug("Player %d requested connect_nbr", player->number);
+//     log_debug("Team %s has %d unused slots", team->name, size);
+//     add_response_to_player(game->server->clients, player,
+//         formatstr("%d", size));
+// }

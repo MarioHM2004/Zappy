@@ -8,9 +8,9 @@
 #include "game/event.h"
 #include <stdlib.h>
 
-bool add_event(event_list_t *event_list, event_t *event)
+bool add_event(event_list_t *event_list, event_t *event, float wait_time)
 {
-    event_node_t *event_node = create_event_node(event, 0.0);
+    event_node_t *event_node = create_event_node(event, wait_time);
     event_node_t *tmp = LIST_FIRST(event_list);
 
     if (!event_node)

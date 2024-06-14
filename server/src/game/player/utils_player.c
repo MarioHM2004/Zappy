@@ -31,15 +31,6 @@ bool add_player(player_list_t *player_list, player_t *player)
     return true;
 }
 
-bool add_event_to_player(event_t *event, player_t *player)
-{
-    bool status = false;
-
-    if (get_event_list_size(player->events) >= 10)
-        return status;
-    return add_event(player->events, event);
-}
-
 uint get_player_list_size(player_list_t *head)
 {
     uint size = 0;

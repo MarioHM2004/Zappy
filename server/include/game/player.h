@@ -61,7 +61,6 @@ void destroy_player_node(player_node_t *pn);
 void destroy_player_list(player_list_t *head);
 
 bool add_player(player_list_t *player_list, player_t *player);
-bool add_event_to_player(event_t *event, player_t *player);
 
 uint get_player_list_size(player_list_t *head);
 bool is_player_in_list(player_list_t *head, player_t *player);

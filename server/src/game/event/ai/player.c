@@ -13,6 +13,7 @@
 #include "game/resources.h"
 #include "game/team.h"
 #include "libs/log.h"
+#include "server/command.h"
 #include <sys/queue.h>
 #include <time.h>
 
@@ -94,6 +95,7 @@ void fork_player(game_t *game, player_t *player, event_t *event)
     tile_t egg_tile = {0};
 
     if (!team) {
+        add_response_to_player(game->server->clients, player, ERROR_MESSAGE);
         log_error("%d: Player not in a team\n", player->number);
         return;
     }
@@ -102,7 +104,7 @@ void fork_player(game_t *game, player_t *player, event_t *event)
     change_eggs_tile(game->map, egg_pos, 1);
     log_info("%d: An egg is laid in %d %d\n",
         player->number, egg_pos.x, egg_pos.y);
-
+    add_response_to_player(game->server->clients, player, FORK_RESPONSE);
 }
 
 void eject(game_t *game, player_t *player, event_t *event)

@@ -16,7 +16,7 @@ event_func_ptr_t event_func_ptr[] = {
     {LOOK, &look},
     {INVENTORY, &inventory},
     {BROADCAST, &broadcast},
-    {CONNECT_NBR, &connect_nbr},
+    // {CONNECT_NBR, &connect_nbr},
     {FORK, &fork_player},
     {EJECT, &eject},
     {TAKE_OBJECT, &take_object},
