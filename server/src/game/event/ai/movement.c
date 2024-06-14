@@ -9,6 +9,7 @@
 
 #include "game/game.h"
 #include "game/map.h"
+#include "game/player.h"
 #include "libs/log.h"
 #include "server/command.h"
 
@@ -20,10 +21,7 @@ void forward(game_t *game, player_t *player, event_t *event)
     move_player(game->map, player, new_pos);
     log_debug("Player %d moved to %d %d", player->number, player->pos.x,
         player->pos.y);
-    client = get_client_by_fd(game->server->clients, player->fd);
-    add_response(client, FORWARD_RESPONSE);
-    // if (client)
-    //     packet_message(client, FORWARD_RESPONSE);
+    add_response_to_player(game->server->clients, player, FORWARD_RESPONSE);
 }
 
 direction_e right_dir(direction_e dir)
@@ -37,16 +35,12 @@ direction_e right_dir(direction_e dir)
 
 void turn_right(game_t *game, player_t *player, event_t *event)
 {
-    client_t *client = NULL;
-
     (void)game;
     (void)event;
     if (player->dir < 1 || player->dir > 4)
         return;
     player->dir = right_dir(player->dir);
-    client = get_client_by_fd(game->server->clients, player->fd);
-    if (client)
-        packet_message(client, RIGHT_RESPONSE);
+    add_response_to_player(game->server->clients, player, RIGHT_RESPONSE);
 }
 
 direction_e left_dir(direction_e dir)
@@ -60,14 +54,10 @@ direction_e left_dir(direction_e dir)
 
 void turn_left(game_t *game, player_t *player, event_t *event)
 {
-    client_t *client = NULL;
-
     (void)game;
     (void)event;
     if (player->dir < 1 || player->dir > 4)
         return;
     player->dir = left_dir(player->dir);
-    client = get_client_by_fd(game->server->clients, player->fd);
-    if (client)
-        packet_message(client, FORWARD_RESPONSE);
+    add_response_to_player(game->server->clients, player, LEFT_RESPONSE);
 }

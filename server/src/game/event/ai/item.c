@@ -14,6 +14,7 @@
 #include "libs/log.h"
 #include "server/client.h"
 #include <string.h>
+#include "server/command.h"
 #include "server/server.h"
 
 message_to_resource_t msg_to_resource[TOTAL_RESOURCES] = {
@@ -46,11 +47,13 @@ void take_object(game_t *game, player_t *player, event_t *event)
         return;
     item = string_to_resource(event->data.object.name);
     if (move_item(tile.resource, player->inventory, item)) {
-        log_debug("Player %d took %s from the floor",
-        player->number, item);
+        log_debug("Player %d took %s from the floor", player->number, item);
+        add_response_to_player(game->server->clients, player,
+            TAKE_OBJECT_RESPONSE);
     } else {
         log_debug("Player %d couldn't take %s from the floor",
         player->number, item);
+        add_response_to_player(game->server->clients, player, ERROR_MESSAGE);
     }
 }
 
@@ -64,11 +67,13 @@ void set_object(game_t *game, player_t *player, event_t *event)
         return;
     item = string_to_resource(event->data.object.name);
     if (move_item(player->inventory, tile.resource, item)) {
-        log_debug("Player %d set %s on the floor",
-        player->number, item);
+        log_debug("Player %d set %s on the floor", player->number, item);
+        add_response_to_player(game->server->clients, player,
+            SET_OBJECT_RESPONSE);
     } else {
         log_debug("Player %d couldn't set %s on the floor",
         player->number, item);
+        add_response_to_player(game->server->clients, player, ERROR_MESSAGE);
     }
 
 }

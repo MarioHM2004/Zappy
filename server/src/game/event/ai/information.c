@@ -17,22 +17,30 @@
 
 void inventory(game_t *game, player_t *player, event_t *event)
 {
-    char *inventory = NULL;
-    client_t * client = get_client_by_fd(game->server->clients, player->fd);
+    char *inventory = formatstr("[food %d, linemate %d, deraumere %d, sibur %d, "
+        "mendiane %d, phiras %d, thystame %d]",
+        player->inventory->food,
+        player->inventory->linemate,
+        player->inventory->deraumere,
+        player->inventory->sibur,
+        player->inventory->mendiane,
+        player->inventory->phiras,
+        player->inventory->thystame);
 
-    inventory = formatstr("[food %d, linemate %d, deraumere %d, sibur %d, "
-                          "mendiane %d, phiras %d, thystame %d]",
-                          player->inventory->food,
-                          player->inventory->linemate,
-                          player->inventory->deraumere,
-                          player->inventory->sibur,
-                          player->inventory->mendiane,
-                          player->inventory->phiras,
-                          player->inventory->thystame);
     log_debug("Player %d inventory: %s", player->number, inventory);
+    add_response_to_player(game->server->clients, player, inventory);
+}
 
-    if(client)
-        packet_message(client, inventory);
+static uint get_team_unused_spots(player_list_t *head)
+{
+    uint size = 0;
+    player_node_t *tmp = NULL;
+
+    LIST_FOREACH(tmp, head, entries) {
+        if (tmp->player->state == EGG)
+            size++;
+    }
+    return size;
 }
 
 void connect_nbr(game_t *game, player_t *player, event_t *event)
@@ -42,9 +50,9 @@ void connect_nbr(game_t *game, player_t *player, event_t *event)
 
     if (!team)
         return;
-
-    size = get_player_list_size(team->players);
+    size = get_team_unused_spots(team->players);
     log_debug("Player %d requested connect_nbr", player->number);
     log_debug("Team %s has %d unused slots", team->name, size);
-    printf("%d\n", size);
+    add_response_to_player(game->server->clients, player,
+        formatstr("%d", size));
 }

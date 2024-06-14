@@ -14,7 +14,7 @@
 #include "game/event.h"
 #include "libs/lib.h"
 #include "libs/log.h"
-#include "server/command.h"
+#include "server/server.h"
 #include <time.h>
 
 static position_t first_position_in_row(game_t *game, direction_e player_dir,
@@ -89,14 +89,6 @@ static uint look_total_tiles(uint level)
     return total_tiles;
 }
 
-static void send_look_packet(game_t *game, player_t *player, char *look_content)
-{
-    client_t *client = get_client_by_fd(game->server->clients, player->fd);
-
-    if (client)
-        add_response(client, look_content);
-}
-
 void look(game_t *game, player_t *player, event_t *event)
 {
     position_t row_pos = player->pos;
@@ -118,5 +110,6 @@ void look(game_t *game, player_t *player, event_t *event)
         }
         row_pos = dir_at(game->map, row_pos, player->dir);
     }
-    send_look_packet(game, player, get_look_content(look_tiles, total_tiles));
+    add_response_to_player(game->server->clients, player,
+        get_look_content(look_tiles, total_tiles));
 }
