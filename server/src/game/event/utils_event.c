@@ -8,7 +8,6 @@
 #include "game/event.h"
 #include <stdlib.h>
 
-
 bool add_event(event_list_t *event_list, event_t *event)
 {
     event_node_t *event_node = create_event_node(event, 0.0);

@@ -12,8 +12,9 @@
 #include "game/player.h"
 #include "game/resources.h"
 #include "libs/log.h"
+#include "server/client.h"
 #include <string.h>
-
+#include "server/server.h"
 
 message_to_resource_t msg_to_resource[TOTAL_RESOURCES] = {
     { "food", FOOD },

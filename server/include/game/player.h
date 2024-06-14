@@ -12,6 +12,7 @@
     #include "game.h"
     #include "game/map.h"
     #include "game/resources.h"
+#include "server/client.h"
     #include "server/socket.h"
     #include <sys/types.h>
 
@@ -69,5 +70,6 @@ player_t *get_player_by_fd(player_list_t *players, int fd);
 void player_tick(game_t *game, player_t *player);
 bool move_player(map_t *map,player_t *player, position_t new_pos);
 void log_player(player_t *player);
-
+bool add_response_to_player(client_list_t *client_list, player_t *player
+    , char *response);
 #endif /* !PLAYER_H_ */

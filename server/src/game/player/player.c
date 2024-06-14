@@ -8,7 +8,23 @@
 #include "game/player.h"
 #include "game/event.h"
 #include "libs/log.h"
+#include "server/client.h"
+#include "server/command.h"
 #include <sys/queue.h>
+
+bool add_response_to_player(client_list_t *client_list, player_t *player
+    , char *response)
+{
+    client_t *client = NULL;
+
+    if (!player || !client_list)
+        return false;
+    client = get_client_by_fd(client_list, player->fd);
+    if (!client)
+        return false;
+    add_response(client, response);
+    return true;
+}
 
 bool move_player(map_t *map,player_t *player, position_t new_pos)
 {
