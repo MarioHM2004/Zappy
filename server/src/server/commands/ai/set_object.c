@@ -17,7 +17,7 @@ void set_object_command(server_t *server, client_t *client, char *cmd)
     event_t *event = NULL;
     char cmd_object[MAX_OBJECT_LENGTH];
 
-    if (sscanf(cmd, "take %15s", cmd_object) == -1)
+    if (sscanf(cmd, "set %15s", cmd_object) == -1)
         return packet_message(client, ERROR_MESSAGE);
     object = create_object(player, cmd_object);
     if (!player || !object)

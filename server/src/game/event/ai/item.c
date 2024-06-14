@@ -34,7 +34,7 @@ static resource_e string_to_resource(char message[MAX_OBJECT_LENGTH])
             return msg_to_resource[i].resource;
         }
     }
-    return 0;
+    return -1;
 }
 
 void take_object(game_t *game, player_t *player, event_t *event)
@@ -46,13 +46,13 @@ void take_object(game_t *game, player_t *player, event_t *event)
     if (event->type != TAKE_OBJECT)
         return;
     item = string_to_resource(event->data.object.name);
-    if (move_item(tile.resource, player->inventory, item)) {
-        log_debug("Player %d took %s from the floor", player->number, item);
+    if (item != -1 && move_item(tile.resource, player->inventory, item)) {
+        log_debug("Player %d took %d from the floor", player->number, item);
         add_response_to_player(game->server->clients, player,
             TAKE_OBJECT_RESPONSE);
     } else {
-        log_debug("Player %d couldn't take %s from the floor",
-        player->number, item);
+        log_debug("Player %d couldn't take any item from the floor",
+            player->number);
         add_response_to_player(game->server->clients, player, ERROR_MESSAGE);
     }
 }
@@ -62,12 +62,11 @@ void set_object(game_t *game, player_t *player, event_t *event)
     tile_t tile = map_at(game->map, player->pos);
     resource_e item;
     uint *resource;
-
     if (event->type != SET_OBJECT)
         return;
     item = string_to_resource(event->data.object.name);
-    if (move_item(player->inventory, tile.resource, item)) {
-        log_debug("Player %d set %s on the floor", player->number, item);
+    if (item != -1 && move_item(player->inventory, tile.resource, item)) {
+        log_debug("Player %d set %d on the floor", player->number, item);
         add_response_to_player(game->server->clients, player,
             SET_OBJECT_RESPONSE);
     } else {

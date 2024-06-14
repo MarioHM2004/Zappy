@@ -8,6 +8,7 @@
 #include "game/event.h"
 #include "game/game.h"
 #include "game/player.h"
+#include "libs/log.h"
 #include "server/command.h"
 
 void take_object_command(server_t *server, client_t *client, char *cmd)

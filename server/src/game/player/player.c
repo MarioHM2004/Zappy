@@ -30,7 +30,7 @@ bool move_player(map_t *map,player_t *player, position_t new_pos)
 {
     if (!change_players_tile(map, player->pos, -1))
         return false;
-    if (!change_players_tile(map, player->pos, 1)) {
+    if (!change_players_tile(map, new_pos, 1)) {
         change_players_tile(map, player->pos, 1);
         return false;
     }
