@@ -21,8 +21,9 @@ void forward(game_t *game, player_t *player, event_t *event)
     log_debug("Player %d moved to %d %d", player->number, player->pos.x,
         player->pos.y);
     client = get_client_by_fd(game->server->clients, player->fd);
-    if (client)
-        packet_message(client, FORWARD_RESPONSE);
+    add_response(client, FORWARD_RESPONSE);
+    // if (client)
+    //     packet_message(client, FORWARD_RESPONSE);
 }
 
 direction_e right_dir(direction_e dir)

@@ -26,7 +26,7 @@ void player_tick(game_t *game, player_t *player)
 {
     event_node_t *event_node = LIST_FIRST(player->events);
 
-    //log_player(player);
+    // log_player(player);
     if (event_node == NULL)
         return; // log_debug("has no events");
     //log_debug("has event %d ", event_node->event->type);
