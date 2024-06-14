@@ -56,4 +56,5 @@ void add_response(client_t *client, char *response)
     if (!packet)
         return;
     add_packet(client->response, packet);
+    client->socket->mode = WRITE;
 }

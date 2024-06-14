@@ -62,6 +62,7 @@ void game_tick(game_t *game)
     if (!valid_tick())
         return;
     LIST_FOREACH(team_node, game->teams, entries) {
+        // player list breaks when ai throws fork
         LIST_FOREACH(player_node, team_node->team->players, entries)
             player_tick(game, player_node->player);
     }

@@ -10,6 +10,7 @@
 #include "server/socket.h"
 #include <stdlib.h>
 #include <string.h>
+#include <sys/select.h>
 #include <unistd.h>
 #include "libs/log.h"
 #include <arpa/inet.h>
@@ -32,7 +33,7 @@ packet_t *read_socket(socket_t *socket)
     if (!socket || !data)
         return NULL;
     n = read(socket->fd, data, MAX_PACKET_SIZE);
-    if (n <= strlen(CRLF)) {
+    if (n < strlen(CRLF)) {
         socket->mode = EXCEPT;
         return NULL;
     }
