@@ -91,8 +91,6 @@ void broadcast(game_t *game, player_t *player, event_t *event)
 void fork_player(game_t *game, player_t *player, event_t *event)
 {
     team_t *team = get_team_by_player(game, player);
-    position_t egg_pos = {0};
-    tile_t egg_tile = {0};
 
     if (!team) {
         add_response_to_player(game->server->clients, player, ERROR_MESSAGE);
@@ -100,10 +98,9 @@ void fork_player(game_t *game, player_t *player, event_t *event)
         return;
     }
     team->players++;
-    egg_pos = get_random_pos(game->map);
-    change_eggs_tile(game->map, egg_pos, 1);
+    change_eggs_tile(game->map, player->pos, 1);
     log_info("%d: An egg is laid in %d %d\n",
-        player->number, egg_pos.x, egg_pos.y);
+        player->number, player->pos.x, player->pos.y);
     add_response_to_player(game->server->clients, player, FORK_RESPONSE);
 }
 
