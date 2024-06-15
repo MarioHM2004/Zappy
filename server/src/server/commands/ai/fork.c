@@ -8,6 +8,7 @@
 #include "game/event.h"
 #include "game/game.h"
 #include "game/player.h"
+#include "libs/log.h"
 #include "server/command.h"
 
 void fork_command(server_t *server, client_t *client, char *cmd)
@@ -20,5 +21,5 @@ void fork_command(server_t *server, client_t *client, char *cmd)
     event = create_event(FORK, (void *)player, sizeof(player_t));
     if (!event)
         return packet_message(client, ERROR_MESSAGE);
-    add_event(player->events, event, 42.0);
+    add_event(player->events, event, 42.0 / server->game->freq);
 }
