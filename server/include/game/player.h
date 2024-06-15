@@ -60,6 +60,7 @@ player_list_t *create_player_list(void);
 void destroy_player(player_t *p);
 void destroy_player_node(player_node_t *pn);
 void destroy_player_list(player_list_t *head);
+void remove_player(game_t *game, player_t *player);
 
 bool add_player(player_list_t *player_list, player_t *player);
 

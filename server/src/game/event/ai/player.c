@@ -81,6 +81,8 @@ void incantation(game_t *game, player_t *player, event_t *event)
     log_debug("%d: Incantation with %d players, level %d\n", player->number,
         player->number, get_player_list_size(players), player->level + 1);
     remove_incantation_items(tile.resource, player->level);
+    add_response_to_player(game->server->clients, player,
+        formatstr(END_INCANTATION_RESPONSE, player->level));
 }
 
 void broadcast(game_t *game, player_t *player, event_t *event)
@@ -143,8 +145,13 @@ void eject(game_t *game, player_t *player, event_t *event)
     if (players == NULL)
         return;
     LIST_FOREACH(tmp, players, entries) {
-        if (tmp->player->number == player->number)
+        if (tmp->player->number == player->number
+            || tmp->player->state == DEAD)
             continue;
+        if (tmp->player->state == EGG) {
+            remove_player(game, tmp->player);
+            continue;
+        }
         ejected_pos = ejected_from(game->map, player, tmp->player->pos);
         move_player(game->map, tmp->player, new_pos);
         add_response_to_player(game->server->clients, tmp->player,

@@ -34,6 +34,7 @@ team_list_t *create_team_list(void);
 void destroy_team(team_t *t);
 void destroy_team_node(team_node_t *tn);
 void destroy_team_list(team_list_t *head);
+bool remove_player_from_team(team_t *team, player_t *player);
 
 bool add_team(team_list_t *team_list, team_t *team);
 void add_player_to_team(team_t *team, player_t *player);
