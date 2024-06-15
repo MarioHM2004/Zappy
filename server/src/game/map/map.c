@@ -31,7 +31,7 @@ void spawn_eggs(map_t *map, game_t *game)
     LIST_FOREACH(team_node, game->teams, entries) {
         for (uint j = 0; j < game->players_per_team; j++) {
             position_t pos = get_random_pos(map);
-            player = create_player(map);
+            player = spawn_egg(map);
             add_player(game->players, player);
             add_player_to_team(team_node->team, player);
         }

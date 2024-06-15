@@ -8,6 +8,7 @@
 #include "game/game.h"
 #include "game/player.h"
 #include "game/team.h"
+#include "libs/log.h"
 #include <string.h>
 #include <sys/queue.h>
 

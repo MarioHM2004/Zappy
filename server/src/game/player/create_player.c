@@ -46,7 +46,29 @@ player_t *assign_player(socket_t *socket, server_t *server, char *team_name)
     return egg;
 }
 
-player_t *create_player(map_t *map)
+player_t *create_egg(map_t *map, position_t pos)
+{
+    player_t *player = calloc(1, sizeof(player_t));
+
+    if (!player)
+        return NULL;
+    player->fd = -1;
+    player->number = 0;
+    player->pos = pos;
+    change_eggs_tile(map, player->pos, +1);
+    player->dir = get_random_dir();
+    player->level = 1;
+    player->state = EGG;
+    player->inventory = create_resources();
+    player->events = create_event_list();
+    if (player->inventory == NULL) {
+        free(player);
+        return NULL;
+    }
+    return player;
+}
+
+player_t *spawn_egg(map_t *map)
 {
     player_t *player = calloc(1, sizeof(player_t));
     static int player_count = 1;
@@ -70,7 +92,6 @@ player_t *create_player(map_t *map)
     }
     return player;
 }
-
 
 player_node_t *create_player_node(player_t *p)
 {

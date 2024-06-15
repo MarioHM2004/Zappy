@@ -53,7 +53,8 @@ typedef struct player_list_s {
 } player_list_t;
 
 player_t *assign_player(socket_t *socket, server_t *server, char *team_name);
-player_t *create_player(map_t *map);
+player_t *create_egg(map_t *map, position_t pos);
+player_t *spawn_egg(map_t *map);
 player_node_t *create_player_node(player_t *p);
 player_list_t *create_player_list(void);
 void destroy_player(player_t *p);

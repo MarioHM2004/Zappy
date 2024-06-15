@@ -14,6 +14,7 @@
 #include "game/team.h"
 #include "libs/log.h"
 #include "server/command.h"
+#include "server/packet.h"
 #include <sys/queue.h>
 #include <time.h>
 
@@ -91,14 +92,15 @@ void broadcast(game_t *game, player_t *player, event_t *event)
 void fork_player(game_t *game, player_t *player, event_t *event)
 {
     team_t *team = get_team_by_player(game, player);
+    player_t *new_player = NULL;
 
     if (!team) {
         add_response_to_player(game->server->clients, player, ERROR_MESSAGE);
         log_error("%d: Player not in a team\n", player->number);
         return;
     }
-    team->players++;
-    change_eggs_tile(game->map, player->pos, 1);
+    new_player = create_egg(game->map, player->pos);
+    add_player_to_team(team, new_player);
     log_info("%d: An egg is laid in %d %d\n",
         player->number, player->pos.x, player->pos.y);
     add_response_to_player(game->server->clients, player, FORK_RESPONSE);
