@@ -73,6 +73,7 @@
     #define FORK_RESPONSE "ok"
     #define EJECT_REQUEST "Eject"
     #define EJECT_RESPONSE "ok"
+    #define EJECTED_PLAYER "eject: %d"
     #define DEATH_RESPONSE "dead"
     #define TAKE_OBJECT_REQUEST "Take %s"
     #define TAKE_OBJECT_RESPONSE "ok"

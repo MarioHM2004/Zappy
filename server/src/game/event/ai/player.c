@@ -12,6 +12,7 @@
 #include "game/map.h"
 #include "game/resources.h"
 #include "game/team.h"
+#include "libs/lib.h"
 #include "libs/log.h"
 #include "server/command.h"
 #include "server/packet.h"
@@ -106,12 +107,32 @@ void fork_player(game_t *game, player_t *player, event_t *event)
     add_response_to_player(game->server->clients, player, FORK_RESPONSE);
 }
 
+static uint ejected_from(map_t *map, player_t *player, position_t pos)
+{
+    position_t tmp_pos = dir_at(map, player->pos, player->dir);
+
+    if (tmp_pos.x == pos.x && tmp_pos.y == pos.y)
+        return 1;
+    tmp_pos = dir_at(map, player->pos, right_dir(player->dir));
+    if (tmp_pos.x == pos.x && tmp_pos.y == pos.y)
+        return 7;
+    tmp_pos = dir_at(map, player->pos, left_dir(player->dir));
+    if (tmp_pos.x == pos.x && tmp_pos.y == pos.y)
+        return 3;
+    tmp_pos = dir_at(map, player->pos, right_dir(right_dir(player->dir)));
+    if (tmp_pos.x == pos.x && tmp_pos.y == pos.y)
+        return 5;
+    log_error("Invalid eject direction\n");
+    return 0;
+}
+
 void eject(game_t *game, player_t *player, event_t *event)
 {
     tile_t tile = map_at(game->map, player->pos);
     position_t new_pos = dir_at(game->map, player->pos, player->dir);
     player_list_t *players = NULL;
     player_node_t *tmp = NULL;
+    uint ejected_pos = 0;
 
     (void)event;
     if (tile.players == 1) {
@@ -124,7 +145,11 @@ void eject(game_t *game, player_t *player, event_t *event)
     LIST_FOREACH(tmp, players, entries) {
         if (tmp->player->number == player->number)
             continue;
+        ejected_pos = ejected_from(game->map, player, tmp->player->pos);
         move_player(game->map, tmp->player, new_pos);
+        add_response_to_player(game->server->clients, tmp->player,
+            formatstr(EJECTED_PLAYER, ejected_pos));
         log_debug("%d: Ejecting player %d\n", player->number, tmp->player->number);
     }
+    add_response_to_player(game->server->clients, player, EJECT_RESPONSE);
 }
