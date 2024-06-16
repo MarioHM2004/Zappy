@@ -113,6 +113,8 @@ static uint ejected_from(map_t *map, player_t *player, position_t pos)
 {
     position_t tmp_pos = dir_at(map, player->pos, player->dir);
 
+    log_debug("Ejecting from %d %d to %d %d", player->pos.x, player->pos.y,
+        pos.x, pos.y);
     if (tmp_pos.x == pos.x && tmp_pos.y == pos.y)
         return 1;
     tmp_pos = dir_at(map, player->pos, right_dir(player->dir));
@@ -124,7 +126,7 @@ static uint ejected_from(map_t *map, player_t *player, position_t pos)
     tmp_pos = dir_at(map, player->pos, right_dir(right_dir(player->dir)));
     if (tmp_pos.x == pos.x && tmp_pos.y == pos.y)
         return 5;
-    log_error("Invalid eject direction\n");
+    log_error("Invalid eject direction");
     return 0;
 }
 
@@ -138,7 +140,7 @@ void eject(game_t *game, player_t *player, event_t *event)
 
     (void)event;
     if (tile.players == 1) {
-        log_debug("%d: No players to eject\n", player->number);
+        log_debug("%d: No players to eject", player->number);
         return;
     }
     players = get_players_on_tile(game->players, player->pos);
@@ -152,11 +154,11 @@ void eject(game_t *game, player_t *player, event_t *event)
             remove_player(game, tmp->player);
             continue;
         }
-        ejected_pos = ejected_from(game->map, player, tmp->player->pos);
+        ejected_pos = ejected_from(game->map, tmp->player, new_pos);
         move_player(game->map, tmp->player, new_pos);
         add_response_to_player(game->server->clients, tmp->player,
             formatstr(EJECTED_PLAYER, ejected_pos));
-        log_debug("%d: Ejecting player %d\n", player->number, tmp->player->number);
+        log_debug("%d: Ejecting player %d", player->number, tmp->player->number);
     }
     add_response_to_player(game->server->clients, player, EJECT_RESPONSE);
 }

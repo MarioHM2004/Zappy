@@ -67,5 +67,7 @@ position_t get_random_pos(map_t *map)
 
 direction_e get_random_dir(void)
 {
-    return rand() % 4;
+    direction_e dir = rand() % 4;
+
+    return dir + 1;
 }
