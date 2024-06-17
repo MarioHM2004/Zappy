@@ -23,7 +23,7 @@ namespace zappy
 
         void set_max_count(std::size_t count);
         const Player &get_player_at(std::size_t index);
-        void add_player(std::size_t number, godot::Vector3 position);
+        void add_player(std::unique_ptr<zappy::Player> player);
     };
 } // namespace zappy
 
