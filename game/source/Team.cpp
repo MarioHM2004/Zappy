@@ -38,5 +38,7 @@ void zappy::Team::add_player(std::unique_ptr<zappy::Player> player)
     }
 
     _count += 1;
+    _color = _color * (1.0f - 0.1f * _players.size());
+    player->tint(_color);
     _players.push_back(std::move(player));
 }
