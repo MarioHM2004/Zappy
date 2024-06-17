@@ -12,9 +12,10 @@
 void pie_command(server_t *server, client_t *client,
     player_t *player, bool res)
 {
-    if (!player)
+    char *response = formatstr(PIE_RESPONSE, (int)player->pos.x,
+        (int)player->pos.y, (int)res);
+    if (!player || !response)
         return packet_message(client, ERROR_MESSAGE);
-    add_response(client, formatstr(PIE_RESPONSE, (int)player->pos.x,
-        (int)player->pos.y, (int)res));
-
+    add_response(client, response);
+    free(response);
 }

@@ -5,9 +5,26 @@
 ** game_delete
 */
 
+#include "game/game.h"
 #include "game/map.h"
 #include "game/player.h"
+#include "game/team.h"
+#include "libs/log.h"
 #include <stdlib.h>
+
+void remove_player(game_t *game, player_t *player)
+{
+    team_t *team = get_team_by_player(game, player);
+
+    if (!team)
+        return;
+    remove_player_from_team(team, player);
+    if (player->state == EGG)
+        change_eggs_tile(game->map, player->pos, -1);
+    else
+        change_players_tile(game->map, player->pos, -1);
+    log_info("Player %d removed", player->number);
+}
 
 void destroy_player(player_t *p)
 {

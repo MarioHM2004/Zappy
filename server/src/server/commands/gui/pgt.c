@@ -13,7 +13,10 @@
 void pgt_command(server_t *server, client_t *client,
     player_t *player, resource_e resource)
 {
-    if (!player)
+    char *response = formatstr(PGT_RESPONSE, (int)player->number, resource);
+
+    if (!player || !response)
         return packet_message(client, ERROR_MESSAGE);
-    add_response(client, formatstr(PGT_RESPONSE, (int)player->number, resource));
+    add_response(client, response);
+    free(response);
 }

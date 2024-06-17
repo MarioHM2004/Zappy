@@ -8,6 +8,7 @@
 #include "game/event.h"
 #include "game/game.h"
 #include "game/player.h"
+#include "libs/log.h"
 #include "server/command.h"
 
 void take_object_command(server_t *server, client_t *client, char *cmd)
@@ -25,5 +26,5 @@ void take_object_command(server_t *server, client_t *client, char *cmd)
     event = create_event(TAKE_OBJECT, (void *)object, sizeof(object_t));
     if (!event)
         return packet_message(client, ERROR_MESSAGE);
-    add_event(player->events, event);
+    add_event(player->events, event, 7.0 / server->game->freq);
 }

@@ -8,6 +8,7 @@
 #include "game/event.h"
 #include "game/game.h"
 #include "game/player.h"
+#include "libs/log.h"
 #include <stdbool.h>
 #include <sys/queue.h>
 
@@ -28,15 +29,6 @@ bool add_player(player_list_t *player_list, player_t *player)
         return true;
     }
     return true;
-}
-
-bool add_event_to_player(event_t *event, player_t *player)
-{
-    bool status = false;
-
-    if (get_event_list_size(player->events) >= 10)
-        return status;
-    return add_event(player->events, event);
 }
 
 uint get_player_list_size(player_list_t *head)
@@ -65,7 +57,7 @@ player_t *get_player_by_fd(player_list_t *players, int fd)
     player_node_t *node = NULL;
 
     LIST_FOREACH(node, players, entries) {
-        if (node->player->number == fd)
+        if (node->player->fd == fd)
             return node->player;
     }
     return NULL;

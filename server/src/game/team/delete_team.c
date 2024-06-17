@@ -7,6 +7,23 @@
 
 #include "game/team.h"
 #include <stdlib.h>
+#include <sys/queue.h>
+
+bool remove_player_from_team(team_t *team, player_t *player)
+{
+    player_node_t *tmp = NULL;
+
+    if (!team || !player)
+        return false;
+    LIST_FOREACH(tmp, team->players, entries) {
+        if (tmp->player == player) {
+            LIST_REMOVE(tmp, entries);
+            free(tmp);
+            return true;
+        }
+    }
+    return false;
+}
 
 void destroy_team(team_t *t)
 {

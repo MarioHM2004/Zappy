@@ -20,5 +20,5 @@ void inventory_command(server_t *server, client_t *client, char *cmd)
     event = create_event(INVENTORY, (void *)player, sizeof(player_t));
     if (!event)
         return packet_message(client, ERROR_MESSAGE);
-    add_event(player->events, event);
+    add_event(player->events, event, 1.0 / server->game->freq);
 }

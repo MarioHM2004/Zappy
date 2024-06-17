@@ -7,11 +7,13 @@
 
 #include "libs/lib.h"
 #include "server/command.h"
-#include "game/player.h"
 
 void smg_command(server_t *server, client_t *client, char *msg)
 {
-    if (!msg)
+    char *response = formatstr(SMG_RESPONSE, msg);
+
+    if (!msg || !response)
         return packet_message(client, ERROR_MESSAGE);
-    add_response(client, formatstr(SMG_RESPONSE, msg));
+    add_response(client, response);
+    free(response);
 }

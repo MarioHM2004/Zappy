@@ -5,6 +5,8 @@
 ** connection
 */
 
+#include "game/game.h"
+#include "game/player.h"
 #include "server/client.h"
 #include "server/packet.h"
 #include "server/server.h"
@@ -59,13 +61,19 @@ void accept_connection(server_t *server)
 void close_connection(server_t *server)
 {
     client_node_t *tmp = NULL;
+    player_t *player = NULL;
 
     if (!server)
         return;
+
     LIST_FOREACH(tmp, server->clients, entries) {
         if (!FD_ISSET(tmp->client->socket->fd, &server->except_fds)
             && tmp->client->socket->mode != EXCEPT)
             continue;
+        player = get_player_by_fd(server->game->players, tmp->client->socket->fd);
+        log_player(player);
+        if (player)
+            player->state = DEAD;
         LIST_REMOVE(tmp, entries);
         destroy_client(tmp->client);
     }

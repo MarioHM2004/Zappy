@@ -73,6 +73,7 @@
     #define FORK_RESPONSE "ok"
     #define EJECT_REQUEST "Eject"
     #define EJECT_RESPONSE "ok"
+    #define EJECTED_PLAYER "eject: %d"
     #define DEATH_RESPONSE "dead"
     #define TAKE_OBJECT_REQUEST "Take %s"
     #define TAKE_OBJECT_RESPONSE "ok"
@@ -80,6 +81,8 @@
     #define SET_OBJECT_RESPONSE "ok"
     #define START_INCANTATION_REQUEST "Incantation"
     #define START_INCANTATION_RESPONSE "Elevation underway"
+    #define END_INCANTATION_RESPONSE "Current level: %d"
+
 
 typedef void (*client_command_func_t)(server_t *, client_t *, char *);
 

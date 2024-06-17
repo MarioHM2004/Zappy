@@ -13,6 +13,7 @@
 #include "server/command.h"
 #include "libs/lib.h"
 #include <string.h>
+#include <time.h>
 
 static void send_gui_player_info(server_t *server, client_t *client)
 {
@@ -67,7 +68,6 @@ static void send_guis_player_info(server_t *server, player_t *player)
     free(command);
 }
 
-
 static bool assign_team(server_t *server, client_t *client, char *team)
 {
     team_node_t *node = NULL;
@@ -77,12 +77,14 @@ static bool assign_team(server_t *server, client_t *client, char *team)
         if (strcmp(node->team->name, team) != 0)
             continue;
         client->type = AI;
-        // do all player assignation in one function
-        player = create_player(client->socket, 0, 0);
+        player = assign_player(client->socket, server, team);
+        if (!player) {
+            log_error("No room for more players in team %s", team);
+            return false;
+        }
         log_info("Player %d joined team %s", player->number, team);
-        add_player(server->game->players, player);
-        add_player_to_team(node->team, player);
-        add_response(client, formatstr("%d", player->number));
+        log_debug("Pos x: %d, y: %d", player->pos.x, player->pos.y);
+        pnw_command(server, client, player);
         msz_command(server, client, "msz");
         send_guis_player_info(server, player);
         return true;

@@ -35,9 +35,13 @@ static char *get_pin(server_t *server, int player)
 
 void pin_command(server_t *server, client_t *client, char *cmd)
 {
+    char *response = NULL;
     int player = 0;
 
     if (sscanf(cmd, PIN_REQUEST, &player) == -1)
         return packet_message(client, INVALID_PARAMETERS);
-    add_response(client, get_pin(server, player));
+    response = get_pin(server, player);
+    add_response(client, response);
+    if (response)
+        free(response);
 }

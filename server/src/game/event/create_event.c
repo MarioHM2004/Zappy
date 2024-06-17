@@ -6,6 +6,7 @@
 */
 
 #include "game/event.h"
+#include "libs/log.h"
 #include <stdlib.h>
 
 event_t *create_event(event_type_e type, void *data, size_t size)
@@ -20,6 +21,8 @@ event_t *create_event(event_type_e type, void *data, size_t size)
         event->data.broadcast = *(broadcast_t *)data;
     else
         event->data.player = *(player_t *)data;
+    if (event->type == TAKE_OBJECT || event->type == SET_OBJECT)
+        event->data.object = *(object_t *)data;
     return event;
 }
 

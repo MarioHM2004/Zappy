@@ -11,8 +11,13 @@
 
 void msz_command(server_t *server, client_t *client, char *cmd)
 {
+    char *response = formatstr(MSZ_RESPONSE,
+        (int)server->game->map->width, (int)server->game->map->height);
+
     if (sscanf(cmd, MSZ_REQUEST) == -1)
         return packet_message(client, INVALID_PARAMETERS);
-    add_response(client, formatstr(MSZ_RESPONSE,
-        (int)server->game->map->width, (int)server->game->map->height));
+    if (!response)
+        return packet_message(client, ERROR_MESSAGE);
+    add_response(client, response);
+    free(response);
 }

@@ -12,7 +12,10 @@
 void pbc_command(server_t *server, client_t *client,
     player_t *player, char *msg)
 {
-    if (!player || !msg)
+    char *response = formatstr(PBC_RESPONSE, (int)player->number, msg);
+
+    if (!player || !msg || !response)
         return packet_message(client, ERROR_MESSAGE);
-    add_response(client, formatstr(PBC_RESPONSE, (int)player->number, msg));
+    add_response(client, response);
+    free(response);
 }

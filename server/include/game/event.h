@@ -22,7 +22,7 @@ typedef enum {
     LOOK,
     INVENTORY,
     BROADCAST,
-    CONNECT_NBR,
+    // CONNECT_NBR,
     FORK,
     EJECT,
     TAKE_OBJECT,
@@ -82,7 +82,7 @@ void turn_left(game_t *game, player_t *player, event_t *event);
 void look(game_t *game, player_t *player, event_t *event);
 void inventory(game_t *game, player_t *player, event_t *event);
 void broadcast(game_t *game, player_t *player, event_t *event);
-void connect_nbr(game_t *game, player_t *player, event_t *event);
+// void connect_nbr(game_t *game, player_t *player, event_t *event);
 void fork_player(game_t *game, player_t *player, event_t *event);
 void eject(game_t *game, player_t *player, event_t *event);
 void take_object(game_t *game, player_t *player, event_t *event);
@@ -94,7 +94,9 @@ object_t *create_object(player_t *player, const char *name);
 void destroy_object(object_t *object);
 broadcast_t *create_broadcast(player_t *player, const char *text);
 void delete_broadcast(broadcast_t *broadcast);
-bool add_event(event_list_t *event_list, event_t *event);
+bool add_event(event_list_t *event_list, event_t *event, float wait_time);
 uint get_event_list_size(event_list_t *head);
+direction_e left_dir(direction_e dir);
+direction_e right_dir(direction_e dir);
 
 #endif /* !EVENT_H_ */

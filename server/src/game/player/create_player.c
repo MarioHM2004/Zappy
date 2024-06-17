@@ -6,27 +6,84 @@
 */
 
 #include "game/event.h"
+#include "game/game.h"
 #include "game/map.h"
+#include "server/command.h"
+#include "server/server.h"
 #include "game/player.h"
+#include "game/team.h"
 #include <stdlib.h>
 #include <sys/types.h>
+#include <time.h>
 
-player_t *create_player(socket_t *socket, uint x, uint y)
+
+static player_t *get_egg_from_team(team_t *team)
+{
+    player_node_t *tmp = NULL;
+
+    LIST_FOREACH(tmp, team->players, entries) {
+        if (tmp->player && tmp->player->state == EGG)
+            return tmp->player;
+    }
+    return NULL;
+}
+
+player_t *assign_player(socket_t *socket, server_t *server, char *team_name)
+{
+    static int player_count = 0;
+    team_t *team = get_team_by_name(server->game, team_name);
+    player_t *egg = NULL;
+
+    if (!team)
+        return NULL;
+    egg = get_egg_from_team(team);
+    if (!egg)
+        return NULL;
+    change_eggs_tile(server->game->map, egg->pos, -1);
+    change_players_tile(server->game->map, egg->pos, 1);
+    egg->state = ALIVE;
+    egg->fd = socket->fd;
+    return egg;
+}
+
+player_t *create_egg(map_t *map, position_t pos)
 {
     player_t *player = calloc(1, sizeof(player_t));
-    static int player_count = 0;
+
+    if (!player)
+        return NULL;
+    player->fd = -1;
+    player->number = 0;
+    player->pos = pos;
+    change_eggs_tile(map, player->pos, +1);
+    player->dir = get_random_dir();
+    player->level = 1;
+    player->state = EGG;
+    player->inventory = create_resources();
+    player->events = create_event_list();
+    if (player->inventory == NULL) {
+        free(player);
+        return NULL;
+    }
+    return player;
+}
+
+player_t *spawn_egg(map_t *map)
+{
+    player_t *player = calloc(1, sizeof(player_t));
+    static int player_count = 1;
 
     if (!player)
         return NULL;
 
-    player->fd = socket->fd;
+    player->fd = -1;
     player->number = player_count;
     player_count++;
-    player->pos.x = x;
-    player->pos.y = y;
-    player->dir = NORTH;
+    player->pos = get_random_pos(map);
+    change_eggs_tile(map, player->pos, +1);
+    player->dir = get_random_dir();
     player->level = 1;
-    player->state = ALIVE;
+    player->state = EGG;
     player->inventory = create_resources();
     player->events = create_event_list();
     if (player->inventory == NULL) {
