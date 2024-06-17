@@ -152,6 +152,6 @@ class AIManager:
         # check if cmd is valid
         if s_data == "suc":
             return "ko"
-        if cmd == "look":
-            self.drone.view = s_data.split()
+        # parse payload
+        self.drone.parse_payload(cmd=cmd, payload=s_data)
         return const.CMD_FUNC[cmd](self.drone, "")

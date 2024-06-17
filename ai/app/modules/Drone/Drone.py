@@ -21,6 +21,7 @@ class Drone:
         self.x_position: int = 0
         self.y_position: int = 0
         self.orientation: int = 0
+        self.connect_nbr: int = 0
         self.algo: algo.Algorithm = algo.Algorithm()
         self.inventory: inv.Inventory = inv.Inventory()
 
@@ -50,8 +51,37 @@ class Drone:
             "frozen": self.frozen,
             "x_position": self.x_position,
             "y_position": self.y_position,
+            "orientation": self.orientation,
+            "connect_nbr": self.connect_nbr,
             "inventory": self.inventory,
         }
+
+    def parse_payload(self, cmd: str, payload: str) -> None:
+        """
+        Parses the payload to update the drone's internal variables.
+
+        Args:
+            payload (str): Information coming from the server.
+        """
+
+        if payload == "dead":
+            self.life = 0
+            return
+
+        if payload == "suc" or payload == "ko" or payload == "ok":
+            return
+
+        try:
+            match cmd:
+                case "look":
+                    self.view = payload.split(',')
+                case "inventory":
+                    print(f"Parse Inventory")
+                case "connect_nbr":
+                    self.connect_nbr = int(payload)
+        except Exception as e:
+            print(f"Error parsing payload: {e}")
+
 
     def take_decision(self) -> str:
         """
