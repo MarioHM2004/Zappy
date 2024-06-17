@@ -23,8 +23,22 @@ add_executable(zappy_server ${SOURCES})
 
 # Set the output directory for binaries
 set_target_properties(zappy_server PROPERTIES
-RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"
 )
 
-# If there are specific libraries your project depends on, link them here
-target_link_libraries(zappy_server liblog.so my)
+# Link the libraries
+file(GLOB LOG_SOURCES "${CMAKE_SOURCE_DIR}/libs/log/src/*.c")
+
+# Create a shared library for log
+add_library(log SHARED ${LOG_SOURCES})
+
+# Add the include directory for log
+target_include_directories(log PRIVATE libs/log/include)
+
+# Link the log library
+target_link_libraries(zappy_server log my)
+
+# if its a mac, link the argp library
+if(APPLE)
+    target_link_libraries(zappy_server argp)
+endif()
