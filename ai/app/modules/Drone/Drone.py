@@ -1,22 +1,79 @@
+##
+## EPITECH PROJECT, 2023
+## zappy
+## File description:
+## Drone.py
+##
+
 import ai.app.const as const
-import ai.app.modules.Drone.Inventory.Inventory as i
+import ai.app.modules.Drone.Inventory.Inventory as inv
+import ai.app.modules.Drone.Algorithm.Algorithm as algo
+
 
 class Drone:
     def __init__(self, x_position: int, y_position: int, team: str) -> None:
         self.life: int = 10
         self.team: str = team
         self.elevation: int = 1
+        self.view: list[str] = []
+        self.frozen: bool = False
         self.x_position: int = x_position
         self.y_position: int = y_position
-        self.inventory: i.Inventory | None = None
-        self.view: list[str] = []
+        self.algo: algo.Algorithm = algo.Algorithm()
+        self.inventory: inv.Inventory = inv.Inventory()
 
-        # self.frozen: bool = False
 
-    def exec_cmd(self, cmd: str) -> str:
-        if cmd not in const.CMD_FUNC:
+    def __process_payload(self, payload: str) -> None:
+        """
+        Updates the drone's internal variables with the payload.
+
+        Args:
+            payload (str): Drone information coming from the server.
+        """
+        
+        raise NotImplementedError
+    
+    def __build_algo_payload(self) -> const.AlgoPayload:
+        """
+        Builds the payload to be sent to the algorithm.
+
+        Returns:
+            const.AlgoPayload: Payload to be sent to the algorithm.
+        """
+        
+        return {
+            "life": self.life,
+            "team": self.team,
+            "elevation": self.elevation,
+            "view": self.view,
+            "frozen": self.frozen,
+            "x_position": self.x_position,
+            "y_position": self.y_position,
+            "inventory": self.inventory,
+        }
+
+    def take_decision(self, payload: str) -> str:
+        """
+        Decides what action (command) to take based on the payload.
+
+        Args:
+            payload (str): Information coming from the server.
+
+        Returns:
+            str: The action (command) taken by the drone.
+        """
+
+        action: str | None = None
+
+        self.__process_payload(payload) # Payload -> Internal Variables
+        action = self.algo.choose_decision(self.__build_algo_payload())
+        if action is None or action not in const.CMD_FUNC:
             return "ko"
-        return const.CMD_FUNC[cmd]()
+        
+        #! Most likely will change for a better implementation
+        if action.find("broadcast") != -1:
+            return const.CMD_FUNC[action](self, action)
+        return const.CMD_FUNC[action](self, None)
 
     def __str__(self) -> str:
         return f"Drone {self.team} at ({self.x_position}, {self.y_position}) with {self.life} life, {self.elevation} elevation and Inventory: {self.inventory}"

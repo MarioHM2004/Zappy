@@ -1,8 +1,15 @@
+##
+## EPITECH PROJECT, 2023
+## zappy
+## File description:
+## main.py
+##
+
 import ai.app.modules.AIManager.AIManager as m
 
 
 def main(argc: int, argv: list[str]):
-    ai_manager: m.AIManager = None
+    ai_manager: m.AIManager | None = None
 
     print("Starting AI...")
     if len(argv) < 2 or len(argv) > 7:

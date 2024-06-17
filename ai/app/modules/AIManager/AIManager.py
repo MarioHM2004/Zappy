@@ -1,43 +1,53 @@
+##
+## EPITECH PROJECT, 2023
+## zappy
+## File description:
+## AIManager.py
+##
+
 import argparse
 import socket
-from typing import List
 
 import ai.app.modules.Drone.Drone as d
 
+
 class AIManager:
     # def __init__(self, frequency: int) -> None:
-    def __init__(self):
+    def __init__(self) -> None:
+        self.port: int
+        self.host: str
+        self.team: str
+        self.client_id: int
+        self.drone: d.Drone | None = None
+        self.socket: socket.socket | None = None
+        self.map_size: list[int] | None = None
         self.parser = argparse.ArgumentParser(add_help=False)
         self.parser.add_argument("-help", action="help", help="Show this help message and exit")
         self.parser.add_argument("-p", type=int, required=True, help="Port number")
         self.parser.add_argument("-n", type=str, required=True, help="Name of the team")
         self.parser.add_argument("-h", type=str, default="localhost", help="Name of the machine; localhost by default")
-        self.port: int
-        self.host: str
-        self.team: str
-        self.client_id: int
-        self.map_size: List[int] = []
         # self.frequency: int = frequency
-        self.socket = None
-        self.drone: d.Drone = None
 
-    def parse_args(self, args):
+    def parse_args(self, args) -> None:
         args = self.parser.parse_args(args)
         self.port = args.p
         self.host = args.h
         self.team = args.n
         self.drone = d.Drone(0, 0, self.team)
 
-    def send_data(self, socket, data: str):
-        to_send = f"{data}\n"
+    def send_data(self, socket: socket.socket, data: str) -> None:
+        to_send: str = f"{data}\n"
         socket.sendall(to_send.encode())
 
-    def recv_data(self, socket) -> str:
-        data = socket.recv(1024).decode()
+    def recv_data(self, socket: socket.socket) -> str:
+        data: str = socket.recv(1024).decode()
         return data
 
     def start_socket(self, host: str, port: int, team_name: str) -> socket.socket:
-        socket_cl = None
+        data: str | None = None
+        map: list[str] | None = None
+        client_id: list[str] | None = None
+        socket_cl: socket.socket | None = None
 
         try:
             socket_cl = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -45,19 +55,19 @@ class AIManager:
             print(f"-- Connected to {host}:{port}")  ## DEBUG
 
             # Recieve Welcome from server
-            data = self.recv_data(socket_cl)
+            data = self.recv_data(socket=socket_cl)
             print(f"{data}")
 
             # Send team name
-            self.send_data(socket_cl, team_name)
+            self.send_data(socket=socket_cl, data=team_name)
 
             # Recieve CLIENT-NUM
-            data = self.recv_data(socket_cl)
+            data = self.recv_data(socket=socket_cl)
             print(f"{data}")
             client_id = data.split()
 
             # Recieve MAP-SIZE: msz X Y
-            data = self.recv_data(socket_cl)
+            data = self.recv_data(socket=socket_cl)
             map = data.split()
             if len(map) != 3 and map[0] != "msz":
                 print("-- Failed to connect to server: Invalid response")
@@ -74,18 +84,18 @@ class AIManager:
             print(f"-- Failed to connect to server: {host}:{port}, {e}")
         return socket_cl
 
-    def close_socket(self, socket):
+    def close_socket(self, socket: socket.socket) -> None:
         print("-- Connection closed")
         socket.close()
 
-    def start_ai(self):
+    def start_ai(self) -> None:
         print(f"-- Starting AI for team {self.team} on {self.host}:{self.port}")
-        self.socket = self.start_socket(self.host, self.port, self.team)
 
+        self.socket = self.start_socket(host=self.host, port=self.port, team_name=self.team)
         self.loop()
 
-    def loop(self):
-        running = True
+    def loop(self) -> None:
+        running: bool = True
 
         if self.socket is None:
             running = False
@@ -93,36 +103,37 @@ class AIManager:
 
         while running is True:
             running = self.run()
-        self.close_socket(self.socket)
+        self.close_socket(socket=self.socket)
 
     def run(self) -> bool:
+        cmd: str = ""
+        payload: str = ""
+        data: str | None = None
+
         try:
-            # cmd = take_decision TO DO
-            # cmd = "forward"
-            cmd = ""
-            if cmd != "":
-                self.drone.exec_cmd(cmd)
-                self.send_data(self.socket, cmd)
+            cmd = self.drone.take_decision(payload=payload)
+            if cmd != "ko":
+                self.send_data(socket=self.socket, cmd=cmd)
 
             # Recieve data from server
-            data = self.recv_data(self.socket)
+            data = self.recv_data(socket=self.socket)
             if data is None or len(data) == 0:
                 return True
             print(f"[TEST] len: {len(data)}")
-            return self.handle_data(data)
 
         except Exception as e:
             print(f"-- Error: {e}")
             return False
-        return True
+        return self.handle_data(data=data)
 
     def handle_data(self, data: str) -> bool:
+        ret: bool = True
+
         print(f"[TEST] Data: {data}")
-        ret = True
         if data.startswith("dead"):
-            ret = self.handle_pdi(data)
+            ret = self.handle_pdi(data=data)
         return ret
 
-    def handle_pdi(self, data):
+    def handle_pdi(self, data: str) -> bool:
         print("Player has died.")
         return False

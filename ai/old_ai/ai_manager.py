@@ -23,7 +23,7 @@ class AIManager:
 
         running_ai(client_socket)
 
-    def establish_connection(self, host, port, team_name):
+    def establish_connection(self, host, port, team_name) -> socket.socket | None:
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         try:
