@@ -24,25 +24,25 @@ const zappy::TileData &zappy::World::get_tile(
 std::size_t zappy::World::get_resource(
     std::size_t x, std::size_t y, ResourceType resource) const
 {
-    return _map.at(x).at(y).at(static_cast<std::size_t>(resource));
+    return _map.at(x).at(y).at(resource);
 }
 
 void zappy::World::set_resource(
     std::size_t x, std::size_t y, ResourceType resource, std::size_t amount)
 {
-    _map.at(x).at(y).at(static_cast<std::size_t>(resource)) = amount;
+    _map.at(x).at(y).at(resource) = amount;
 }
 
 void zappy::World::add_resource(
     std::size_t x, std::size_t y, ResourceType resource, std::size_t amount)
 {
-    _map.at(x).at(y).at(static_cast<std::size_t>(resource)) += amount;
+    _map.at(x).at(y).at(resource) += amount;
 }
 
 void zappy::World::remove_resource(
     std::size_t x, std::size_t y, ResourceType resource, std::size_t amount)
 {
-    _map.at(x).at(y).at(static_cast<std::size_t>(resource)) -= amount;
+    _map.at(x).at(y).at(resource) -= amount;
 }
 
 void zappy::World::clear_tile(std::size_t x, std::size_t y)
@@ -52,9 +52,23 @@ void zappy::World::clear_tile(std::size_t x, std::size_t y)
 
 void zappy::World::clear()
 {
-    for (std::size_t y = 0; y < _map.size(); ++y) {
-        for (std::size_t x = 0; x < _map.at(0).size(); ++x) {
-            clear_tile(x, y);
+    std::for_each(_map.begin(), _map.end(), [](std::vector<TileData> &row) {
+        std::for_each(row.begin(), row.end(), [](TileData &tile) {
+            tile = {0, 0, 0, 0, 0, 0, 0};
+        });
+    });
+}
+
+std::string zappy::World::dump() const
+{
+    std::string result;
+    for (const std::vector<TileData> &row : _map) {
+        for (const TileData &tile : row) {
+            for (std::size_t resource : tile) {
+                result += std::to_string(resource) + " ";
+            }
+            result += "\n";
         }
     }
+    return result;
 }

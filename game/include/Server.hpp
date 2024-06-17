@@ -27,8 +27,8 @@ namespace zappy
         std::string generate(int x, int y);
 
       private:
-        const int _x = 10;
-        const int _y = 10;
+        int _x = 10;
+        int _y = 10;
         struct sockaddr_in _clientAddr;
         int _serverSocket;
         int _clientSockets[FD_SETSIZE];
