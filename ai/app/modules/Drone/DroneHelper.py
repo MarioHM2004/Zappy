@@ -58,6 +58,7 @@ def cmd_right(drone: Drone, payload) -> str:
 
 
 def cmd_look(drone: Drone, payload) -> str:
+    print(f"look: {drone.view}")
     return "look"
 
 

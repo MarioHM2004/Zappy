@@ -150,6 +150,8 @@ class AIManager:
         if self.handle_data(data=s_data) is False:
             return "ko"
         # check if cmd is valid
-        if s_data == "ok":
-            return const.CMD_FUNC[cmd](self.drone, "")
-        return "ko"
+        if s_data == "suc":
+            return "ko"
+        if cmd == "look":
+            self.drone.view = s_data.split()
+        return const.CMD_FUNC[cmd](self.drone, "")
