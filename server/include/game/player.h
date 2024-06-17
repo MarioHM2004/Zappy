@@ -73,4 +73,5 @@ bool move_player(map_t *map,player_t *player, position_t new_pos);
 void log_player(player_t *player);
 bool add_response_to_player(client_list_t *client_list, player_t *player
     , char *response);
+
 #endif /* !PLAYER_H_ */

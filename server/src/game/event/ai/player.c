@@ -19,7 +19,7 @@
 #include <sys/queue.h>
 #include <time.h>
 
-incantation_t incantations[] = {
+incantation_t incantations[INCANTATION_NUM] = {
     {1, 1, 1, 0, 0, 0, 0, 0},
     {2, 2, 1, 1, 1, 0, 0, 0},
     {3, 2, 2, 0, 1, 0, 2, 0},
@@ -29,7 +29,7 @@ incantation_t incantations[] = {
     {7, 6, 2, 2, 2, 2, 2, 1}
 };
 
-static bool valid_incantation_tile(tile_t tile, incantation_t incantation)
+bool valid_incantation_tile(tile_t tile, incantation_t incantation)
 {
     if (tile.players < incantation.players)
         return false;
@@ -64,11 +64,12 @@ void incantation(server_t *server, player_t *player, event_t *event)
 {
     tile_t tile = map_at(server->game->map, player->pos);
     player_list_t *players  = NULL;
-    player_node_t *tmp= NULL;
+    player_node_t *tmp = NULL;
 
     (void)event;
     if (!valid_incantation_tile(tile, incantations[player->level - 1])) {
         log_debug("%d: Invalid incantation\n", player->number);
+        add_response_to_player(server->clients, player, ERROR_MESSAGE);
         return;
     }
     players = get_players_on_tile(server->game->players, player->pos);

@@ -6,6 +6,7 @@
 */
 
 #include "game/map.h"
+#include "libs/log.h"
 
 bool move_item(resources_t *src, resources_t *dest, resource_e item)
 {
@@ -19,10 +20,11 @@ bool move_item(resources_t *src, resources_t *dest, resource_e item)
 bool change_resource(resources_t *resources, resource_e item, uint quantity)
 {
     uint *resource = get_resource_ptr(resources, item);
+    int result = *resource + quantity;
 
     if (resource == NULL)
         return false;
-    if (*resource + quantity < 0)
+    if ((result) < 0)
         return false;
     *resource += quantity;
     return true;

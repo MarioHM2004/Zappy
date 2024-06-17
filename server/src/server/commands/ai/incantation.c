@@ -7,6 +7,7 @@
 
 #include "game/event.h"
 #include "game/game.h"
+#include "game/map.h"
 #include "game/player.h"
 #include "server/command.h"
 
@@ -14,8 +15,10 @@ void incantation_command(server_t *server, client_t *client, char *cmd)
 {
     player_t *player = get_player_by_fd(server->game->players, client->socket->fd);
     event_t *event = NULL;
+    tile_t tile = map_at(server->game->map, player->pos);
 
-    if (!player)
+    if (!player ||
+        !valid_incantation_tile(tile, incantations[player->level - 1]))
         return packet_message(client, ERROR_MESSAGE);
     event = create_event(START_INCANTATION, (void *)player, sizeof(player_t));
     if (!event)
