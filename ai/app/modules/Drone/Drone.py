@@ -76,7 +76,7 @@ class Drone:
                 case "look":
                     self.view = payload.split(',')
                 case "inventory":
-                    print(f"Parse Inventory")
+                    self.inventory.update_inventory(payload)
                 case "connect_nbr":
                     self.connect_nbr = int(payload)
         except Exception as e:

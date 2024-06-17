@@ -63,6 +63,7 @@ def cmd_look(drone: Drone, payload) -> str:
 
 
 def cmd_inventory(drone: Drone, payload) -> str:
+    print(f"inventory: {drone.inventory}")
     return "inventory"
 
 

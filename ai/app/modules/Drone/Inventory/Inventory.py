@@ -59,5 +59,37 @@ class Inventory:
     def remove_item(self, item: str, x: int) -> None:
         self.add_item(item, -x if x > 0 else x)
 
+    def update_inventory(self, inventory: list[str]) -> None:
+        try:
+            # clear inventory (remove [ and ])
+            if inventory[0] == '[':
+                inventory = inventory[1:]
+            if inventory[len(inventory) - 1] == ']':
+                inventory = inventory[:-1]
+            inventory = inventory.split(',')
+
+            for item in inventory:
+                #remove first space if exists
+                if item[0] == ' ':
+                    item = item[1:]
+
+                if item.startswith("food"):
+                    self.food = int(item[len("food"):])
+                elif item.startswith("linemate"):
+                    self.linemate = int(item[len("linemate"):])
+                elif item.startswith("deraumere"):
+                    self.deraumere = int(item[len("deraumere"):])
+                elif item.startswith("sibur"):
+                    self.sibur = int(item[len("sibur"):])
+                elif item.startswith("mendiane"):
+                    self.mendiane = int(item[len("mendiane"):])
+                elif item.startswith("phiras"):
+                    self.phiras = int(item[len("phiras"):])
+                elif item.startswith("thystame"):
+                    self.thystame = int(item[len("thystame"):])
+
+        except Exception as e:
+            print(f"Error updating inventory: {e}")
+
     def __str__(self) -> str:
-        return f"Inventory: {self.food}, {self.linemate}, {self.deraumere}, {self.sibur}, {self.mendiane}, {self.phiras}, {self.thystame}"
+        return f"food={self.food}, linemate={self.linemate}, deraumere={self.deraumere}, sibur={self.sibur}, mendiane={self.mendiane}, phiras={self.phiras}, thystame={self.thystame}"
