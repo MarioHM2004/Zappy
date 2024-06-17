@@ -15,7 +15,7 @@
 #include "server/command.h"
 #include "server/server.h"
 
-void inventory(game_t *game, player_t *player, event_t *event)
+void inventory(server_t *server, player_t *player, event_t *event)
 {
     char *inventory = formatstr("[food %d, linemate %d, deraumere %d, sibur %d, "
         "mendiane %d, phiras %d, thystame %d]",
@@ -28,7 +28,7 @@ void inventory(game_t *game, player_t *player, event_t *event)
         player->inventory->thystame);
 
     log_debug("Player %d inventory: %s", player->number, inventory);
-    add_response_to_player(game->server->clients, player, inventory);
+    add_response_to_player(server->clients, player, inventory);
 }
 
 // void connect_nbr(game_t *game, player_t *player, event_t *event)

@@ -68,7 +68,7 @@ uint get_player_list_size(player_list_t *head);
 bool is_player_in_list(player_list_t *head, player_t *player);
 player_t *get_player_by_fd(player_list_t *players, int fd);
 
-void player_tick(game_t *game, player_t *player);
+void player_tick(server_t *server, player_t *player);
 bool move_player(map_t *map,player_t *player, position_t new_pos);
 void log_player(player_t *player);
 bool add_response_to_player(client_list_t *client_list, player_t *player

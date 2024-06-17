@@ -30,7 +30,7 @@ server_t *create_server(arguments_t *arguments)
         return NULL;
     server->socket = create_socket(arguments->port, htonl(INADDR_LOOPBACK));
     server->clients = create_client_list();
-    server->game = create_game(arguments, server);
+    server->game = create_game(arguments);
     free_arguments(arguments);
     if (!initialize_serveer(server) || !server->clients || !server->game) {
         destroy_server(server);

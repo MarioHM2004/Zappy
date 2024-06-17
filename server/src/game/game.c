@@ -8,13 +8,11 @@
 #include "game/map.h"
 #include "game/player.h"
 #include "game/team.h"
-#include "libs/log.h"
 #include "server/server.h"
 #include <stdlib.h>
 #include <time.h>
 
-
-game_t *create_game(arguments_t *arguments, server_t *server)
+game_t *create_game(arguments_t *arguments)
 {
     game_t *game = calloc(1, sizeof(game_t));
 
@@ -30,7 +28,6 @@ game_t *create_game(arguments_t *arguments, server_t *server)
     game->players_per_team = arguments->client_nb;
     game->auto_start = arguments->auto_start == 1 ? true : false;
     game->display_eggs = arguments->display_eggs == 0 ? true : false;
-    game->server = server;
     spawn_eggs(game->map, game);
     return game;
 }
@@ -54,17 +51,17 @@ static bool valid_tick() {
     return false;
 }
 
-void game_tick(game_t *game)
+void game_tick(server_t *server)
 {
     team_node_t *team_node = NULL;
     player_node_t *player_node = NULL;
 
     if (!valid_tick())
         return;
-    LIST_FOREACH(team_node, game->teams, entries) {
+    LIST_FOREACH(team_node, server->game->teams, entries) {
         // player list breaks when ai throws fork
         LIST_FOREACH(player_node, team_node->team->players, entries)
-            player_tick(game, player_node->player);
+            player_tick(server, player_node->player);
     }
 }
 

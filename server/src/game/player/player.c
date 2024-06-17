@@ -1,4 +1,4 @@
-/*
+/*ser
 ** EPITECH PROJECT, 2024
 ** B-YEP-400-BAR-4-1-zappy-joan-pau.merida-ruiz
 ** File description:
@@ -7,7 +7,6 @@
 
 #include "game/player.h"
 #include "game/event.h"
-#include "libs/log.h"
 #include "server/client.h"
 #include "server/command.h"
 #include <sys/queue.h>
@@ -38,7 +37,7 @@ bool move_player(map_t *map,player_t *player, position_t new_pos)
     return true;
 }
 
-void player_tick(game_t *game, player_t *player)
+void player_tick(server_t *server, player_t *player)
 {
     event_node_t *event_node = LIST_FIRST(player->events);
 
@@ -52,6 +51,6 @@ void player_tick(game_t *game, player_t *player)
         return;
     }
     //log_debug("and is executing it");
-    handle_ai_event(game, player, event_node->event);
+    handle_ai_event(server, player, event_node->event);
     LIST_REMOVE(event_node, entries);
 }

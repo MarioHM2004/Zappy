@@ -25,12 +25,12 @@ event_func_ptr_t event_func_ptr[] = {
     {0, NULL}
 };
 
-void handle_ai_event(game_t *game, player_t *player, event_t *event)
+void handle_ai_event(server_t *server, player_t *player, event_t *event)
 {
     for (int i = 0; event_func_ptr[i].func != NULL; i++) {
         if (event_func_ptr[i].type == event->type) {
                 //log_debug("Handling event %d", event->type);
-            event_func_ptr[i].func(game, player, event);
+            event_func_ptr[i].func(server, player, event);
             return;
         }
     }
