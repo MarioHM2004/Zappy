@@ -47,6 +47,7 @@ class AIManager:
 
     def start_socket(self, host: str, port: int, team_name: str) -> socket.socket:
         data: str | None = None
+        connect_nbr: str | None = None
         map: list[str] | None = None
         client_info: list[str] | None = None
         socket_cl: socket.socket | None = None
@@ -74,7 +75,6 @@ class AIManager:
             self.drone.y_position = int(client_info[3])
             self.drone.orientation = int(client_info[4])
             self.drone.incantation_lvl = int(client_info[5])
-            print(f"{self.client_id}")
 
             # Recieve MAP-SIZE: msz X Y
             data = self.recv_data(socket=socket_cl)
@@ -82,8 +82,15 @@ class AIManager:
             if len(map) != 3 and map[0] != "msz":
                 print("-- Failed to connect to server: Invalid response msz")
                 return None
+
+            # Connect nbr
+            self.send_data(socket=socket_cl, data="connect_nbr")
+            connect_nbr = self.recv_data(socket=socket_cl)
+
+            print(f"{connect_nbr}")
             print(f"{map[1]} {map[2]}")
 
+            self.drone.connect_nbr = int(connect_nbr)
             self.map_size.extend([int(map[1]), int(map[2])])
 
 
