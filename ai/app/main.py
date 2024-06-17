@@ -4,7 +4,6 @@
 ## File description:
 ## main.py
 ##
-
 import ai.app.modules.AIManager.AIManager as m
 
 

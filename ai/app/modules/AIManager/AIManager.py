@@ -4,7 +4,6 @@
 ## File description:
 ## AIManager.py
 ##
-
 import argparse
 import socket
 

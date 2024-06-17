@@ -4,8 +4,8 @@
 ## File description:
 ## const.py
 ##
-
-from typing import Callable, Union
+from typing import Callable
+from typing import Union
 
 import ai.app.modules.Drone.DroneHelper as dh
 import ai.app.modules.Drone.Inventory.Inventory as inv

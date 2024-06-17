@@ -4,7 +4,6 @@
 ## File description:
 ## DroneHelper.py
 ##
-
 from __future__ import annotations
 
 import typing

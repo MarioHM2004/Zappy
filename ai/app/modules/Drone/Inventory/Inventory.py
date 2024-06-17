@@ -5,6 +5,7 @@
 ## Inventory.py
 ##
 
+
 class Inventory:
     def __init__(self) -> None:
         self.food: int = 0

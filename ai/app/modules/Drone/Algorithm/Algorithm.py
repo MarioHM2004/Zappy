@@ -4,12 +4,9 @@
 ## File description:
 ## Algorithm.py
 ##
-
-from tokenize import triple_quoted
-from turtle import Turtle, forward
-from webbrowser import get
 import ai.app.const as const
 import ai.app.modules.Drone.Algorithm.AlgorithmHelper as ah
+
 
 class Algorithm:
     def __init__(self) -> None:
@@ -25,7 +22,7 @@ class Algorithm:
         self.take: ah.TakeDecision = ah.TakeDecision()
         self.set: ah.SetDecision = ah.SetDecision()
         self.incantation: ah.IncantationDecision = ah.IncantationDecision()
-  
+
     def __calculate_scores(self, payload: const.AlgoPayload) -> dict[str, float]:
         """
         Calculate the scores of each decision based on the payload.
@@ -37,7 +34,7 @@ class Algorithm:
             dict[str, float]: Dictionary with the name and scores of each decision.
         """
         raise NotImplementedError
-    
+
     def choose_decision(self, payload: const.AlgoPayload) -> str:
         """
         Choose the best decision to take based on the payload.
@@ -48,7 +45,7 @@ class Algorithm:
         Returns:
             str: The decision to take.
         """
-        
+
         if payload.get("frozen") is True:
             return "ko"
         scores = self.__calculate_scores(payload)

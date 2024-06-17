@@ -4,10 +4,9 @@
 ## File description:
 ## Drone.py
 ##
-
 import ai.app.const as const
-import ai.app.modules.Drone.Inventory.Inventory as inv
 import ai.app.modules.Drone.Algorithm.Algorithm as algo
+import ai.app.modules.Drone.Inventory.Inventory as inv
 
 
 class Drone:
@@ -22,7 +21,6 @@ class Drone:
         self.algo: algo.Algorithm = algo.Algorithm()
         self.inventory: inv.Inventory = inv.Inventory()
 
-
     def __process_payload(self, payload: str) -> None:
         """
         Updates the drone's internal variables with the payload.
@@ -30,9 +28,9 @@ class Drone:
         Args:
             payload (str): Drone information coming from the server.
         """
-        
+
         raise NotImplementedError
-    
+
     def __build_algo_payload(self) -> const.AlgoPayload:
         """
         Builds the payload to be sent to the algorithm.
@@ -40,7 +38,7 @@ class Drone:
         Returns:
             const.AlgoPayload: Payload to be sent to the algorithm.
         """
-        
+
         return {
             "life": self.life,
             "team": self.team,
@@ -65,11 +63,11 @@ class Drone:
 
         action: str | None = None
 
-        self.__process_payload(payload) # Payload -> Internal Variables
+        self.__process_payload(payload)  # Payload -> Internal Variables
         action = self.algo.choose_decision(self.__build_algo_payload())
         if action is None or action not in const.CMD_FUNC:
             return "ko"
-        
+
         #! Most likely will change for a better implementation
         if action.find("broadcast") != -1:
             return const.CMD_FUNC[action](self, action)
