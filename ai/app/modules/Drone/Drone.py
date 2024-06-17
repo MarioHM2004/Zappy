@@ -10,14 +10,15 @@ import ai.app.modules.Drone.Inventory.Inventory as inv
 
 
 class Drone:
-    def __init__(self, x_position: int, y_position: int, team: str) -> None:
+    def __init__(self, team: str) -> None:
         self.life: int = 10
         self.team: str = team
-        self.elevation: int = 1
+        self.incantation_lvl: int = 1
         self.view: list[str] = []
         self.frozen: bool = False
-        self.x_position: int = x_position
-        self.y_position: int = y_position
+        self.x_position: int = 0
+        self.y_position: int = 0
+        self.orientation: int = 0
         self.algo: algo.Algorithm = algo.Algorithm()
         self.inventory: inv.Inventory = inv.Inventory()
 

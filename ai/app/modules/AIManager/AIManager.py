@@ -19,7 +19,7 @@ class AIManager:
         self.client_id: int
         self.drone: d.Drone | None = None
         self.socket: socket.socket | None = None
-        self.map_size: list[int] | None = None
+        self.map_size: list[int] = []
         self.parser = argparse.ArgumentParser(add_help=False)
         self.parser.add_argument("-help", action="help", help="Show this help message and exit")
         self.parser.add_argument("-p", type=int, required=True, help="Port number")
@@ -32,7 +32,7 @@ class AIManager:
         self.port = args.p
         self.host = args.h
         self.team = args.n
-        self.drone = d.Drone(0, 0, self.team)
+        self.drone = d.Drone(self.team)
 
     def send_data(self, socket: socket.socket, data: str) -> None:
         to_send: str = f"{data}\n"
@@ -45,7 +45,7 @@ class AIManager:
     def start_socket(self, host: str, port: int, team_name: str) -> socket.socket:
         data: str | None = None
         map: list[str] | None = None
-        client_id: list[str] | None = None
+        client_info: list[str] | None = None
         socket_cl: socket.socket | None = None
 
         try:
@@ -60,20 +60,27 @@ class AIManager:
             # Send team name
             self.send_data(socket=socket_cl, data=team_name)
 
-            # Recieve CLIENT-NUM
+            # Recieve CLIENT-NUM: pnw #n X Y O L N
             data = self.recv_data(socket=socket_cl)
-            print(f"{data}")
-            client_id = data.split()
+            client_info = data.split()
+            if len(client_info) != 7 and client_info[0] != "pnw":
+                print("-- Failed to connect to server: Invalid response pnw")
+                return None
+            self.client_id = int(client_info[1])
+            self.drone.x_position = int(client_info[2])
+            self.drone.y_position = int(client_info[3])
+            self.drone.orientation = int(client_info[4])
+            self.drone.incantation_lvl = int(client_info[5])
+            print(f"{self.client_id}")
 
             # Recieve MAP-SIZE: msz X Y
             data = self.recv_data(socket=socket_cl)
             map = data.split()
             if len(map) != 3 and map[0] != "msz":
-                print("-- Failed to connect to server: Invalid response")
+                print("-- Failed to connect to server: Invalid response msz")
                 return None
             print(f"{map[1]} {map[2]}")
 
-            self.client_id = int(client_id[0])
             self.map_size.extend([int(map[1]), int(map[2])])
 
             print(f"[TEST] Client ID: {self.client_id}")
