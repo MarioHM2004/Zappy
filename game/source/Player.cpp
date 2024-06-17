@@ -29,18 +29,15 @@ zappy::Player::Player(godot::SceneTree *tree, std::size_t number,
         godot::Object::cast_to<godot::CharacterBody3D>(
             instantiated_scene->get_child(0));
 
-    // TODO(jabolo): Fix this setting position incorrectly
     instantiated_scene->set_position(position);
+
+    double degrees = 90 * orientation;
+    instantiated_scene->set_rotation_degrees(godot::Vector3(0, degrees, 0));
 
     _robot_scene = instantiated_scene;
     _robot_body = character_body;
 
     spawn();
-}
-
-zappy::Player::~Player()
-{
-    // TODO: Free resources
 }
 
 std::size_t zappy::Player::get_number() const

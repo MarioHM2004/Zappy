@@ -15,7 +15,7 @@
 
 namespace zappy
 {
-    enum Orientation { NORTH = 1, EAST = 2, SOUTH = 3, WEST = 4 };
+    enum Orientation { NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3 };
 
     class Player {
       private:
@@ -33,7 +33,6 @@ namespace zappy
       public:
         Player(godot::SceneTree *tree, std::size_t number,
             godot::Vector3 position, Orientation orientation);
-        ~Player();
 
         std::size_t get_number() const;
         std::size_t get_level() const;
