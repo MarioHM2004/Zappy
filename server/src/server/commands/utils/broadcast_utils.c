@@ -17,7 +17,7 @@ broadcast_t *create_broadcast(player_t *player, const char *text)
         return NULL;
     broadcast->player = *player;
     strcpy(broadcast->text, text);
-    return NULL;
+    return broadcast;
 }
 
 void delete_broadcast(broadcast_t *broadcast)

@@ -13,6 +13,16 @@
 
     #include <sys/types.h>
 
+typedef enum {
+    N = 1,
+    E = 2,
+    S = 3,
+    W = 4,
+    NE = 5,
+    SE = 6,
+    NW = 7,
+    SW = 8
+} sound_e;
 
 typedef enum {
     NORTH = 1,

@@ -42,6 +42,7 @@ player_t *assign_player(socket_t *socket, server_t *server, char *team_name)
     change_players_tile(server->game->map, egg->pos, 1);
     egg->state = ALIVE;
     egg->fd = socket->fd;
+    egg->food_status = 126;
     return egg;
 }
 

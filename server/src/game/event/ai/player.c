@@ -18,6 +18,7 @@
 #include "server/packet.h"
 #include <sys/queue.h>
 #include <time.h>
+#include "game/event.h"
 
 incantation_t incantations[INCANTATION_NUM] = {
     {1, 1, 1, 0, 0, 0, 0, 0},
@@ -84,13 +85,6 @@ void incantation(server_t *server, player_t *player, event_t *event)
     remove_incantation_items(tile.resource, player->level);
     add_response_to_player(server->clients, player,
         formatstr(END_INCANTATION_RESPONSE, player->level));
-}
-
-void broadcast(server_t *server, player_t *player, event_t *event)
-{
-    (void)server;
-    (void)event;
-    (void)player;
 }
 
 void fork_player(server_t *server, player_t *player, event_t *event)

@@ -47,13 +47,6 @@ static const client_command_t gui_commands[] = {
     {"", NULL}
 };
 
-static bool is_white_space(char c)
-{
-    if (isalpha(c))
-        return false;
-    return true;
-}
-
 static void client_command_ptr(server_t *server, client_t *client, char *cmd)
 {
     const client_command_t *commands = NULL;
@@ -64,7 +57,7 @@ static void client_command_ptr(server_t *server, client_t *client, char *cmd)
     for (size_t i = 0; commands[i].name[0]; i++) {
         if (!startswith(cmd, commands[i].name))
             continue;
-        if (!is_white_space(cmd[strlen(commands[i].name)]))
+        if (isalpha(cmd[strlen(commands[i].name)]))
             continue;
         return commands[i].func(server, client, cmd);
     }
