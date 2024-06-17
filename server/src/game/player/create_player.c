@@ -8,7 +8,6 @@
 #include "game/event.h"
 #include "game/game.h"
 #include "game/map.h"
-#include "server/command.h"
 #include "server/server.h"
 #include "game/player.h"
 #include "game/team.h"

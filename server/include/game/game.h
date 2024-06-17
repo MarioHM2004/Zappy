@@ -11,6 +11,7 @@
     #include <sys/queue.h>
     #include <sys/types.h>
     #include "parser.h"
+    #include <sys/select.h>
 
     #define MAX_TEAM_LENGTH 32
 
