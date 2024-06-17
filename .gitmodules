@@ -2,3 +2,6 @@
 	path = game/library/godot-cpp
 	url = https://github.com/godotengine/godot-cpp
 	branch = 4.2
+[submodule "server/libs/external"]
+	path = server/libs/log
+	url = https://github.com/rxi/log.c.git
