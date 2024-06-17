@@ -8,6 +8,8 @@ import argparse
 import socket
 
 import ai.app.modules.Drone.Drone as d
+import ai.app.modules.Drone.DroneHelper as dh
+import ai.app.const as const
 
 
 class AIManager:
@@ -40,6 +42,7 @@ class AIManager:
 
     def recv_data(self, socket: socket.socket) -> str:
         data: str = socket.recv(1024).decode()
+        data = data.strip()
         return data
 
     def start_socket(self, host: str, port: int, team_name: str) -> socket.socket:
@@ -83,8 +86,6 @@ class AIManager:
 
             self.map_size.extend([int(map[1]), int(map[2])])
 
-            print(f"[TEST] Client ID: {self.client_id}")
-            print(f"[TEST] Map Size: {self.map_size[0]}x{self.map_size[1]}")
 
         except Exception as e:
             print(f"-- Failed to connect to server: {host}:{port}, {e}")
@@ -106,40 +107,49 @@ class AIManager:
         if self.socket is None:
             running = False
             return
-
         while running is True:
             running = self.run()
         self.close_socket(socket=self.socket)
 
     def run(self) -> bool:
         cmd: str = ""
-        payload: str = ""
-        data: str | None = None
+        # payload: str = ""
 
         try:
-            cmd = self.drone.take_decision(payload=payload)
-            if cmd != "ko":
-                self.send_data(socket=self.socket, cmd=cmd)
+            # cmd = self.drone.take_decision(payload=payload)
+            cmd = self.drone.take_decision()
 
-            # Recieve data from server
-            data = self.recv_data(socket=self.socket)
-            if data is None or len(data) == 0:
-                return True
-            print(f"[TEST] len: {len(data)}")
+            print(f"[TEST] cmd: {cmd}")
+            if cmd == "ko":
+                return False
+            if self.execute_cmd(cmd=cmd) == "ko":
+                return False
 
         except Exception as e:
-            print(f"-- Error: {e}")
+            print(f"-- Error run: {e}")
             return False
-        return self.handle_data(data=data)
+        return True
 
     def handle_data(self, data: str) -> bool:
-        ret: bool = True
-
         print(f"[TEST] Data: {data}")
         if data.startswith("dead"):
-            ret = self.handle_pdi(data=data)
-        return ret
+            return self.handle_pdi(data=data)
+        return True
 
     def handle_pdi(self, data: str) -> bool:
         print("Player has died.")
         return False
+
+    def execute_cmd(self, cmd: str) -> str:
+        s_data: str = ""
+
+        self.send_data(socket=self.socket, data=cmd)
+        s_data = self.recv_data(socket=self.socket)
+
+        # check if is dead
+        if self.handle_data(data=s_data) is False:
+            return "ko"
+        # check if cmd is valid
+        if s_data == "ok":
+            return const.CMD_FUNC[cmd](self.drone, "")
+        return "ko"
