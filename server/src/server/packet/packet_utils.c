@@ -38,6 +38,20 @@ bool read_packets(socket_t *socket, packet_list_t *packets)
     return true;
 }
 
+static void insert_tail(packet_list_t *packets, packet_node_t *node)
+{
+    packet_node_t *tmp = NULL;
+
+    if (!LIST_FIRST(packets)) {
+        LIST_INSERT_HEAD(packets, node, entries);
+        return;
+    }
+    tmp = LIST_FIRST(packets);
+    while (LIST_NEXT(tmp, entries))
+        tmp = LIST_NEXT(tmp, entries);
+    LIST_INSERT_AFTER(tmp, node, entries);
+}
+
 void add_packet(packet_list_t *packets, packet_t *packet)
 {
     packet_node_t *node = NULL;
@@ -46,10 +60,7 @@ void add_packet(packet_list_t *packets, packet_t *packet)
     node = create_packet_node(packet);
     if (!node)
         return;
-    if (LIST_FIRST(packets))
-        LIST_INSERT_AFTER(LIST_FIRST(packets), node, entries);
-    else
-        LIST_INSERT_HEAD(packets, node, entries);
+    insert_tail(packets, node);
 }
 
 void add_packet_by_fd(server_t *server, int fd, packet_t *packet)
@@ -60,3 +71,4 @@ void add_packet_by_fd(server_t *server, int fd, packet_t *packet)
         return;
     add_packet(client->response, packet);
 }
+
