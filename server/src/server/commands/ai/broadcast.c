@@ -8,6 +8,7 @@
 #include "game/event.h"
 #include "game/game.h"
 #include "game/player.h"
+#include "libs/log.h"
 #include "server/command.h"
 
 void broadcast_command(server_t *server, client_t *client, char *cmd)
@@ -17,13 +18,20 @@ void broadcast_command(server_t *server, client_t *client, char *cmd)
     event_t *event = NULL;
     char broadcast_text[MAX_BROADCAST_LENGTH];
 
-    if (sscanf(cmd, "broadcast %1023s", broadcast_text) == -1)
+    if (sscanf(cmd, "broadcast %1023s", broadcast_text) == -1) {
+        log_debug("1111");
         return packet_message(client, ERROR_MESSAGE);
+    }
     broadcast = create_broadcast(player, broadcast_text);
-    if (!player || !broadcast)
+    if (!player || !broadcast) {
+        log_debug("22222");
         return packet_message(client, ERROR_MESSAGE);
+    }
+    log_fatal("%s", broadcast->text),
     event = create_event(BROADCAST, (void *)broadcast, sizeof(broadcast_t));
-    if (!event)
+    if (!event) {
+        log_debug("44444");
         return packet_message(client, ERROR_MESSAGE);
+    }
     add_event(player->events, event, 7.0 / server->game->freq);
 }

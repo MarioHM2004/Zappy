@@ -67,7 +67,8 @@
     #define INVENTORY_REQUEST "Inventory"
     #define INVENTORY_RESPONSE "[linemate %d, deraumere %d, sibur %d, mendiane %d, phiras %d, thystame %d]"
     #define BROADCAST_REQUEST "Broadcast %s"
-    #define BROADCAST_RESPONSE "ok"
+    #define BROADCAST_SENDER "ok"
+    #define BROADCAST_RECEIVER "message %d, %s"
     #define CONNECT_NBR_REQUEST "Connect_nbr"
     #define CONNECT_NBR_RESPONSE "%d"
     #define FORK_REQUEST "Fork"
@@ -83,7 +84,6 @@
     #define START_INCANTATION_REQUEST "Incantation"
     #define START_INCANTATION_RESPONSE "Elevation underway"
     #define END_INCANTATION_RESPONSE "Current level: %d"
-
 
 typedef void (*client_command_func_t)(server_t *, client_t *, char *);
 
