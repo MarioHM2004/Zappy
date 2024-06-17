@@ -61,7 +61,7 @@ class Drone:
             str: The action (command) taken by the drone.
         """
 
-        print(f"[TEST] Drone {self.team} at ({self.x_position}, {self.y_position}) with {self.life} life, {self.incantation_lvl} elevation and Inventory: {self.inventory}")
+        print(f"[TEST] Drone {self.team} at ({self.x_position}, {self.y_position} - orientation: {self.orientation}) with {self.life} life, {self.incantation_lvl} elevation and Inventory: {self.inventory}")
 
         action: str | None = None
 

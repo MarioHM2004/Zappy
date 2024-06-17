@@ -19,17 +19,41 @@ if typing.TYPE_CHECKING:
 
 
 def cmd_forward(drone: Drone, payload) -> str:
-    # drone.y_position += 1
+    match drone.orientation:
+        case 1:
+            drone.y_position += 1
+        case 2:
+            drone.x_position += 1
+        case 3:
+            drone.y_position -= 1
+        case 4:
+            drone.x_position -= 1
     return "forward"
 
 
 def cmd_left(drone: Drone, payload) -> str:
-    # drone.x_position -= 1
+    match drone.orientation:
+        case 1:
+            drone.orientation = 4
+        case 2:
+            drone.orientation = 1
+        case 3:
+            drone.orientation = 2
+        case 4:
+            drone.orientation = 3
     return "left"
 
 
 def cmd_right(drone: Drone, payload) -> str:
-    # drone.x_position += 1
+    match drone.orientation:
+        case 1:
+            drone.orientation = 2
+        case 2:
+            drone.orientation = 3
+        case 3:
+            drone.orientation = 4
+        case 4:
+            drone.orientation = 1
     return "right"
 
 
