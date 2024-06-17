@@ -41,6 +41,7 @@ typedef struct player_s {
     player_state_e state;
     resources_t *inventory;
     event_list_t *events;
+    uint food_status; //Starts at 126, when reaches 0 and has no food, player dies
 } player_t;
 
 typedef struct player_node_s {

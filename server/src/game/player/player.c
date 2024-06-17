@@ -7,6 +7,9 @@
 
 #include "game/player.h"
 #include "game/event.h"
+#include "game/game.h"
+#include "game/resources.h"
+#include "libs/log.h"
 #include "server/client.h"
 #include "server/command.h"
 #include <sys/queue.h>
@@ -42,15 +45,24 @@ void player_tick(server_t *server, player_t *player)
     event_node_t *event_node = LIST_FIRST(player->events);
 
     // log_player(player);
+    if (player->state != ALIVE)
+        return;
+    log_debug("Player %d food status %d", player->number, player->food_status);
+    if (player->food_status == 0) {
+        if (change_resource(player->inventory, FOOD, -1))
+            player->food_status = 126;
+        else {
+            log_info("Player %d DIED", player->number);
+            player->state = DEAD;
+        }
+    }
+    player->food_status--;
     if (event_node == NULL)
-        return; // log_debug("has no events");
-    //log_debug("has event %d ", event_node->event->type);
+        return;
     if (event_node->wait_time > 0) {
-        //log_debug("but needs to wait %d ticks", event_node->wait_time);
         event_node->wait_time--;
         return;
     }
-    //log_debug("and is executing it");
     handle_ai_event(server, player, event_node->event);
     LIST_REMOVE(event_node, entries);
 }

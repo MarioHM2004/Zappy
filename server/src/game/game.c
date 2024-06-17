@@ -69,7 +69,7 @@ void game_tick(server_t *server)
         log_info("Spawning reosurces");
         spawn_all_resources(server->game->map);
         spawn_resources = 0;
-    } else
-        spawn_resources++;
+    }
+    spawn_resources++;
 }
 
