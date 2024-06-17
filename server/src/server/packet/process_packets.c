@@ -9,6 +9,7 @@
 #include "libs/log.h"
 #include "server/client.h"
 #include "server/server.h"
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/queue.h>
@@ -46,6 +47,13 @@ static const client_command_t gui_commands[] = {
     {"", NULL}
 };
 
+static bool is_white_space(char c)
+{
+    if (isalpha(c))
+        return false;
+    return true;
+}
+
 static void client_command_ptr(server_t *server, client_t *client, char *cmd)
 {
     const client_command_t *commands = NULL;
@@ -54,8 +62,11 @@ static void client_command_ptr(server_t *server, client_t *client, char *cmd)
         return assign_client_type(server, client, cmd);
     commands = (client->type == AI) ? ai_commands : gui_commands;
     for (size_t i = 0; commands[i].name[0]; i++) {
-        if (startswith(cmd, commands[i].name))
-            return commands[i].func(server, client, cmd);
+        if (!startswith(cmd, commands[i].name))
+            continue;
+        if (!is_white_space(cmd[strlen(commands[i].name)]))
+            continue;
+        return commands[i].func(server, client, cmd);
     }
     packet_message(client, UNKNOWN_COMMAND);
 }
