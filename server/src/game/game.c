@@ -7,7 +7,9 @@
 
 #include "game/map.h"
 #include "game/player.h"
+#include "game/resources.h"
 #include "game/team.h"
+#include "libs/log.h"
 #include "server/server.h"
 #include <stdlib.h>
 #include <time.h>
@@ -55,7 +57,7 @@ void game_tick(server_t *server)
 {
     team_node_t *team_node = NULL;
     player_node_t *player_node = NULL;
-
+    static uint spawn_resources = 0;
     if (!valid_tick())
         return;
     LIST_FOREACH(team_node, server->game->teams, entries) {
@@ -63,5 +65,11 @@ void game_tick(server_t *server)
         LIST_FOREACH(player_node, team_node->team->players, entries)
             player_tick(server, player_node->player);
     }
+    if (spawn_resources == 20) {
+        log_info("Spawning reosurces");
+        spawn_all_resources(server->game->map);
+        spawn_resources = 0;
+    } else
+        spawn_resources++;
 }
 
