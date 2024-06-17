@@ -18,7 +18,7 @@ void run(server_t *server)
             break;
         accept_connection(server);
         handle_packets(server);
-        game_tick(server->game);
+        game_tick(server);
         close_connection(server);
     }
 }

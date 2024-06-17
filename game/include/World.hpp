@@ -9,7 +9,7 @@ namespace zappy
     constexpr std::size_t RESOURCE_COUNT = 7;
     using TileData = std::array<std::size_t, RESOURCE_COUNT>;
 
-    enum class ResourceType {
+    enum ResourceType {
         FOOD = 0,
         LINEMATE,
         DERAUMERE,
@@ -46,6 +46,7 @@ namespace zappy
             ResourceType resource, std::size_t amount);
         void clear_tile(std::size_t x, std::size_t y);
         void clear();
+        std::string dump() const;
     };
 } // namespace zappy
 

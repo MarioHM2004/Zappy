@@ -19,7 +19,7 @@
 #include <sys/queue.h>
 #include <time.h>
 
-incantation_t incantations[] = {
+incantation_t incantations[INCANTATION_NUM] = {
     {1, 1, 1, 0, 0, 0, 0, 0},
     {2, 2, 1, 1, 1, 0, 0, 0},
     {3, 2, 2, 0, 1, 0, 2, 0},
@@ -29,7 +29,7 @@ incantation_t incantations[] = {
     {7, 6, 2, 2, 2, 2, 2, 1}
 };
 
-static bool valid_incantation_tile(tile_t tile, incantation_t incantation)
+bool valid_incantation_tile(tile_t tile, incantation_t incantation)
 {
     if (tile.players < incantation.players)
         return false;
@@ -60,18 +60,19 @@ static void remove_incantation_items(resources_t *resource, int level)
     change_resource(resource, THYSTAME, -incantation.thystame);
 }
 
-void incantation(game_t *game, player_t *player, event_t *event)
+void incantation(server_t *server, player_t *player, event_t *event)
 {
-    tile_t tile = map_at(game->map, player->pos);
+    tile_t tile = map_at(server->game->map, player->pos);
     player_list_t *players  = NULL;
-    player_node_t *tmp= NULL;
+    player_node_t *tmp = NULL;
 
     (void)event;
     if (!valid_incantation_tile(tile, incantations[player->level - 1])) {
         log_debug("%d: Invalid incantation\n", player->number);
+        add_response_to_player(server->clients, player, ERROR_MESSAGE);
         return;
     }
-    players = get_players_on_tile(game->players, player->pos);
+    players = get_players_on_tile(server->game->players, player->pos);
     if (players == NULL)
         return;
     LIST_FOREACH(tmp, players, entries) {
@@ -81,32 +82,32 @@ void incantation(game_t *game, player_t *player, event_t *event)
     log_debug("%d: Incantation with %d players, level %d\n", player->number,
         player->number, get_player_list_size(players), player->level + 1);
     remove_incantation_items(tile.resource, player->level);
-    add_response_to_player(game->server->clients, player,
+    add_response_to_player(server->clients, player,
         formatstr(END_INCANTATION_RESPONSE, player->level));
 }
 
-void broadcast(game_t *game, player_t *player, event_t *event)
+void broadcast(server_t *server, player_t *player, event_t *event)
 {
-    (void)game;
+    (void)server;
     (void)event;
     (void)player;
 }
 
-void fork_player(game_t *game, player_t *player, event_t *event)
+void fork_player(server_t *server, player_t *player, event_t *event)
 {
-    team_t *team = get_team_by_player(game, player);
+    team_t *team = get_team_by_player(server->game, player);
     player_t *new_player = NULL;
 
     if (!team) {
-        add_response_to_player(game->server->clients, player, ERROR_MESSAGE);
+        add_response_to_player(server->clients, player, ERROR_MESSAGE);
         log_error("%d: Player not in a team\n", player->number);
         return;
     }
-    new_player = create_egg(game->map, player->pos);
+    new_player = create_egg(server->game->map, player->pos);
     add_player_to_team(team, new_player);
     log_info("%d: An egg is laid in %d %d\n",
         player->number, player->pos.x, player->pos.y);
-    add_response_to_player(game->server->clients, player, FORK_RESPONSE);
+    add_response_to_player(server->clients, player, FORK_RESPONSE);
 }
 
 static uint ejected_from(map_t *map, player_t *player, position_t pos)
@@ -130,10 +131,10 @@ static uint ejected_from(map_t *map, player_t *player, position_t pos)
     return 0;
 }
 
-void eject(game_t *game, player_t *player, event_t *event)
+void eject(server_t *server, player_t *player, event_t *event)
 {
-    tile_t tile = map_at(game->map, player->pos);
-    position_t new_pos = dir_at(game->map, player->pos, player->dir);
+    tile_t tile = map_at(server->game->map, player->pos);
+    position_t new_pos = dir_at(server->game->map, player->pos, player->dir);
     player_list_t *players = NULL;
     player_node_t *tmp = NULL;
     uint ejected_pos = 0;
@@ -143,7 +144,7 @@ void eject(game_t *game, player_t *player, event_t *event)
         log_debug("%d: No players to eject", player->number);
         return;
     }
-    players = get_players_on_tile(game->players, player->pos);
+    players = get_players_on_tile(server->game->players, player->pos);
     if (players == NULL)
         return;
     LIST_FOREACH(tmp, players, entries) {
@@ -151,14 +152,14 @@ void eject(game_t *game, player_t *player, event_t *event)
             || tmp->player->state == DEAD)
             continue;
         if (tmp->player->state == EGG) {
-            remove_player(game, tmp->player);
+            remove_player(server->game, tmp->player);
             continue;
         }
-        ejected_pos = ejected_from(game->map, tmp->player, new_pos);
-        move_player(game->map, tmp->player, new_pos);
-        add_response_to_player(game->server->clients, tmp->player,
+        ejected_pos = ejected_from(server->game->map, tmp->player, new_pos);
+        move_player(server->game->map, tmp->player, new_pos);
+        add_response_to_player(server->clients, tmp->player,
             formatstr(EJECTED_PLAYER, ejected_pos));
         log_debug("%d: Ejecting player %d", player->number, tmp->player->number);
     }
-    add_response_to_player(game->server->clients, player, EJECT_RESPONSE);
+    add_response_to_player(server->clients, player, EJECT_RESPONSE);
 }

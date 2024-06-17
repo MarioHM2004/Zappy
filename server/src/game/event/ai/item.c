@@ -12,7 +12,6 @@
 #include "game/player.h"
 #include "game/resources.h"
 #include "libs/log.h"
-#include "server/client.h"
 #include <string.h>
 #include "server/command.h"
 #include "server/server.h"
@@ -37,9 +36,9 @@ static resource_e string_to_resource(char message[MAX_OBJECT_LENGTH])
     return -1;
 }
 
-void take_object(game_t *game, player_t *player, event_t *event)
+void take_object(server_t *server, player_t *player, event_t *event)
 {
-    tile_t tile = map_at(game->map, player->pos);
+    tile_t tile = map_at(server->game->map, player->pos);
     resource_e item;
     uint *resource;
 
@@ -48,18 +47,18 @@ void take_object(game_t *game, player_t *player, event_t *event)
     item = string_to_resource(event->data.object.name);
     if (item != -1 && move_item(tile.resource, player->inventory, item)) {
         log_debug("Player %d took %d from the floor", player->number, item);
-        add_response_to_player(game->server->clients, player,
+        add_response_to_player(server->clients, player,
             TAKE_OBJECT_RESPONSE);
     } else {
         log_debug("Player %d couldn't take any item from the floor",
             player->number);
-        add_response_to_player(game->server->clients, player, ERROR_MESSAGE);
+        add_response_to_player(server->clients, player, ERROR_MESSAGE);
     }
 }
 
-void set_object(game_t *game, player_t *player, event_t *event)
+void set_object(server_t *server, player_t *player, event_t *event)
 {
-    tile_t tile = map_at(game->map, player->pos);
+    tile_t tile = map_at(server->game->map, player->pos);
     resource_e item;
     uint *resource;
     if (event->type != SET_OBJECT)
@@ -67,12 +66,12 @@ void set_object(game_t *game, player_t *player, event_t *event)
     item = string_to_resource(event->data.object.name);
     if (item != -1 && move_item(player->inventory, tile.resource, item)) {
         log_debug("Player %d set %d on the floor", player->number, item);
-        add_response_to_player(game->server->clients, player,
+        add_response_to_player(server->clients, player,
             SET_OBJECT_RESPONSE);
     } else {
         log_debug("Player %d couldn't set %s on the floor",
         player->number, item);
-        add_response_to_player(game->server->clients, player, ERROR_MESSAGE);
+        add_response_to_player(server->clients, player, ERROR_MESSAGE);
     }
 
 }

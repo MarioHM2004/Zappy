@@ -29,6 +29,8 @@ int zappy::Server::getServerSocket()
 
 void zappy::Server::setMapSize(int x, int y)
 {
+    _x = x;
+    _y = y;
 }
 
 int zappy::Server::createServerSocket(int port)
@@ -205,7 +207,7 @@ void zappy::Server::runServer()
 int main(int ac, char **av)
 {
     zappy::Server server;
-    server.setMapSize(10, 10);
+    server.setMapSize(9, 9);
     int serverSocket = server.createServerSocket(std::atoi(av[1]));
     server.setServerSocket(serverSocket);
     server.runServer();

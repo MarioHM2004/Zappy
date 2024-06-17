@@ -1,65 +1,50 @@
 #include <arpa/inet.h>
+#include <atomic>
 #include <cstring>
-#include <functional>
-#include <future>
 #include <netinet/in.h>
+#include <poll.h>
+#include <queue>
 #include <string>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <unistd.h>
+#include <godot_cpp/classes/mutex.hpp>
+#include <godot_cpp/classes/node.hpp>
+#include <godot_cpp/classes/ref.hpp>
+#include <godot_cpp/classes/thread.hpp>
 
 #ifndef __CLIENT
     #define __CLIENT
 
 namespace zappy
 {
-    using FnCallback = std::function<void(const std::string &)>;
+    using FnCallback = std::function<void(const std::vector<std::string> &)>;
 
-    class TCPSocket {
+    class TCPSocket : public godot::Node {
       private:
+        void setup_socket();
+        void poll_socket();
+
+        std::string _address;
+        int _port;
         int _sockfd;
-        bool _ready = false;
-        struct sockaddr_in _address;
+        bool _connected;
+        std::atomic<bool> _stop;
+        std::queue<std::string> _message_queue;
+
+        godot::Ref<godot::Thread> _thread;
+        godot::Ref<godot::Mutex> _mutex;
 
       public:
-        static constexpr size_t BUFFER_SIZE = 2048;
-
-        TCPSocket(const std::string &ip, int port);
+        TCPSocket(const std::string &address, int port);
         ~TCPSocket();
 
-        TCPSocket(const TCPSocket &) = delete;
-        TCPSocket &operator=(const TCPSocket &) = delete;
-
-        TCPSocket(TCPSocket &&other) noexcept;
-
-        TCPSocket &operator=(TCPSocket &&other) noexcept;
-
-        template <typename T>
-            requires std::is_trivially_copyable_v<T>
-        void send_data(const T &data);
-
-        template <typename T>
-            requires std::is_trivially_copyable_v<T>
-        T receive_data();
-
-        void send_string(const std::string &message);
-
-        std::string receive_string(size_t length);
-
-        void process_with(FnCallback &processor, const std::string &command);
-
-        template <typename T>
-            requires std::is_trivially_copyable_v<T>
-        std::future<void> async_send_data(const T &data);
-
-        template <typename T>
-            requires std::is_trivially_copyable_v<T>
-        std::future<T> async_receive_data();
-
-        std::future<void> async_send_string(const std::string &message);
-
-        std::future<std::string> async_receive_string(size_t length);
-
-        bool is_ready() const;
+        void start_polling();
+        void stop_polling();
+        bool pop_message(std::string &msg);
+        void send_message(const std::string &msg);
+        bool connected() const;
+        std::size_t message_count() const;
     };
 } // namespace zappy
 

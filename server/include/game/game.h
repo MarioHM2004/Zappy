@@ -11,6 +11,7 @@
     #include <sys/queue.h>
     #include <sys/types.h>
     #include "parser.h"
+    #include <sys/select.h>
 
     #define MAX_TEAM_LENGTH 32
 
@@ -39,14 +40,13 @@ typedef struct game_s {
     team_list_t *teams;
     player_list_t *players;
     uint players_per_team;
-    server_t *server;
     map_t *map;
 } game_t;
 
-game_t *create_game(arguments_t *arguments, server_t *server);
+game_t *create_game(arguments_t *arguments);
 void set_auto_start(game_t *g, bool auto_start);
 void set_display_eggs(game_t *g, bool display_eggs);
 void destroy_game(game_t *g);
-void game_tick(game_t *game);
+void game_tick(server_t *server);
 
 #endif /* !GAME_H_ */

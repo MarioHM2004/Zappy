@@ -63,6 +63,7 @@ static char *get_item_name(tile_t look_tiles)
         item_name = format_item_name(item_name, "egg");
     return item_name;
 }
+
 static char *get_look_content(tile_t *look_tiles, uint total_tiles)
 {
     char *look_content = NULL;
@@ -89,7 +90,7 @@ static uint look_total_tiles(uint level)
     return total_tiles;
 }
 
-void look(game_t *game, player_t *player, event_t *event)
+void look(server_t *server, player_t *player, event_t *event)
 {
     position_t row_pos = player->pos;
     position_t tile_pos = {0};
@@ -99,17 +100,17 @@ void look(game_t *game, player_t *player, event_t *event)
     uint count = 1;
 
     log_debug("Player %d looked", player->number);
-    look_tiles[0] = map_at(game->map, player->pos);
+    look_tiles[0] = map_at(server->game->map, player->pos);
     for (int i = 1; i <= player->level; i++) {
-        tile_pos = first_position_in_row(game, player->dir,
+        tile_pos = first_position_in_row(server->game, player->dir,
             row_pos, (i * 2) + 1);
         for (int j = 0; j < (i * 2) + 1; j++) {
-            look_tiles[count] = map_at(game->map, tile_pos);
-            tile_pos = dir_at(game->map, tile_pos, right_direction);
+            look_tiles[count] = map_at(server->game->map, tile_pos);
+            tile_pos = dir_at(server->game->map, tile_pos, right_direction);
             count++;
         }
-        row_pos = dir_at(game->map, row_pos, player->dir);
+        row_pos = dir_at(server->game->map, row_pos, player->dir);
     }
-    add_response_to_player(game->server->clients, player,
+    add_response_to_player(server->clients, player,
         get_look_content(look_tiles, total_tiles));
 }

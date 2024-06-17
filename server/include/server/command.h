@@ -12,6 +12,7 @@
     #include "game/team.h"
     #include "server.h"
 
+    #define INCANTATION_NUM 7
     #define MAX_COMMAND_NAME_LENGTH 64
     #define ERROR_MESSAGE "ko"
 
@@ -145,5 +146,8 @@ void assign_client_type(server_t *server, client_t *client, char *cmd);
 char *get_tile_content(server_t *server, int width, int height);
 char *get_cmd_from_packets(packet_list_t *packets);
 void add_response(client_t *client, char *response);
+
+bool valid_incantation_tile(tile_t tile, incantation_t incantation);
+extern incantation_t incantations[INCANTATION_NUM];
 
 #endif /* !COMMAND_H_ */
