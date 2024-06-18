@@ -52,11 +52,13 @@ godot::Genesis::Genesis()
                         return std::stoi(elem);
                     });
 
-                std::for_each(resources.begin(), resources.end(),
-                    [this, x, y](std::size_t resource) {
-                        _world->set_resource(x, y,
-                            static_cast<zappy::ResourceType>(resource), 1);
-                    });
+                for (auto it = resources.begin(); it != resources.end();
+                     ++it) {
+                    _world->set_resource(x, y,
+                        static_cast<zappy::ResourceType>(
+                            std::distance(resources.begin(), it)),
+                        *it);
+                }
             },
         },
         {
@@ -113,13 +115,14 @@ godot::Genesis::Genesis()
                         std::format(">> team not found: `{}`", team).c_str());
                 }
 
-                std::unique_ptr<zappy::Player> player =
+                std::shared_ptr<zappy::Player> player =
                     std::make_unique<zappy::Player>(
                         get_tree(), number, Vector3(x, 1, y), orientation);
 
                 player->set_level(level);
 
-                _teams.at(team)->add_player(std::move(player));
+                _players[number] = player;
+                _teams.at(team)->add_player(player);
             },
         },
         {
@@ -140,6 +143,47 @@ godot::Genesis::Genesis()
                 }
 
                 _teams[name] = std::make_unique<zappy::Team>(name);
+            },
+        },
+        {
+            zappy::Constants::Commands::PLAYER_POSITION,
+            [this](const std::vector<std::string> &response) {
+                std::shared_ptr<zappy::Player> player =
+                    _players.at(std::stoi(response.at(1)));
+                std::size_t x = std::stoi(response.at(2));
+                std::size_t y = std::stoi(response.at(3));
+
+                player->set_position(Vector3(x, 1, y));
+            },
+        },
+        {
+            zappy::Constants::Commands::PLAYER_LEVEL,
+            [this](const std::vector<std::string> &response) {
+                std::shared_ptr<zappy::Player> player =
+                    _players.at(std::stoi(response.at(1)));
+                std::size_t level = std::stoi(response.at(2));
+
+                player->set_level(level);
+            },
+        },
+        {
+            zappy::Constants::Commands::PLAYER_INVENTORY,
+            [this](const std::vector<std::string> &response) {
+                std::size_t number = std::stoi(response.at(1));
+                std::size_t x = std::stoi(response.at(2));
+                std::size_t y = std::stoi(response.at(3));
+
+                std::array<std::size_t, 7> resources;
+
+                std::transform(response.begin() + 4, response.end(),
+                    resources.begin(), [](const std::string &elem) {
+                        return std::stoi(elem);
+                    });
+
+                std::shared_ptr<zappy::Player> player = _players.at(number);
+
+                player->set_position(Vector3(x, 1, y));
+                player->get_inventory().set_all(resources);
             },
         },
         {

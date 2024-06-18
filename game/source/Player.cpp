@@ -20,14 +20,27 @@ zappy::Player::Player(godot::SceneTree *tree, std::size_t number,
         return;
     }
 
-    // TODO(jabolo): Add null checks
     godot::Ref<godot::PackedScene> packed_scene =
         godot::Object::cast_to<godot::PackedScene>(resource.ptr());
+    if (packed_scene.is_null()) {
+        godot::UtilityFunctions::print("packed scene not found");
+        return;
+    }
+
     godot::Node3D *instantiated_scene =
         godot::Object::cast_to<godot::Node3D>(packed_scene->instantiate());
+    if (instantiated_scene == NULL) {
+        godot::UtilityFunctions::print("instantiated scene not found");
+        return;
+    }
+
     godot::CharacterBody3D *character_body =
         godot::Object::cast_to<godot::CharacterBody3D>(
             instantiated_scene->get_child(0));
+    if (character_body == NULL) {
+        godot::UtilityFunctions::print("character body not found");
+        return;
+    }
 
     instantiated_scene->set_position(position);
 
@@ -50,7 +63,7 @@ std::size_t zappy::Player::get_level() const
     return _level;
 }
 
-const zappy::Inventory &zappy::Player::get_inventory() const
+zappy::Inventory &zappy::Player::get_inventory() const
 {
     return *_inventory;
 }
@@ -77,6 +90,7 @@ void zappy::Player::set_position(godot::Vector3 position)
     }
     _position = position;
     _robot_body->call("move_to_coordinate", position);
+    // TODO(jabolo): Set orientation (maybe)
 }
 
 void zappy::Player::spawn()

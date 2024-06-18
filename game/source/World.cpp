@@ -30,8 +30,7 @@ std::size_t zappy::World::get_resource(
 void zappy::World::set_resource(
     std::size_t x, std::size_t y, ResourceType resource, std::size_t amount)
 {
-    // TODO(jabolo): Fix this crash
-    // _map.at(x).at(y).at(resource) = amount;
+    _map.at(x).at(y).at(resource) = amount;
 }
 
 void zappy::World::add_resource(

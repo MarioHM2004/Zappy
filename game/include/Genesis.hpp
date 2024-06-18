@@ -41,6 +41,8 @@ namespace godot
         int _movement = 0;
         const float _speed = 150;
         std::unordered_map<std::string, std::unique_ptr<zappy::Team>> _teams;
+        std::unordered_map<std::size_t, std::shared_ptr<zappy::Player>>
+            _players;
 
       protected:
         static void _bind_methods();
