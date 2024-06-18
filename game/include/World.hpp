@@ -1,4 +1,6 @@
+#include <algorithm>
 #include <array>
+#include <string>
 #include <vector>
 
 #ifndef __WORLD
