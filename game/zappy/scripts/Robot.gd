@@ -34,3 +34,20 @@ func move_to_coordinate(coordinate: Vector3):
 	movement_direction.y = 0
 	set_movement_direction.emit(movement_direction)
 	set_movement_state.emit(movement_states["run"])
+
+func tint_one(path: String, principal: Color, dim: Color, shade: Color, light: Color):
+	var node: MeshInstance3D = get_node(path);
+	var shader_material: ShaderMaterial = node.get_surface_override_material(0).duplicate();
+	node.set_surface_override_material(0, shader_material)
+	shader_material.set("shader_parameter/NEWCOLORS", [principal, dim, shade, light])
+
+func tint(principal: Color, dim: Color, shade: Color, light: Color):
+	var paths = [
+		"MeshRoot/3DGodotRobot/RobotArmature/Skeleton3D/Llimbs and head",
+		"MeshRoot/3DGodotRobot/RobotArmature/Skeleton3D/Face",
+		"MeshRoot/3DGodotRobot/RobotArmature/Skeleton3D/Chest",
+		"MeshRoot/3DGodotRobot/RobotArmature/Skeleton3D/Bottom",
+	]
+	
+	for path in paths:
+		tint_one(path, principal, dim, shade, light)
