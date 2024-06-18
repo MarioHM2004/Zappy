@@ -99,7 +99,7 @@ class Drone:
 
         action = self.algo.choose_decision(self.__build_algo_payload())
 
-        if action is None or action not in const.CMD_FUNC and action.startswith("broadcast") is False:
+        if action is None or action not in const.CMD_FUNC and action.startswith("broadcast") is False and action.startswith("take") is False:
             return "ko"
 
         #! Most likely will change for a better implementation
