@@ -1,4 +1,5 @@
 #include "Client.hpp"
+#include <format>
 #include <thread>
 #include <godot_cpp/variant/utility_functions.hpp>
 
@@ -34,6 +35,8 @@ bool zappy::TCPSocket::pop_message(std::string &msg)
     if (!_message_queue.empty()) {
         msg = _message_queue.front();
         _message_queue.pop();
+        godot::UtilityFunctions::print(
+            std::format("[socket] >> `{}`", msg).c_str());
         _mutex->unlock();
         return true;
     }
@@ -69,19 +72,34 @@ void zappy::TCPSocket::poll_socket()
         return;
     }
 
+    const int buffer_size = 1024;
+    char buffer[buffer_size] = {0};
+    std::string message;
+
     while (!_stop) {
-        char buffer[1024] = {0};
-        int n = read(_sockfd, buffer, 1024);
+        int n = read(_sockfd, buffer, buffer_size);
         if (n < 0) {
             godot::UtilityFunctions::print(std::strerror(errno));
             continue;
+        } else if (n == 0) {
+            _connected = false;
+            break;
         }
 
-        std::string message(buffer, n);
-        _mutex->lock();
-        _message_queue.push(message);
-        _mutex->unlock();
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        message += std::string(buffer, n);
+
+        auto pos = std::find(message.begin(), message.end(), '\n');
+        while (pos != message.end()) {
+            std::string token = message.substr(0, pos - message.begin());
+            _mutex->lock();
+            _message_queue.push(token);
+            _mutex->unlock();
+            message.erase(message.begin(), pos + 1);
+            pos = std::find(message.begin(), message.end(), '\n');
+        }
+
+        std::this_thread::sleep_for(
+            std::chrono::milliseconds(_time_unit * 10));
     }
 }
 
@@ -91,10 +109,18 @@ void zappy::TCPSocket::send_message(const std::string &msg)
         return godot::UtilityFunctions::print(std::strerror(errno));
     }
 
-    int n = write(_sockfd, msg.c_str(), msg.size());
+    // apend \n to the message
+    std::string message = msg + "\n";
+
+    int n = write(_sockfd, message.c_str(), message.size());
     if (n < 0) {
         return godot::UtilityFunctions::print(std::strerror(errno));
     }
+}
+
+void zappy::TCPSocket::send_message(const std::string_view &msg)
+{
+    send_message(std::string(msg));
 }
 
 bool zappy::TCPSocket::connected() const
@@ -105,4 +131,14 @@ bool zappy::TCPSocket::connected() const
 std::size_t zappy::TCPSocket::message_count() const
 {
     return _message_queue.size();
+}
+
+std::size_t zappy::TCPSocket::time_unit() const
+{
+    return _time_unit;
+}
+
+void zappy::TCPSocket::time_unit(std::size_t unit)
+{
+    _time_unit = unit;
 }

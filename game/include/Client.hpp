@@ -35,6 +35,8 @@ namespace zappy
         godot::Ref<godot::Thread> _thread;
         godot::Ref<godot::Mutex> _mutex;
 
+        std::size_t _time_unit = 10;
+
       public:
         TCPSocket(const std::string &address, int port);
         ~TCPSocket();
@@ -43,8 +45,11 @@ namespace zappy
         void stop_polling();
         bool pop_message(std::string &msg);
         void send_message(const std::string &msg);
+        void send_message(const std::string_view &msg);
         bool connected() const;
         std::size_t message_count() const;
+        std::size_t time_unit() const;
+        void time_unit(std::size_t unit);
     };
 } // namespace zappy
 

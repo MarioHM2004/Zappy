@@ -15,19 +15,24 @@
 
 namespace zappy
 {
-    class Player : public godot::Node {
+    enum Orientation { NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3 };
+
+    class Player {
       private:
         godot::Vector3 _position;
         std::size_t _number;
         std::size_t _level = 0;
+        Orientation _orientation = NORTH;
         std::string _path = "res://scenes/robot.tscn";
         std::unique_ptr<Inventory> _inventory;
-        std::unique_ptr<godot::PackedScene> _scene;
-        std::unique_ptr<godot::Node3D> _robot_scene;
-        std::unique_ptr<godot::CharacterBody3D> _robot_body;
+
+        godot::SceneTree *_tree;
+        godot::Node3D *_robot_scene = nullptr;
+        godot::CharacterBody3D *_robot_body = nullptr;
 
       public:
-        Player(std::size_t number, godot::Vector3 position);
+        Player(godot::SceneTree *tree, std::size_t number,
+            godot::Vector3 position, Orientation orientation);
 
         std::size_t get_number() const;
         std::size_t get_level() const;
@@ -36,8 +41,11 @@ namespace zappy
 
         void set_level(std::size_t level);
         void set_position(godot::Vector3 position);
+        void set_orientation(Orientation orientation);
+        Orientation get_orientation() const;
 
         void spawn();
+        void tint(godot::Color accent);
     };
 } // namespace zappy
 

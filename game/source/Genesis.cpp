@@ -68,6 +68,86 @@ godot::Genesis::Genesis()
                     std::format(">> echo: `{}`", message).c_str());
             },
         },
+        {
+            zappy::Constants::Commands::SERVER_OPEN,
+            [this](const std::vector<std::string> &_response) {
+                _socket->send_message(zappy::Constants::TEAM_NAME);
+            },
+        },
+        {
+            zappy::Constants::Commands::TIME_UNIT_MODIFICATION,
+            [this](const std::vector<std::string> &response) {
+                // TODO(jabolo): verify if this is the correct command
+                _socket->time_unit(std::stoi(response.at(1)));
+            },
+        },
+        {
+            zappy::Constants::Commands::TIME_UNIT_REQUEST,
+            [this](const std::vector<std::string> &response) {
+                // TODO(jabolo): verify if this is the correct command
+                _socket->time_unit(std::stoi(response.at(1)));
+            },
+        },
+        {
+            zappy::Constants::Commands::PLAYER_INVENTORY,
+            [](const std::vector<std::string> &response) {
+                // TODO(jabolo): find player and update inventory
+            },
+        },
+        {
+            zappy::Constants::Commands::PLAYER_JOINED,
+            [this](const std::vector<std::string> &response) {
+                std::size_t number = std::stoi(response.at(1));
+                std::size_t x = std::stoi(response.at(2));
+                std::size_t y = std::stoi(response.at(3));
+                zappy::Orientation orientation =
+                    static_cast<zappy::Orientation>(std::stoi(response.at(4)));
+                std::size_t level = std::stoi(response.at(5));
+                std::string team = response.at(6);
+
+                UtilityFunctions::print(
+                    std::format(">> player joined: `{}`", number).c_str());
+
+                if (_teams.find(team) == _teams.end()) {
+                    return UtilityFunctions::print(
+                        std::format(">> team not found: `{}`", team).c_str());
+                }
+
+                std::unique_ptr<zappy::Player> player =
+                    std::make_unique<zappy::Player>(
+                        get_tree(), number, Vector3(x, 1, y), orientation);
+
+                player->set_level(level);
+
+                _teams.at(team)->add_player(std::move(player));
+            },
+        },
+        {
+            zappy::Constants::Commands::PLAYER_LEVEL,
+            [](const std::vector<std::string> &response) {
+                // TODO(jabolo): find player and update level
+            },
+        },
+        {
+            zappy::Constants::Commands::TEAM_NAMES,
+            [this](const std::vector<std::string> &response) {
+                std::string name = response.at(1);
+
+                if (_teams.find(name) != _teams.end()) {
+                    return UtilityFunctions::print(
+                        std::format(">> team already exists: `{}`", name)
+                            .c_str());
+                }
+
+                _teams[name] = std::make_unique<zappy::Team>(name);
+            },
+        },
+        {
+            zappy::Constants::Commands::SERVER_KO,
+            [](const std::vector<std::string> &_response) {
+                UtilityFunctions::print(">> critical error: server KO");
+            },
+        },
     };
 }
 
@@ -95,9 +175,6 @@ void godot::Genesis::_ready()
     }
 
     _socket->start_polling();
-
-    // TODO(jabolo): Add an alias to avoid hardcoding commands
-    dispatch(zappy::Constants::Commands::MAP_SIZE);
 }
 
 void godot::Genesis::_process(double delta)
@@ -236,6 +313,11 @@ void godot::Genesis::tick()
         }
 
         std::string command = response.at(0);
+
+        std::transform(command.begin(), command.end(), command.begin(),
+            [](unsigned char c) {
+                return std::tolower(c);
+            });
 
         if (_callbacks.find(command) != _callbacks.end()) {
             _callbacks.at(command)(response);

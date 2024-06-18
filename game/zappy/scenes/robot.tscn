@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dgto4y77lwlv6"]
+[gd_scene load_steps=20 format=3 uid="uid://dgto4y77lwlv6"]
 
 [ext_resource type="Script" path="res://scripts/Robot.gd" id="1_5n33w"]
 [ext_resource type="Resource" uid="uid://bt4mstbw5g22a" path="res://assets/Robot/MovementStates/Idle.tres" id="2_xkwfx"]
@@ -6,8 +6,38 @@
 [ext_resource type="Script" path="res://scripts/movement_controller.gd" id="4_afwf3"]
 [ext_resource type="Script" path="res://scripts/animation_controller.gd" id="5_rp5cb"]
 [ext_resource type="PackedScene" uid="uid://ddq84xd1kwsxh" path="res://scenes/3d_godot_robot.tscn" id="6_haw36"]
+[ext_resource type="Shader" path="res://assets/color.gdshader" id="7_b7j6w"]
+[ext_resource type="Texture2D" uid="uid://c1oj7adfejcly" path="res://assets/Robot/3DGodotRobot_GodotPalette.png" id="8_jnnky"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dthk3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jxlq4"]
+render_priority = 0
+shader = ExtResource("7_b7j6w")
+shader_parameter/OLDCOLORS = PackedColorArray(0.270588, 0.552941, 0.752941, 1, 0.494118, 0.670588, 0.796078, 1, 0.560784, 0.592157, 0.615686, 1, 1, 1, 1, 1)
+shader_parameter/NEWCOLORS = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/texture_albedo = ExtResource("8_jnnky")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y8bu0"]
+render_priority = 0
+shader = ExtResource("7_b7j6w")
+shader_parameter/OLDCOLORS = PackedColorArray(0.270588, 0.552941, 0.752941, 1, 0.494118, 0.670588, 0.796078, 1, 0.560784, 0.592157, 0.615686, 1, 1, 1, 1, 1)
+shader_parameter/NEWCOLORS = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/texture_albedo = ExtResource("8_jnnky")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vi8qr"]
+render_priority = 0
+shader = ExtResource("7_b7j6w")
+shader_parameter/OLDCOLORS = PackedColorArray(0.270588, 0.552941, 0.752941, 1, 0.494118, 0.670588, 0.796078, 1, 0.560784, 0.592157, 0.615686, 1, 1, 1, 1, 1)
+shader_parameter/NEWCOLORS = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/texture_albedo = ExtResource("8_jnnky")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_phu66"]
+render_priority = 0
+shader = ExtResource("7_b7j6w")
+shader_parameter/OLDCOLORS = PackedColorArray(0.270588, 0.552941, 0.752941, 1, 0.494118, 0.670588, 0.796078, 1, 0.560784, 0.592157, 0.615686, 1, 1, 1, 1, 1)
+shader_parameter/NEWCOLORS = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+shader_parameter/texture_albedo = ExtResource("8_jnnky")
 
 [sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_sbk1e"]
 
@@ -67,30 +97,43 @@ shape = SubResource("CapsuleShape3D_dthk3")
 [node name="3DGodotRobot" parent="Robot/MeshRoot" instance=ExtResource("6_haw36")]
 
 [node name="Skeleton3D" parent="Robot/MeshRoot/3DGodotRobot/RobotArmature" index="0"]
-bones/0/position = Vector3(-3.56855e-17, 0.871784, 0.0298551)
+bones/0/position = Vector3(-3.5256e-16, 0.861288, 0.0298551)
 bones/0/rotation = Quaternion(0.0149092, 1.19196e-07, 1.77731e-09, 0.999889)
 bones/1/rotation = Quaternion(0.0294489, -1.52236e-14, 7.02117e-09, 0.999566)
-bones/4/position = Vector3(-3.36359e-16, 0.159783, -0.0114502)
+bones/4/position = Vector3(-3.65722e-16, 0.151501, -0.011741)
 bones/4/rotation = Quaternion(0.00540027, -1.19208e-07, -6.43763e-10, 0.999985)
 bones/5/rotation = Quaternion(0.00821238, -4.94291e-14, -1.95798e-09, 0.999966)
-bones/8/position = Vector3(9.98242e-08, 0.0790102, 0.418693)
+bones/8/position = Vector3(9.97907e-08, 0.0611572, 0.418552)
 bones/8/rotation = Quaternion(0.00393964, 1.19208e-07, -4.69641e-10, 0.999992)
-bones/9/position = Vector3(0.267321, 0.0915163, -0.0276966)
-bones/9/rotation = Quaternion(-0.517167, -0.464418, -0.516018, 0.50058)
-bones/10/rotation = Quaternion(-0.369526, 0.608072, -0.447025, 0.542096)
+bones/9/position = Vector3(0.267321, 0.0764982, -0.028224)
+bones/9/rotation = Quaternion(-0.523066, -0.457802, -0.521926, 0.49438)
+bones/10/rotation = Quaternion(-0.356441, 0.617847, -0.433107, 0.551029)
 bones/11/rotation = Quaternion(-0.0175777, -0.091351, 0.0271132, 0.995294)
 bones/12/rotation = Quaternion(0.0209349, 0.0170217, -0.0176714, 0.99948)
-bones/13/position = Vector3(-0.267321, 0.0915163, -0.0276966)
-bones/13/rotation = Quaternion(-0.517167, 0.464418, 0.516018, 0.50058)
-bones/14/rotation = Quaternion(-0.369526, -0.608072, 0.447025, 0.542096)
+bones/13/position = Vector3(-0.267321, 0.0764982, -0.028224)
+bones/13/rotation = Quaternion(-0.523066, 0.457802, 0.521926, 0.49438)
+bones/14/rotation = Quaternion(-0.356441, -0.617847, 0.433107, 0.551029)
 bones/15/rotation = Quaternion(-0.0175777, 0.091351, -0.0271132, 0.995294)
 bones/16/rotation = Quaternion(0.0209349, -0.0170217, 0.0176714, 0.99948)
-bones/17/rotation = Quaternion(0.996263, 0.0206615, -0.00655086, 0.0836061)
-bones/18/rotation = Quaternion(0.14826, 0.00726681, 0.0259902, 0.98858)
-bones/19/rotation = Quaternion(-0.563631, 0.00304491, -0.00497156, 0.826006)
-bones/21/rotation = Quaternion(0.996263, -0.0206616, 0.00655087, 0.083606)
-bones/22/rotation = Quaternion(0.14826, -0.00726677, -0.0259902, 0.98858)
-bones/23/rotation = Quaternion(-0.563631, -0.00304492, 0.00497158, 0.826006)
+bones/17/rotation = Quaternion(0.991415, 0.0203396, -0.00748625, 0.128945)
+bones/18/rotation = Quaternion(0.249628, 0.00871771, 0.024974, 0.967981)
+bones/19/rotation = Quaternion(-0.608714, 0.00331542, -0.00479121, 0.793369)
+bones/21/rotation = Quaternion(0.991415, -0.0203396, 0.00748626, 0.128945)
+bones/22/rotation = Quaternion(0.249628, -0.00871766, -0.0249741, 0.967981)
+bones/23/rotation = Quaternion(-0.608714, -0.00331544, 0.00479126, 0.793368)
+
+[node name="Bottom" parent="Robot/MeshRoot/3DGodotRobot/RobotArmature/Skeleton3D" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_jxlq4")
+
+[node name="Chest" parent="Robot/MeshRoot/3DGodotRobot/RobotArmature/Skeleton3D" index="1"]
+surface_material_override/0 = SubResource("ShaderMaterial_y8bu0")
+
+[node name="Face" parent="Robot/MeshRoot/3DGodotRobot/RobotArmature/Skeleton3D" index="2"]
+surface_material_override/0 = SubResource("ShaderMaterial_vi8qr")
+surface_material_override/1 = SubResource("ShaderMaterial_vi8qr")
+
+[node name="Llimbs and head" parent="Robot/MeshRoot/3DGodotRobot/RobotArmature/Skeleton3D" index="3"]
+surface_material_override/0 = SubResource("ShaderMaterial_phu66")
 
 [node name="AnimationTree" type="AnimationTree" parent="Robot/MeshRoot"]
 root_node = NodePath("../3DGodotRobot")
