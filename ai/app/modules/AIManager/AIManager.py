@@ -64,10 +64,13 @@ class AIManager:
             # Send team name
             self.send_data(socket=socket_cl, data=team_name)
 
-            # Recieve CLIENT-NUM: pnw #n X Y O L N
+            # Ignore ebo
+            self.recv_data(socket=socket_cl)
+
+            # Recieve CLIENT-NUM and MAP-SIZE: pnw #n X Y O L N msz X Y
             data = self.recv_data(socket=socket_cl)
             client_info = data.split()
-            if len(client_info) != 7 and client_info[0] != "pnw":
+            if len(client_info) != 10 or client_info[0] != "pnw" or client_info[7] != "msz":
                 print("-- Failed to connect to server: Invalid response pnw")
                 return None
             self.client_id = int(client_info[1])
@@ -76,22 +79,17 @@ class AIManager:
             self.drone.orientation = int(client_info[4])
             self.drone.incantation_lvl = int(client_info[5])
 
-            # Recieve MAP-SIZE: msz X Y
-            data = self.recv_data(socket=socket_cl)
-            map = data.split()
-            if len(map) != 3 and map[0] != "msz":
-                print("-- Failed to connect to server: Invalid response msz")
-                return None
+            map = [int(client_info[8]), int(client_info[9])]
 
             # Connect nbr
             self.send_data(socket=socket_cl, data="connect_nbr")
             connect_nbr = self.recv_data(socket=socket_cl)
 
             print(f"{connect_nbr}")
-            print(f"{map[1]} {map[2]}")
+            print(f"{map[0]} {map[1]}")
 
             self.drone.connect_nbr = int(connect_nbr)
-            self.map_size.extend([int(map[1]), int(map[2])])
+            self.map_size.extend([int(map[0]), int(map[1])])
 
 
         except Exception as e:
