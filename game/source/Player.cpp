@@ -98,7 +98,7 @@ zappy::Orientation zappy::Player::get_orientation() const
     return _orientation;
 }
 
-void zappy::Player::tint(godot::Color color)
+void zappy::Player::tint(godot::Color accent)
 {
     if (_robot_body == nullptr) {
         return godot::UtilityFunctions::print("Robot body is null");
@@ -108,5 +108,9 @@ void zappy::Player::tint(godot::Color color)
         return godot::UtilityFunctions::print("Method `tint` not found");
     }
 
-    _robot_body->call("tint", color);
+    godot::Color main_body(0, 0, 0, 255);
+    godot::Color pupils(0, 0, 0, 255);
+    godot::Color eye_bg(255, 255, 255, 255);
+
+    _robot_body->call("tint", main_body, pupils, accent, eye_bg);
 }

@@ -45,7 +45,7 @@ namespace zappy
         Orientation get_orientation() const;
 
         void spawn();
-        void tint(godot::Color color);
+        void tint(godot::Color accent);
     };
 } // namespace zappy
 
