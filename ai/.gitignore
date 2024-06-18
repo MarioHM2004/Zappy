@@ -7,3 +7,4 @@ venv/
 .venv/
 .ruff_cache
 # src/secrets.py
+notes.md

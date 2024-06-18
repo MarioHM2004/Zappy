@@ -15,7 +15,7 @@ def running_ai(client_socket):
                 break
             print(f"Received: {data}")
         except Exception as e:
-            print(f"-- Error: {e}")
+            print(f"-- Error running: {e}")
             running = False
             break
 
