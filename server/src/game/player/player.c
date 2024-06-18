@@ -40,23 +40,30 @@ bool move_player(map_t *map,player_t *player, position_t new_pos)
     return true;
 }
 
-void player_tick(server_t *server, player_t *player)
+static void handle_player_hunger(server_t *server, player_t *player)
 {
-    event_node_t *event_node = LIST_FIRST(player->events);
+    client_t *client = get_client_by_fd(server->clients, player->fd);
 
-    // log_player(player);
-    if (player->state != ALIVE)
+    if (player->state != ALIVE || !client)
         return;
-    log_debug("Player %d food status %d", player->number, player->food_status);
     if (player->food_status == 0) {
         if (change_resource(player->inventory, FOOD, -1))
             player->food_status = 126;
         else {
             log_info("Player %d DIED", player->number);
+            add_response_to_player(server->clients, player, DEATH_RESPONSE);
+            pdi_command(server, client, player);
             player->state = DEAD;
         }
     }
     player->food_status--;
+}
+
+void player_tick(server_t *server, player_t *player)
+{
+    event_node_t *event_node = LIST_FIRST(player->events);
+    
+    handle_player_hunger(server, player);
     if (event_node == NULL)
         return;
     if (event_node->wait_time > 0) {

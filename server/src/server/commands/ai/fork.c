@@ -21,5 +21,6 @@ void fork_command(server_t *server, client_t *client, char *cmd)
     event = create_event(FORK, (void *)player, sizeof(player_t));
     if (!event)
         return packet_message(client, ERROR_MESSAGE);
+    pfk_command(server, client, player);
     add_event(player->events, event, 42.0 / server->game->freq);
 }

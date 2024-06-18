@@ -14,6 +14,7 @@
 #include "game/team.h"
 #include "libs/lib.h"
 #include "libs/log.h"
+#include "server/client.h"
 #include "server/command.h"
 #include "server/packet.h"
 #include <sys/queue.h>
@@ -73,7 +74,7 @@ void incantation(server_t *server, player_t *player, event_t *event)
         add_response_to_player(server->clients, player, ERROR_MESSAGE);
         return;
     }
-    players = get_players_on_tile(server->game->players, player->pos);
+    players = get_players_on_tile(server->game->players, player->pos, ALIVE);
     if (players == NULL)
         return;
     LIST_FOREACH(tmp, players, entries) {
@@ -91,16 +92,17 @@ void fork_player(server_t *server, player_t *player, event_t *event)
 {
     team_t *team = get_team_by_player(server->game, player);
     player_t *new_player = NULL;
+    client_t *client = get_client_by_fd(server->clients, player->fd);
 
-    if (!team) {
+    if (!team || !client) {
         add_response_to_player(server->clients, player, ERROR_MESSAGE);
-        log_error("%d: Player not in a team\n", player->number);
         return;
     }
     new_player = create_egg(server->game->map, player->pos);
     add_player_to_team(team, new_player);
     log_info("%d: An egg is laid in %d %d\n",
         player->number, player->pos.x, player->pos.y);
+    enw_command(server, client, player, new_player);
     add_response_to_player(server->clients, player, FORK_RESPONSE);
 }
 
@@ -125,28 +127,37 @@ static uint ejected_from(map_t *map, player_t *player, position_t pos)
     return 0;
 }
 
+static void egg_death(server_t *server, player_t *player)
+{
+    client_t *client = get_client_by_fd(server->clients, player->fd);
+
+    if (!client) {
+        log_error("Could not remove egg");
+        return;
+    }
+    edi_command(server, client, player);
+    remove_player(server->game, player); 
+}
+
 void eject(server_t *server, player_t *player, event_t *event)
 {
     tile_t tile = map_at(server->game->map, player->pos);
     position_t new_pos = dir_at(server->game->map, player->pos, player->dir);
-    player_list_t *players = NULL;
+    player_list_t *players =
+        get_players_on_tile(server->game->players, player->pos, -1);
     player_node_t *tmp = NULL;
     uint ejected_pos = 0;
 
-    (void)event;
-    if (tile.players == 1) {
-        log_debug("%d: No players to eject", player->number);
+    if (tile.players == 1 || players == NULL) {
+        add_response_to_player(server->clients, player, ERROR_MESSAGE);
         return;
     }
-    players = get_players_on_tile(server->game->players, player->pos);
-    if (players == NULL)
-        return;
     LIST_FOREACH(tmp, players, entries) {
         if (tmp->player->number == player->number
             || tmp->player->state == DEAD)
             continue;
         if (tmp->player->state == EGG) {
-            remove_player(server->game, tmp->player);
+            egg_death(server, tmp->player);
             continue;
         }
         ejected_pos = ejected_from(server->game->map, tmp->player, new_pos);

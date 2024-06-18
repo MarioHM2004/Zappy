@@ -54,8 +54,8 @@ bool update_tile(map_t *map, tile_t new_tile, position_t pos);
 bool change_resource_tile(map_t *map, position_t pos, resource_e item, uint quantity);
 bool change_players_tile(map_t *map, position_t pos, int change);
 bool change_eggs_tile(map_t *map, position_t pos, int change);
-player_list_t *get_players_on_tile(player_list_t *player_list, position_t pos);
-
+player_list_t *get_players_on_tile(player_list_t *player_list,
+    position_t pos, player_state_e state);
 void spawn_eggs(map_t *map, game_t *game);
 
 tile_t map_at(map_t* map, position_t pos);
