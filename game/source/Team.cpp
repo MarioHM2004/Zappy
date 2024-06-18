@@ -37,7 +37,7 @@ const zappy::Player &zappy::Team::get_player_at(std::size_t index)
     return *_players.at(index);
 }
 
-void zappy::Team::add_player(std::unique_ptr<zappy::Player> player)
+void zappy::Team::add_player(std::shared_ptr<zappy::Player> player)
 {
     if (_players.size() >= _count) {
         return godot::UtilityFunctions::print(
