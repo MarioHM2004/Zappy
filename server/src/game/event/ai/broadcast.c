@@ -11,6 +11,7 @@
 #include "game/resources.h"
 #include "libs/lib.h"
 #include "libs/log.h"
+#include "server/client.h"
 #include "server/command.h"
 #include "server/server.h"
 #include "game/event.h"
@@ -134,9 +135,10 @@ static int sound_trajectory(map_t *map, player_t *from, player_t *to)
 void broadcast(server_t *server, player_t *player, event_t *event)
 {
     player_node_t *tmp = NULL;
+    client_t *client = get_client_by_fd(server->clients, player->fd);
     int sound_dir = 0;
 
-    if (event->type != BROADCAST)
+    if (event->type != BROADCAST || !client)
         return;
     LIST_FOREACH(tmp, server->game->players, entries) {
         if (tmp->player == player || tmp->player->state != ALIVE)
@@ -151,5 +153,6 @@ void broadcast(server_t *server, player_t *player, event_t *event)
         add_response_to_player(server->clients, tmp->player,
             formatstr(BROADCAST_RECEIVER, sound_dir, event->data.broadcast.text));
     }
+    pbc_command(server, client, player, event->data.broadcast.text);
     add_response_to_player(server->clients, player, BROADCAST_SENDER);
 }

@@ -8,6 +8,8 @@
 #include "game/event.h"
 #include "game/game.h"
 #include "game/map.h"
+#include "server/client.h"
+#include "server/command.h"
 #include "server/server.h"
 #include "game/player.h"
 #include "game/team.h"
@@ -30,10 +32,10 @@ static player_t *get_egg_from_team(team_t *team)
 player_t *assign_player(socket_t *socket, server_t *server, char *team_name)
 {
     static int player_count = 0;
+    client_t *client = get_client_by_fd(server->clients, socket->fd);
     team_t *team = get_team_by_name(server->game, team_name);
     player_t *egg = NULL;
-
-    if (!team)
+    if (!team || !client)
         return NULL;
     egg = get_egg_from_team(team);
     if (!egg)
@@ -43,6 +45,7 @@ player_t *assign_player(socket_t *socket, server_t *server, char *team_name)
     egg->state = ALIVE;
     egg->fd = socket->fd;
     egg->food_status = 126;
+    ebo_command(server, client, egg);
     return egg;
 }
 

@@ -5,21 +5,24 @@
 ** pic
 */
 
+#include "game/game.h"
 #include "libs/lib.h"
 #include "server/command.h"
 #include "game/player.h"
+#include <sys/queue.h>
 
 void pic_command(server_t *server, client_t *client,
-    player_t *player, int *p_number)
+    player_t *player, player_list_t *p_number)
 {
+    player_node_t *tmp = NULL;
     char *p_nb_list;
     char *response = NULL;
 
     if (!player || !p_number)
         return packet_message(client, ERROR_MESSAGE);
-    for (size_t i = 0; p_number[i]; i++) {
-        p_nb_list = formatstr("%d", p_nb_list[i]);
-        if (p_number[i + 1])
+    LIST_FOREACH(tmp, p_number, entries) {
+        p_nb_list = formatstr("%d", tmp->player->number);
+        if (LIST_NEXT(tmp, entries))
             p_nb_list = safe_strcat(p_nb_list, " ");
     }
     response = formatstr(PIC_RESPONSE,
