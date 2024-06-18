@@ -1,25 +1,31 @@
-###########
-# EXAMPLE #
-###########
-# Database configuration
-DB_HOST = "localhost"
-DB_PORT = 5432
-DB_NAME = "mydatabase"
-DB_USER = "myuser"
-DB_PASSWORD = "mypassword"
+##
+## EPITECH PROJECT, 2023
+## zappy
+## File description:
+## const.py
+##
+from typing import Callable
+from typing import Union
 
-# API configuration
-API_KEY = "myapikey"
-API_URL = "https://api.example.com"
+import ai.app.modules.Drone.DroneHelper as dh
+import ai.app.modules.Drone.Inventory.Inventory as inv
 
-# Logging configuration
-LOG_LEVEL = "DEBUG"
-LOG_FILE = "app.log"
 
-# Other project-specific settings
-MAX_RESULTS = 100
-DEFAULT_TIMEOUT = 10
+# Type hint for the payload that will be sent to the algorithm
+AlgoPayload = dict[str, Union[int, str, list[str], inv.Inventory, bool, None]]
 
-###########
-# EXAMPLE #
-###########
+# Commands
+CMD_FUNC: list[str, Callable] = {
+    "forward": dh.cmd_forward,
+    "left": dh.cmd_left,
+    "right": dh.cmd_right,
+    "look": dh.cmd_look,
+    "inventory": dh.cmd_inventory,
+    "broadcast": dh.cmd_broadcast,
+    "connect_nbr": dh.cmd_connect_nbr,
+    "fork": dh.cmd_fork,
+    "eject": dh.cmd_eject,
+    "take": dh.cmd_take,
+    "set": dh.cmd_set,
+    "incantation": dh.cmd_incantation,
+}
