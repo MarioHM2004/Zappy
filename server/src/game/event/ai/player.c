@@ -74,7 +74,7 @@ void incantation(server_t *server, player_t *player, event_t *event)
         add_response_to_player(server->clients, player, ERROR_MESSAGE);
         return;
     }
-    players = get_players_on_tile(server->game->players, player->pos);
+    players = get_players_on_tile(server->game->players, player->pos, ALIVE);
     if (players == NULL)
         return;
     LIST_FOREACH(tmp, players, entries) {
@@ -144,7 +144,7 @@ void eject(server_t *server, player_t *player, event_t *event)
     tile_t tile = map_at(server->game->map, player->pos);
     position_t new_pos = dir_at(server->game->map, player->pos, player->dir);
     player_list_t *players =
-        get_players_on_tile(server->game->players, player->pos);
+        get_players_on_tile(server->game->players, player->pos, -1);
     player_node_t *tmp = NULL;
     uint ejected_pos = 0;
 

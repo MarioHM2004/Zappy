@@ -17,7 +17,7 @@ void incantation_command(server_t *server, client_t *client, char *cmd)
     player_t *player = get_player_by_fd(server->game->players, client->socket->fd);
     player_node_t *tmp = NULL;
     player_list_t *player_list =
-        get_players_on_tile(server->game->players, player->pos);
+        get_players_on_tile(server->game->players, player->pos, ALIVE);
     event_t *event = NULL;
     tile_t tile = {0};
 
