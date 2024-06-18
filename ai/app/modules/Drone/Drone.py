@@ -79,6 +79,8 @@ class Drone:
                     self.inventory.update_inventory(payload)
                 case "connect_nbr":
                     self.connect_nbr = int(payload)
+                case "eject":
+                    print(f"eject: {payload}")
         except Exception as e:
             print(f"Error parsing payload: {e}")
 

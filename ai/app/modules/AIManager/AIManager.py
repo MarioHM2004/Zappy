@@ -127,6 +127,14 @@ class AIManager:
             print(f"[TEST] cmd: {cmd}")
             if cmd == "ko":
                 return False
+
+            # if eject, we need to check if egg is ejected
+            if cmd == "eject":
+                if self.execute_cmd(cmd=cmd) == "eject_failed":
+                    print("[TEST] eject failed")
+                    return True
+                elif self.execute_cmd(cmd="inventory") == "ko":
+                    return False
             if self.execute_cmd(cmd=cmd) == "ko":
                 return False
 
@@ -155,6 +163,8 @@ class AIManager:
         if self.handle_data(data=s_data) is False:
             return "ko"
         # check if cmd is valid
+        if cmd == "eject" and s_data == "ko":
+            return "eject_failed"
         if s_data == "suc":
             return "ko"
         # parse payload
