@@ -36,7 +36,7 @@ namespace zappy
 
         std::size_t get_number() const;
         std::size_t get_level() const;
-        const Inventory &get_inventory() const;
+        Inventory &get_inventory() const;
         const godot::Vector3 &get_position() const;
 
         void set_level(std::size_t level);

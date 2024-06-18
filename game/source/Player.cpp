@@ -50,7 +50,7 @@ std::size_t zappy::Player::get_level() const
     return _level;
 }
 
-const zappy::Inventory &zappy::Player::get_inventory() const
+zappy::Inventory &zappy::Player::get_inventory() const
 {
     return *_inventory;
 }
@@ -77,6 +77,7 @@ void zappy::Player::set_position(godot::Vector3 position)
     }
     _position = position;
     _robot_body->call("move_to_coordinate", position);
+    // TODO(jabolo): Set orientation (maybe)
 }
 
 void zappy::Player::spawn()
