@@ -50,4 +50,4 @@ class Algorithm:
             return "ko"
         # scores = self.__calculate_scores(payload)
         # return max(scores, key=scores.get)
-        return "take object" # Testing purposes
+        return "set object" # Testing purposes

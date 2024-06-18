@@ -85,10 +85,12 @@ def cmd_eject(drone: Drone, payload) -> str:
 
 # takes 7/f
 def cmd_take(drone: Drone, payload) -> str:
+    print(f"Helper take: {payload}")
     return "take"
 
 # takes 7/f
 def cmd_set(drone: Drone, payload) -> str:
+    print(f"Helper set: {payload}")
     return "set"
 
 # takes 300/f

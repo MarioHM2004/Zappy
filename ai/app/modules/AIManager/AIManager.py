@@ -118,7 +118,7 @@ class AIManager:
 
     def run(self) -> bool:
         cmd: str = ""
-        take_res: str = ""
+        aux: str = ""
         # payload: str = ""
 
         try:
@@ -137,11 +137,19 @@ class AIManager:
                 elif self.execute_cmd(cmd="inventory") == "ko":
                     return False
             elif cmd.startswith("take"):
-                take_res = self.execute_cmd(cmd=cmd)
-                if take_res == "take_failed":
+                aux = self.execute_cmd(cmd=cmd)
+                if aux == "take_failed":
                     print("[TEST] take failed")
                     return True
-                if take_res == "ko":
+                if aux == "ko":
+                    return False
+                return True
+            elif cmd.startswith("set"):
+                aux = self.execute_cmd(cmd=cmd)
+                if aux == "set_failed":
+                    print("[TEST] set failed")
+                    return True
+                if aux == "ko":
                     return False
                 return True
             elif self.execute_cmd(cmd=cmd) == "ko":
@@ -180,8 +188,14 @@ class AIManager:
             return "broadcast"
         if cmd.startswith("take"):
             if s_data == "ok":
-                return "take"
-            return "take_failed"
+                cmd = "take"
+            else:
+                return "take_failed"
+        if cmd.startswith("set"):
+            if s_data == "ok":
+                cmd = "set"
+            else:
+                return "set_failed"
         # parse payload
         self.drone.parse_payload(cmd=cmd, payload=s_data)
         return const.CMD_FUNC[cmd](self.drone, "")
