@@ -135,6 +135,7 @@ void eject(server_t *server, player_t *player, event_t *event)
 
     (void)event;
     if (tile.players == 1) {
+        add_response_to_player(server->clients, player, ERROR_MESSAGE);
         log_debug("%d: No players to eject", player->number);
         return;
     }
