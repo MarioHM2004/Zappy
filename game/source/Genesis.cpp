@@ -192,6 +192,28 @@ godot::Genesis::Genesis()
                 UtilityFunctions::print(">> critical error: server KO");
             },
         },
+        {
+            zappy::Constants::Commands::PLAYER_EXPULSION,
+            [this](const std::vector<std::string> &response) {
+                std::size_t id = std::stoi(response.at(1));
+
+                auto p = _players.find(id);
+
+                if (p == _players.end()) {
+                    return UtilityFunctions::print(
+                        std::format(">> could not find {}", id).c_str());
+                }
+
+                _players.erase(p);
+
+                std::for_each(_teams.begin(), _teams.end(),
+                    [id](const std::pair<const std::basic_string<char>,
+                        std::unique_ptr<zappy::Team>> &team) {
+                        team.second->remove_player(id);
+                    });
+            },
+
+        },
     };
 }
 
@@ -293,8 +315,8 @@ void godot::Genesis::key_input(const Ref<InputEventKey> &key)
         case KEY_ESCAPE:
             Input::get_singleton()->set_mouse_mode(is_pressed
                     ? (key->get_keycode() == KEY_ESCAPE
-                              ? Input::MouseMode::MOUSE_MODE_VISIBLE
-                              : Input::MouseMode::MOUSE_MODE_HIDDEN)
+                            ? Input::MouseMode::MOUSE_MODE_VISIBLE
+                            : Input::MouseMode::MOUSE_MODE_HIDDEN)
                     : Input::get_singleton()->get_mouse_mode());
             break;
         default: break;
