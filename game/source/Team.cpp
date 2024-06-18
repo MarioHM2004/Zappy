@@ -1,8 +1,15 @@
 #include "Team.hpp"
 #include <format>
+#include <godot_cpp/variant/color.hpp>
 
 zappy::Team::Team(std::string name) : _name(name)
 {
+    std::string randomHex = "#";
+    for (int i = 0; i < 6; i++) {
+        randomHex += std::format("{:x}", rand() % 16);
+    }
+
+    _color = godot::Color(randomHex.c_str());
 }
 
 std::string zappy::Team::get_name() const
@@ -38,7 +45,6 @@ void zappy::Team::add_player(std::unique_ptr<zappy::Player> player)
     }
 
     _count += 1;
-    _color = _color * (1.0f - 0.1f * _players.size());
     player->tint(_color);
     _players.push_back(std::move(player));
 }

@@ -14,8 +14,7 @@ namespace zappy
         std::string _name;
         std::size_t _count = 6; // TODO(jabolo): Use the correct value
         std::vector<std::unique_ptr<Player>> _players;
-        // TODO(jabolo): Create random color
-        godot::Color _color = godot::Color(1, 1, 1, 1);
+        godot::Color _color;
 
       public:
         Team(std::string name);
