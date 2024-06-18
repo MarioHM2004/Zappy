@@ -167,6 +167,8 @@ class AIManager:
             return "eject_failed"
         if s_data == "suc":
             return "ko"
+        if cmd.startswith("broadcast"):
+            return "broadcast"
         # parse payload
         self.drone.parse_payload(cmd=cmd, payload=s_data)
         return const.CMD_FUNC[cmd](self.drone, "")
