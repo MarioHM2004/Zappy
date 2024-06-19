@@ -4,8 +4,8 @@
 ## File description:
 ## Algorithm.py
 ##
-import ai.app.const as const
-import ai.app.modules.Drone.Algorithm.AlgorithmHelper as ah
+import app.const as const
+import app.modules.Drone.Algorithm.AlgorithmHelper as ah
 
 
 class Algorithm:
@@ -50,4 +50,4 @@ class Algorithm:
             return "ko"
         # scores = self.__calculate_scores(payload)
         # return max(scores, key=scores.get)
-        return "set object" # Testing purposes
+        return "forward" # Testing purposes

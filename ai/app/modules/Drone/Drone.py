@@ -6,9 +6,9 @@
 ##
 import socket
 
-import ai.app.const as const
-import ai.app.modules.Drone.Algorithm.Algorithm as algo
-import ai.app.modules.Drone.Inventory.Inventory as inv
+import app.const as const
+import app.modules.Drone.Algorithm.Algorithm as algo
+import app.modules.Drone.Inventory.Inventory as inv
 
 
 class Drone:

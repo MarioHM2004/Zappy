@@ -7,9 +7,9 @@
 import argparse
 import socket
 
-import ai.app.modules.Drone.Drone as d
-import ai.app.modules.Drone.DroneHelper as dh
-import ai.app.const as const
+import app.modules.Drone.Drone as d
+import app.modules.Drone.DroneHelper as dh
+import app.const as const
 
 
 class AIManager:

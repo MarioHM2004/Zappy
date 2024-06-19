@@ -10,7 +10,7 @@ import typing
 
 
 if typing.TYPE_CHECKING:
-    from ai.app.modules.Drone.Drone import Drone
+    from app.modules.Drone.Drone import Drone
 
 # Solves circular import, that way we can have the Drone type hint in the functions
 
