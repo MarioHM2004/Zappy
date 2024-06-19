@@ -81,6 +81,8 @@ class Drone:
                     self.connect_nbr = int(payload)
                 case "eject":
                     print(f"eject: {payload}")
+                case "incantation":
+                    print(f"TO DO: parse incantation payload: {payload}")
         except Exception as e:
             print(f"Error parsing payload: {e}")
 

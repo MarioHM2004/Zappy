@@ -126,6 +126,11 @@ class AIManager:
             cmd = self.drone.take_decision()
 
             print(f"[TEST] cmd: {cmd}")
+
+            if self.drone.frozen is True:
+                print("[TEST] Drone is frozen")
+                return True
+
             if cmd == "ko":
                 return False
 
@@ -136,6 +141,12 @@ class AIManager:
                     return True
                 elif self.execute_cmd(cmd="inventory") == "ko":
                     return False
+                return True
+            elif cmd == "incantation":
+                if self.execute_cmd(cmd=cmd) == "incantation_failed":
+                    print("[TEST] incantation failed")
+                    return True
+                return True
             elif cmd.startswith("take"):
                 aux = self.execute_cmd(cmd=cmd)
                 if aux == "take_failed":
@@ -182,6 +193,8 @@ class AIManager:
         # check if cmd is valid
         if cmd == "eject" and s_data == "ko":
             return "eject_failed"
+        if cmd == "incantation" and s_data == "ko":
+            return "incantation_failed"
         if s_data == "suc":
             return "ko"
         if cmd.startswith("broadcast"):
