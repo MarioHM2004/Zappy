@@ -44,9 +44,6 @@ zappy::Player::Player(godot::SceneTree *tree, std::size_t number,
 
     instantiated_scene->set_position(position);
 
-    double degrees = 90 * orientation;
-    instantiated_scene->set_rotation_degrees(godot::Vector3(0, degrees, 0));
-
     _robot_scene = instantiated_scene;
     _robot_body = character_body;
 
@@ -100,7 +97,6 @@ void zappy::Player::set_position(godot::Vector3 position)
     }
     _position = position;
     _robot_body->call("move_to_coordinate", position);
-    // TODO(jabolo): Set orientation (maybe)
 }
 
 void zappy::Player::spawn()

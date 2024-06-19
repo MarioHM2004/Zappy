@@ -24,7 +24,7 @@ namespace zappy
         std::size_t _level = 0;
         Orientation _orientation = NORTH;
         std::string _path = "res://scenes/robot.tscn";
-        std::unique_ptr<Inventory> _inventory;
+        std::unique_ptr<Inventory> _inventory = std::make_unique<Inventory>();
         bool _frozen = false;
 
         godot::SceneTree *_tree;
