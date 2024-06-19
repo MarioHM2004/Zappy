@@ -45,7 +45,7 @@ void destroy_action_list(action_list_t *head)
     if (!head)
         return;
     current = LIST_FIRST(head);
-    while (current != NULL) {
+    while (current) {
         tmp = LIST_NEXT(current, entries);
         LIST_REMOVE(current, entries);
         destroy_action_node(current);

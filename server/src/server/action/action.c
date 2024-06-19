@@ -8,7 +8,7 @@
 #include "server/action.h"
 #include <stdlib.h>
 
-static void event_completed(action_t *a, void *data)
+static void event_completed_assignation(action_t *a, void *data)
 {
     a->data.event_completed = *((event_completed_t *)data);
 }
@@ -44,7 +44,7 @@ static void map_action(action_t *a, void *data)
 }
 
 static const action_assign_t action_assignation[] = {
-    { EVENT_COMPLETED, &event_completed },
+    { EVENT_COMPLETED, &event_completed_assignation },
     { NEW_GUI, &new_connection },
     { NEW_PLAYER, &new_connection },
     { PLAYER_MOVED, &player_action },

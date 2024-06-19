@@ -88,5 +88,24 @@ void destroy_action_list(action_list_t *head);
 
 void add_action(action_list_t *head, action_t *action);
 
+// action responses
+void event_completed(server_t *server, action_t *action);
+void new_gui(server_t *server, action_t *action);
+void new_player(server_t *server, action_t *action);
+void player_moved(server_t *server, action_t *action);
+void player_eject(server_t *server, action_t *action);
+void player_inventory(server_t *server, action_t *action);
+void player_set(server_t *server, action_t *action);
+void player_take(server_t *server, action_t *action);
+void player_broadcast(server_t *server, action_t *action);
+void player_fork(server_t *server, action_t *action);
+void player_dead(server_t *server, action_t *action);
+void incantation_start(server_t *server, action_t *action);
+void incantation_end(server_t *server, action_t *action);
+void incantation_complete(server_t *server, action_t *action);
+void egg_layed(server_t *server, action_t *action);
+void egg_matured(server_t *server, action_t *action);
+void map_refill(server_t *server, action_t *action);
+
 #endif // !ACTION_H_
 

@@ -7,6 +7,7 @@
 
 #include "server/server.h"
 #include "parser.h"
+#include "server/action.h"
 #include "server/client.h"
 #include "server/socket.h"
 #include <netinet/in.h>
@@ -31,8 +32,10 @@ server_t *create_server(arguments_t *arguments)
     server->socket = create_socket(arguments->port, htonl(INADDR_LOOPBACK));
     server->clients = create_client_list();
     server->game = create_game(arguments);
+    server->actions = create_action_list();
     free_arguments(arguments);
-    if (!initialize_serveer(server) || !server->clients || !server->game) {
+    if (!initialize_serveer(server) || !server->clients
+        || !server->game || !server->actions) {
         destroy_server(server);
         return NULL;
     }
@@ -46,5 +49,6 @@ void destroy_server(server_t *server)
     destroy_socket(server->socket);
     destroy_client_list(server->clients);
     destroy_game(server->game);
+    destroy_action_list(server->actions);
     free(server);
 }

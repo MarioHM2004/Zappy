@@ -16,7 +16,7 @@
 #include "libs/lib.h"
 #include "server/command.h"
 
-// AI Protocol - response comes from the game
+// AI Protocol
 static const client_command_t ai_commands[] = {
     {"forward", &forward_command},
     {"right", &right_command},
