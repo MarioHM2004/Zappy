@@ -49,6 +49,8 @@ namespace zappy
 
         void spawn();
         void tint(godot::Color accent);
+        void invocation_anim() const;
+          void death_anim() const;
     };
 } // namespace zappy
 

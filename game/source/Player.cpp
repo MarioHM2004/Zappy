@@ -134,3 +134,21 @@ void zappy::Player::tint(godot::Color accent)
 
     _robot_body->call("tint", main_body, pupils, accent, eye_bg);
 }
+
+void zappy::Player::invocation_anim() const
+{
+    if (_robot_body == nullptr) {
+        return godot::UtilityFunctions::print("Robot body is null");
+    }
+    _robot_body->call("invocation_anim");
+
+}
+
+void zappy::Player::death_anim() const
+{
+    if (_robot_body == nullptr) {
+        return godot::UtilityFunctions::print("Robot body is null");
+    }
+    _robot_body->call("death_anim");
+
+}

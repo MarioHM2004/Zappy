@@ -36,6 +36,12 @@ func move_to_coordinate(coordinate: Vector3):
 	movement_direction.y = 0
 	set_movement_direction.emit(movement_direction)
 	set_movement_state.emit(movement_states["run"])
+	
+func invocation_anim():
+	set_movement_state.emit(movement_states["Invocation"])
+	
+func death_anim():
+	set_movement_state.emit(movement_states["Death"])
 
 func tint_one(path: String, principal: Color, dim: Color, shade: Color, light: Color):
 	var node: MeshInstance3D = get_node(path);
