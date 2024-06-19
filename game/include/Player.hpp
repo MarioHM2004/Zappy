@@ -25,6 +25,7 @@ namespace zappy
         Orientation _orientation = NORTH;
         std::string _path = "res://scenes/robot.tscn";
         std::unique_ptr<Inventory> _inventory;
+        bool _frozen = false;
 
         godot::SceneTree *_tree;
         godot::Node3D *_robot_scene = nullptr;
@@ -38,6 +39,8 @@ namespace zappy
         std::size_t get_level() const;
         Inventory &get_inventory() const;
         const godot::Vector3 &get_position() const;
+        void set_frozen(bool frozen);
+        bool is_frozen() const;
 
         void set_level(std::size_t level);
         void set_position(godot::Vector3 position);
