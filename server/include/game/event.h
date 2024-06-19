@@ -8,7 +8,6 @@
 #ifndef EVENT_H_
 #define EVENT_H_
 
-
 #include <sys/types.h>
 #include "game/player.h"
 

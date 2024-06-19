@@ -16,6 +16,8 @@ int main(int argc, char **argv)
     server_t *server = NULL;
 
     srand(time(NULL));
+    if (!arguments)
+        return 84;
     server = create_server(arguments);
     if (!server)
         return 84;
