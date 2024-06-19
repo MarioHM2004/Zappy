@@ -5,11 +5,9 @@
 ** player_dead
 */
 
-#include "libs/lib.h"
 #include "server/command.h"
 #include "server/server.h"
 #include "server/action.h"
-#include "game/player.h"
 #include <sys/queue.h>
 
 void player_dead(server_t *server, action_t *action)
@@ -23,5 +21,4 @@ void player_dead(server_t *server, action_t *action)
             continue;
         pdi_command(server, node->client, action->data.player);
     }
-    free(command);
 }

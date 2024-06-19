@@ -19,7 +19,7 @@ void player_inventory(server_t *server, action_t *action)
 
     if (!server || !action)
         return;
-    command = formatstr(PIN_REQUEST, action->data.player.number);
+    command = formatstr(PIN_REQUEST, action->data.player->number);
     if (!command)
         return;
     LIST_FOREACH(node, server->clients, entries) {
