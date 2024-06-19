@@ -84,6 +84,7 @@
     #define START_INCANTATION_REQUEST "Incantation"
     #define START_INCANTATION_RESPONSE "Elevation underway"
     #define END_INCANTATION_RESPONSE "Current level: %d"
+    #define AI_CONNECTION "%d %d"
 
 typedef void (*client_command_func_t)(server_t *, client_t *, char *);
 
