@@ -40,20 +40,13 @@ typedef struct event_completed_s {
     bool successful;
 } event_completed_t;
 
-typedef struct new_connection_s {
-    client_t *client;
-} new_connection_t;
-
-typedef struct incantation_action_s {
-    player_list_t *players;
-} incantation_action_t ;
-
 typedef union {
     event_completed_t event_completed;
-    new_connection_t new_connection;
+    client_t *client;
     player_t *player;
     object_t object;
-    incantation_action_t incantation;
+    broadcast_t broadcast;
+    player_list_t *players;
     map_t *map;
 } action_data_u;
 
@@ -72,12 +65,18 @@ typedef struct action_list_s {
     struct action_node_s *lh_first;
 } action_list_t;
 
-typedef void (*action_f)(server_t *, action_t *);
+typedef void (*action_assign_f)(action_t *, void *);
+typedef void (*action_response_f)(server_t *, action_t *);
 
-typedef struct action_fptr_s {
+typedef struct action_assign_s {
     action_type_e type;
-    action_f func;
-} action_fptr_t;
+    action_assign_f func;
+} action_assign_t;
+
+typedef struct action_response_s {
+    action_type_e type;
+    action_response_f func;
+} action_response_t;
 
 action_t *create_action(action_type_e type, void *data, size_t size);
 action_node_t *create_action_node(action_t *a);
