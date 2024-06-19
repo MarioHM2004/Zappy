@@ -22,12 +22,12 @@ void pic_command(server_t *server, client_t *client, player_list_t *players)
         return packet_message(client, ERROR_MESSAGE);
     LIST_FOREACH(node, players, entries) {
         player_numbers = safe_strcat(player_numbers,
-            formatstr("%d", node->player->number)();
+            formatstr("%d", node->player->number));
         if (LIST_NEXT(node, entries))
             player_numbers = safe_strcat(player_numbers, " ");
     }
     response = formatstr(PIC_RESPONSE,
-        (int)LIST_FIRST(players)->player->pos.x, 
+        (int)LIST_FIRST(players)->player->pos.x,
         (int)LIST_FIRST(players)->player->pos.y, player_numbers);
     add_response(client, response);
     if (response)

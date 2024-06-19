@@ -20,6 +20,8 @@
     #define THYSTAME_DENSITY 0.05
     #define TOTAL_RESOURCES 7
 
+    #define MAX_RESOURCE_LENGTH 9
+
 typedef enum {
     FOOD = 0,
     LINEMATE = 1,
@@ -29,7 +31,12 @@ typedef enum {
     PHIRAS = 5,
     THYSTAME = 6,
     NONE = 7
-}resource_e;
+} resource_e;
+
+typedef struct string_to_resource_s {
+    const char name[MAX_RESOURCE_LENGTH];
+    resource_e resource;
+} string_to_resource_t;
 
 typedef struct resources_s {
     uint food;

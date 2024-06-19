@@ -10,6 +10,7 @@
 
 #include <sys/types.h>
 #include "game/player.h"
+#include "game/resources.h"
 
 #define MAX_BROADCAST_LENGTH 1024
 #define MAX_OBJECT_LENGTH 16
@@ -30,12 +31,12 @@ typedef enum {
 } event_type_e;
 
 typedef struct object_s {
-    player_t player;
-    char name[MAX_OBJECT_LENGTH];
+    player_t *player;
+    resource_e resource;
 } object_t;
 
 typedef struct broadcast_s {
-    player_t player;
+    player_t *player;
     char text[MAX_BROADCAST_LENGTH];
 } broadcast_t;
 

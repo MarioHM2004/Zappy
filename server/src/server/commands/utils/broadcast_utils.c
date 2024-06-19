@@ -15,7 +15,7 @@ broadcast_t *create_broadcast(player_t *player, const char *text)
 
     if (!player || !text || !broadcast)
         return NULL;
-    broadcast->player = *player;
+    broadcast->player = player;
     strcpy(broadcast->text, text);
     return broadcast;
 }
