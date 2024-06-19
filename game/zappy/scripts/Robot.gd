@@ -18,6 +18,8 @@ func _process(_delta):
 	if current_position_xz.distance_to(target_coordinate_xz) < 0.5:
 		set_movement_state.emit(movement_states["Idle"])
 		movement_direction = Vector3.ZERO
+	# TODO(jabolo): If the player falls off the map, we should respawn him
+	# at the other side of the map, at y = 2 so it falls doing an animation
 
 func _physics_process(delta):
 	if !is_on_floor():

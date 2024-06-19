@@ -78,6 +78,16 @@ void zappy::Player::set_level(std::size_t level)
     _level = level;
 }
 
+void zappy::Player::set_frozen(bool frozen)
+{
+    _frozen = frozen;
+}
+
+bool zappy::Player::is_frozen() const
+{
+    return _frozen;
+}
+
 void zappy::Player::set_position(godot::Vector3 position)
 {
     if (_robot_body == nullptr) {
