@@ -6,9 +6,9 @@
 ##
 import socket
 
-import ai.app.const as const
-import ai.app.modules.Drone.Algorithm.Algorithm as algo
-import ai.app.modules.Drone.Inventory.Inventory as inv
+import app.const as const
+import app.modules.Drone.Algorithm.Algorithm as algo
+import app.modules.Drone.Inventory.Inventory as inv
 
 
 class Drone:
@@ -79,6 +79,8 @@ class Drone:
                     self.inventory.update_inventory(payload)
                 case "connect_nbr":
                     self.connect_nbr = int(payload)
+                case "eject":
+                    print(f"eject: {payload}")
         except Exception as e:
             print(f"Error parsing payload: {e}")
 
@@ -97,7 +99,7 @@ class Drone:
 
         action = self.algo.choose_decision(self.__build_algo_payload())
 
-        if action is None or action not in const.CMD_FUNC:
+        if action is None or action not in const.CMD_FUNC and action.startswith("broadcast") is False and action.startswith("take") is False and action.startswith("set") is False:
             return "ko"
 
         #! Most likely will change for a better implementation

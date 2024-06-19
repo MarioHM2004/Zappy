@@ -4,7 +4,7 @@
 ## File description:
 ## main.py
 ##
-import ai.app.modules.AIManager.AIManager as m
+import app.modules.AIManager.AIManager as m
 
 
 def main(argc: int, argv: list[str]):

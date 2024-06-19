@@ -7,7 +7,7 @@
 from abc import ABC
 from abc import abstractmethod
 
-import ai.app.const as const
+import app.const as const
 
 
 class Decision(ABC):

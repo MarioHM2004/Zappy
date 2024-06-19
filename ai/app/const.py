@@ -7,8 +7,8 @@
 from typing import Callable
 from typing import Union
 
-import ai.app.modules.Drone.DroneHelper as dh
-import ai.app.modules.Drone.Inventory.Inventory as inv
+import app.modules.Drone.DroneHelper as dh
+import app.modules.Drone.Inventory.Inventory as inv
 
 
 # Type hint for the payload that will be sent to the algorithm
