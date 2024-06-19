@@ -39,9 +39,10 @@ void process_actions(server_t *server)
             if (action_responses[i].type != node->action->type)
                 continue;
             action_responses[i].func(server, node->action);
-            LIST_REMOVE(node, entries);
-            destroy_action_node(node);
+            break;
         }
     }
+    destroy_action_list(server->actions);
+    server->actions = create_action_list();
 }
 
