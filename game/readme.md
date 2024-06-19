@@ -27,13 +27,7 @@ cmake -B build -G Ninja
 cmake --build build
 ```
 
-4. Run the mock server:
-
-```bash
-./build/server 4242&
-```
-
-5. Open the editor:
+4. Open the editor:
 
 ```bash
 godot
