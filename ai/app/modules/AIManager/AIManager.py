@@ -70,7 +70,6 @@ class AIManager:
             # Recieve CLIENT-NUM and MAP-SIZE: pnw #n X Y O L N msz X Y posX posY
             data = self.recv_data(socket=socket_cl)
             client_info = data.split()
-            print(f"DATA {client_info}")
             if client_info[0] != "pnw" or client_info[7] != "msz":
                 print("-- Failed to connect to server: Invalid response pnw")
                 return None
