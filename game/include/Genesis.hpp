@@ -1,4 +1,7 @@
+#include <memory>
+#include <string>
 #include "Client.hpp"
+#include "Team.hpp"
 #include "World.hpp"
 #include <godot_cpp/classes/camera3d.hpp>
 #include <godot_cpp/classes/global_constants.hpp>
@@ -37,6 +40,9 @@ namespace godot
         Vector3 _move_direction;
         int _movement = 0;
         const float _speed = 150;
+        std::unordered_map<std::string, std::unique_ptr<zappy::Team>> _teams;
+        std::unordered_map<std::size_t, std::shared_ptr<zappy::Player>>
+            _players;
 
       protected:
         static void _bind_methods();

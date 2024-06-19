@@ -62,7 +62,7 @@ static void handle_player_hunger(server_t *server, player_t *player)
 void player_tick(server_t *server, player_t *player)
 {
     event_node_t *event_node = LIST_FIRST(player->events);
-    
+
     handle_player_hunger(server, player);
     if (event_node == NULL)
         return;

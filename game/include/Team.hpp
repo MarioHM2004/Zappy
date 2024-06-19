@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "Player.hpp"
+#include "godot_cpp/variant/color.hpp"
 
 #ifndef __TEAM
     #define __TEAM
@@ -12,7 +13,8 @@ namespace zappy
       private:
         std::string _name;
         std::size_t _count = 6; // TODO(jabolo): Use the correct value
-        std::vector<std::unique_ptr<Player>> _players;
+        std::vector<std::shared_ptr<Player>> _players;
+        godot::Color _color;
 
       public:
         Team(std::string name);
@@ -23,7 +25,7 @@ namespace zappy
 
         void set_max_count(std::size_t count);
         const Player &get_player_at(std::size_t index);
-        void add_player(std::size_t number, godot::Vector3 position);
+        void add_player(std::shared_ptr<zappy::Player> player);
     };
 } // namespace zappy
 
