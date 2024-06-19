@@ -118,8 +118,7 @@ void enw_command(server_t *server, client_t *client, player_t *player,
     player_t *egg);
 void pbc_command(server_t *server, client_t *client,
     player_t *player, char *msg);
-void pic_command(server_t *server, client_t *client,
-    player_t *player, player_list_t *p_number);
+void pic_command(server_t *server, client_t *client, player_list_t *players);
 void pie_command(server_t *server, client_t *client,
     player_t *player, bool res);
 void pdr_command(server_t *server, client_t *client,

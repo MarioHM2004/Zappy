@@ -31,6 +31,6 @@ void incantation_command(server_t *server, client_t *client, char *cmd)
         return packet_message(client, ERROR_MESSAGE);
     LIST_FOREACH(tmp, player_list, entries)
         add_response_to_player(server->clients, tmp->player, START_INCANTATION_RESPONSE);
-    pic_command(server, client, player, player_list);
+    // pic_command(server, client, player, player_list);
     add_event(player->events, event, 300.0 / server->game->freq);
 }

@@ -22,6 +22,6 @@ void event_completed(server_t *server, action_t *action)
         return;
     if (!action->data.event_completed.successful)
         return add_response(client, ERROR_MESSAGE);
-    return add_response(client, action.data.event_completed.response);
+    return add_response(client, action->data.event_completed.response);
 }
 

@@ -33,9 +33,14 @@ static void broadcast_action(action_t *a, void *data)
     a->data.broadcast = *((broadcast_t *)data);
 }
 
-static void players_action(action_t *a, void *data)
+static void incantation_action(action_t *a, void *data)
 {
-    a->data.players = (player_list_t *)data;
+    a->data.incantation = *((incantation_action_t *)data);
+}
+
+static void egg_action(action_t *a, void *data)
+{
+    a->data.egg_shell = *((egg_shell_t *) data);
 }
 
 static void map_action(action_t *a, void *data)
@@ -55,11 +60,11 @@ static const action_assign_t action_assignation[] = {
     { PLAYER_BROADCAST, &broadcast_action },
     { PLAYER_FORK, &player_action },
     { PLAYER_DEAD, &player_action },
-    { INCANTATION_START, &players_action },
-    { INCANTATION_END, &players_action },
-    { INCANTATION_COMPLETE, &players_action },
-    { EGG_LAYED, &player_action },
-    { EGG_MATURED, &player_action },
+    { INCANTATION_START, &incantation_action },
+    { INCANTATION_END, &incantation_action },
+    { INCANTATION_COMPLETE, &incantation_action },
+    { EGG_LAYED, &egg_action },
+    { EGG_MATURED, &egg_action },
     { MAP_REFILL, &map_action },
 };
 

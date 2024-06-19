@@ -9,6 +9,7 @@
 #define ACTION_H_
 
 #include "game/event.h"
+#include "game/game.h"
 #include "game/player.h"
 #include <sys/queue.h>
 
@@ -41,13 +42,30 @@ typedef struct event_completed_s {
     bool successful;
 } event_completed_t;
 
+typedef struct egg_shell_s {
+    player_t *player;
+    player_t *egg;
+} egg_shell_t;
+
+typedef enum {
+    FAILED,
+    SUCCESSFUL,
+    IN_PROGRESS,
+} incantation_state_e;
+
+typedef struct incantation_action_s {
+    player_list_t *players;
+    incantation_state_e state;
+} incantation_action_t;
+
 typedef union {
     event_completed_t event_completed;
     client_t *client;
     player_t *player;
     object_t object;
     broadcast_t broadcast;
-    player_list_t *players;
+    incantation_action_t incantation;
+    egg_shell_t egg_shell;
     map_t *map;
 } action_data_u;
 
