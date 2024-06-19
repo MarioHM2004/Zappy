@@ -109,6 +109,12 @@ godot::Genesis::Genesis()
                         std::format(">> team not found: `{}`", team).c_str());
                 }
 
+                if (_players.find(number) != _players.end()) {
+                    return UtilityFunctions::print(
+                        std::format(">> player already exists: `{}`", number)
+                            .c_str());
+                }
+
                 std::shared_ptr<zappy::Player> player =
                     std::make_unique<zappy::Player>(
                         get_tree(), number, Vector3(x, 1, y), orientation);
