@@ -4,8 +4,8 @@
 ## File description:
 ## Algorithm.py
 ##
-import ai.app.const as const
-import ai.app.modules.Drone.Algorithm.AlgorithmHelper as ah
+import app.const as const
+import app.modules.Drone.Algorithm.AlgorithmHelper as ah
 
 
 class Algorithm:

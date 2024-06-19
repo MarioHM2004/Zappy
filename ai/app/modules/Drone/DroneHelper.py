@@ -10,7 +10,7 @@ import typing
 
 
 if typing.TYPE_CHECKING:
-    from ai.app.modules.Drone.Drone import Drone
+    from app.modules.Drone.Drone import Drone
 
 # Solves circular import, that way we can have the Drone type hint in the functions
 
@@ -85,10 +85,12 @@ def cmd_eject(drone: Drone, payload) -> str:
 
 # takes 7/f
 def cmd_take(drone: Drone, payload) -> str:
+    print(f"Helper take: {payload}")
     return "take"
 
 # takes 7/f
 def cmd_set(drone: Drone, payload) -> str:
+    print(f"Helper set: {payload}")
     return "set"
 
 # takes 300/f
