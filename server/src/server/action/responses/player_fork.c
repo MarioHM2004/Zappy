@@ -19,6 +19,6 @@ void player_fork(server_t *server, action_t *action)
     LIST_FOREACH(node, server->clients, entries) {
         if (node->client->type != GRAPHIC)
             continue;
-        pfk_command(server, node->client, &action->data.player);
+        pfk_command(server, node->client, action->data.player);
     }
 }

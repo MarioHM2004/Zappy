@@ -19,6 +19,6 @@ void player_broadcast(server_t *server, action_t *action)
     LIST_FOREACH(node, server->clients, entries) {
         if (node->client->type != GRAPHIC)
             continue;
-        pbc_command(server, node->client, &action->data.broadcast.player, action->data.broadcast.text);
+        pbc_command(server, node->client, action->data.broadcast.player, action->data.broadcast.text);
     }
 }
