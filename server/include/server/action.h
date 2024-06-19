@@ -17,22 +17,22 @@ typedef enum {
     // response goes to -> AI
     EVENT_COMPLETED, // AI event is completed
     // response goes to -> GUI
-    NEW_GUI, // new GUI connection
-    NEW_PLAYER, // new AI connection
-    PLAYER_MOVED, // AI forward, left, right, or eject
-    PLAYER_EJECT, // AI eject action
-    PLAYER_INVENTORY, // AI set, take or lost food
-    PLAYER_SET, // AI set command
-    PLAYER_TAKE, // AI take command
-    PLAYER_BROADCAST, // AI broadcast action
-    PLAYER_FORK, // AI layes an egg
-    PLAYER_DEAD, // AI dies or disconnects
-    INCANTATION_START, // AI starts incantation by first player
-    INCANTATION_END, // AI incantation ended
-    INCANTATION_COMPLETE, // AI succesfully incantate
-    EGG_LAYED, // AI fork action ended
-    EGG_MATURED, // AI egg matured
-    MAP_REFILL, // map is refilled
+    NEW_GUI,
+    NEW_PLAYER,
+    PLAYER_MOVED,
+    PLAYER_EJECT,
+    PLAYER_INVENTORY,
+    PLAYER_SET,
+    PLAYER_TAKE,
+    PLAYER_BROADCAST,
+    PLAYER_FORK,
+    PLAYER_DEAD,
+    INCANTATION_START,
+    INCANTATION_END,
+    INCANTATION_COMPLETE,
+    EGG_LAYED,
+    EGG_MATURED,
+    MAP_REFILL,
 } action_type_e;
 
 typedef struct event_completed_s {

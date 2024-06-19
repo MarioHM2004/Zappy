@@ -5,11 +5,9 @@
 ** player_take
 */
 
-#include "libs/lib.h"
 #include "server/command.h"
 #include "server/server.h"
 #include "server/action.h"
-#include "game/player.h"
 #include <sys/queue.h>
 
 void player_take(server_t *server, action_t *action)
@@ -21,7 +19,6 @@ void player_take(server_t *server, action_t *action)
     LIST_FOREACH(node, server->clients, entries) {
         if (node->client->type != GRAPHIC)
             continue;
-        pgt_command(server, node->client, &action->data.object.player, action->data.object.resource);
+        pgt_command(server, node->client, action->data.object.player, action->data.object.resource);
     }
-    free(command);
 }

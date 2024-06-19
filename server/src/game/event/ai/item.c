@@ -48,7 +48,7 @@ void take_object(server_t *server, player_t *player, event_t *event)
         add_response_to_player(server->clients, player, ERROR_MESSAGE);
         return;
     }
-    item = string_to_resource(event->data.object.name);
+    item = event->data.object.resource;
     if (item != -1 && move_item(tile.resource, player->inventory, item)) {
         log_debug("Player %d took %d from the floor", player->number, item);
         pgt_command(server, client, player, item);
@@ -72,7 +72,7 @@ void set_object(server_t *server, player_t *player, event_t *event)
         add_response_to_player(server->clients, player, ERROR_MESSAGE);
         return;
     }
-    item = string_to_resource(event->data.object.name);
+    item = event->data.object.resource;
     if (item != -1 && move_item(player->inventory, tile.resource, item)) {
         log_debug("Player %d set %d on the floor", player->number, item);
         pdr_command(server, client, player, item);
