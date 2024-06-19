@@ -48,5 +48,6 @@ void set_auto_start(game_t *g, bool auto_start);
 void set_display_eggs(game_t *g, bool display_eggs);
 void destroy_game(game_t *g);
 void game_tick(server_t *server);
+float get_execution_time(float execution_time, float frequence);
 
 #endif /* !GAME_H_ */
