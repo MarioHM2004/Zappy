@@ -7,88 +7,46 @@
 
 #include "game/game.h"
 #include "libs/log.h"
+#include "server/action.h"
 #include "server/client.h"
 #include "server/server.h"
 #include "game/player.h"
 #include "server/command.h"
-#include "libs/lib.h"
 #include <string.h>
 #include <time.h>
 
-static void send_gui_player_info(server_t *server, client_t *client)
-{
-    player_node_t *node = NULL;
-    char *command = NULL;
-
-    if (!server->game->players)
-        return;
-    LIST_FOREACH(node, server->game->players, entries) {
-        pnw_command(server, client, node->player);
-        command = formatstr("plv %d", (int)node->player->number);
-        plv_command(server, client, command);
-        free(command);
-        command = formatstr("pin %d", (int)node->player->number);
-        pin_command(server, client, command);
-        free(command);
-    }
-}
-
 static bool assign_graphic(server_t *server, client_t *client, char *team)
 {
+    action_t *action = NULL;
+
     if (strcmp(team, GRAPHIC_TEAM_NAME) != 0)
         return false;
     client->type = GRAPHIC;
-    msz_command(server, client, "msz");
-    mct_command(server, client, "mct");
-    tna_command(server, client, "tna");
-    send_gui_player_info(server, client);
-    sgt_command(server, client, "sgt");
-    // eggs?
-    // enw
-    // eht
+    action = create_action(NEW_GUI, client, sizeof(client_t));
+    if (!action)
+        return false;
+    add_action(server->actions, action);
     return true;
-}
-
-static void send_guis_player_info(server_t *server, player_t *player)
-{
-    client_node_t *node = NULL;
-    char *command = NULL;
-
-    if (!player)
-        return;
-    command = formatstr("pin %d", player->number);
-    LIST_FOREACH(node, server->clients, entries) {
-        if (node->client->type != GRAPHIC)
-            continue;
-        pnw_command(server, node->client, player);
-        pin_command(server, node->client, command);
-        ebo_command(server, node->client, player);
-        node->client->socket->mode = WRITE;
-    }
-    free(command);
 }
 
 static bool assign_team(server_t *server, client_t *client, char *team)
 {
     team_node_t *node = NULL;
     player_t *player = NULL;
+    action_t *action = NULL;
 
     LIST_FOREACH(node, server->game->teams, entries) {
         if (strcmp(node->team->name, team) != 0)
             continue;
         client->type = AI;
         player = assign_player(client->socket, server, team);
-        if (!player) {
-            log_error("No room for more players in team %s", team);
+        if (!player)
             return false;
-        }
         log_info("Player %d joined team %s", player->number, team);
-        log_debug("Pos x: %d, y: %d", player->pos.x, player->pos.y);
-        pnw_command(server, client, player);
-        msz_command(server, client, "msz");
-        send_guis_player_info(server, player);
-        add_response(client,
-            formatstr(AI_CONNECTION, player->pos.x, player->pos.y));
+        action = create_action(NEW_PLAYER, client, sizeof(client_t));
+        if (!action)
+            return false;
+        add_action(server->actions, action);
         return true;
     }
     return false;

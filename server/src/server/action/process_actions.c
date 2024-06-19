@@ -9,8 +9,6 @@
 #include "server/server.h"
 #include <sys/queue.h>
 
-void tmp(server_t *, action_t *);
-
 static const action_response_t action_responses[] = {
     { EVENT_COMPLETED, &event_completed },
     { NEW_GUI, &new_gui },
@@ -40,8 +38,9 @@ void process_actions(server_t *server)
         for (size_t i = 0; i < len; i++) {
             if (action_responses[i].type != node->action->type)
                 continue;
-            action_responses[i].func(server, action);
-            // remove action from list
+            action_responses[i].func(server, node->action);
+            LIST_REMOVE(node, entries);
+            destroy_action_node(node);
         }
     }
 }

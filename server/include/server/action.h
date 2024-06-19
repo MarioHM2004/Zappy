@@ -36,6 +36,7 @@ typedef enum {
 
 typedef struct event_completed_s {
     event_type_e type;
+    player_t *player;
     char *response;
     bool successful;
 } event_completed_t;
@@ -88,6 +89,7 @@ void destroy_action_list(action_list_t *head);
 
 void add_action(action_list_t *head, action_t *action);
 
+void process_actions(server_t *server);
 // action responses
 void event_completed(server_t *server, action_t *action);
 void new_gui(server_t *server, action_t *action);

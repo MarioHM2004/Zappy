@@ -6,6 +6,7 @@
 */
 
 #include "game/game.h"
+#include "server/action.h"
 #include "server/server.h"
 
 void run(server_t *server)
@@ -17,6 +18,7 @@ void run(server_t *server)
         if (select_connection(server, &timeout) < 0)
             break;
         accept_connection(server);
+        process_actions(server);
         handle_packets(server);
         game_tick(server);
         close_connection(server);
