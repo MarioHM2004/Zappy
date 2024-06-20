@@ -1,11 +1,11 @@
+#include <array>
+#include <chrono>
 #include <netinet/in.h>
 #include <random>
 #include <string>
 #include <sys/select.h>
-#include <vector>
-#include <array>
-#include <chrono>
 #include <thread>
+#include <vector>
 
 #ifndef __SERVER
     #define __SERVER
@@ -33,6 +33,8 @@ namespace zappy
         void sendInitialData(int clientSocket);
         void sendPeriodicData();
         void sendOtherData(int clientSocket);
+        void incantation(int clientSocket);
+        void incantationEnd(int clientSocket);
 
       private:
         int playerCount = 9;
@@ -50,6 +52,6 @@ namespace zappy
 
         std::array<bool, FD_SETSIZE> _initialDataSent;
     };
-}
+} // namespace zappy
 
 #endif /* __SERVER */

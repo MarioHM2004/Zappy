@@ -119,9 +119,21 @@ void zappy::Server::sendMapContent(int clientSocket)
 
 void zappy::Server::addNewPlayer(int clientSocket)
 {
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    std::uniform_int_distribution<int> xDist(0, _x - 1);
+    std::uniform_int_distribution<int> yDist(0, _y - 1);
+
     for (int n = 0; n < playerCount; ++n) {
+        if (n % 2 != 1) {
+            continue;
+        }
+        int x = xDist(rng);
+        int y = yDist(rng);
+
         std::stringstream msg;
-        msg << "pnw " << n << " " << 0 << " " << n << " 2 1 " << n << std::endl;
+        msg << "pnw " << n << " " << x << " " << y << " 2 1 " << n
+            << std::endl;
         std::string message = msg.str();
         ssize_t bytesSent =
             send(clientSocket, message.c_str(), message.size(), 0);
@@ -168,8 +180,12 @@ void zappy::Server::sendWelcome(int clientSocket)
 void zappy::Server::movePlayer(int clientSocket)
 {
     for (int n = 0; n < playerCount; ++n) {
+        if (n % 2 != 1) {
+            continue;
+        }
         std::stringstream msg;
-        msg << "ppo " << n << " " << _x -1 - n << " " << _y - 1 - n << " " << 0 << std::endl;
+        msg << "ppo " << n << " " << _x - 1 - n << " " << _y - 1 - n << " "
+            << 0 << std::endl;
         std::string message = msg.str();
         ssize_t bytesSent =
             send(clientSocket, message.c_str(), message.size(), 0);
@@ -182,6 +198,56 @@ void zappy::Server::movePlayer(int clientSocket)
     }
 }
 
+void zappy::Server::incantation(int clientSocket)
+{
+    std::vector<int> oddArray;
+    for (int i = 0; i < playerCount; ++i) {
+        if (i % 2 != 1) {
+            continue;
+        }
+        oddArray.push_back(i);
+    }
+
+    std::stringstream msg;
+    msg << "pic " << 0 << " " << 0 << " " << 1;
+    for (int i = 0; i < oddArray.size(); ++i) {
+        msg << " " << oddArray[i];
+    }
+    msg << std::endl;
+
+    std::string message = msg.str();
+    ssize_t bytesSent = send(clientSocket, message.c_str(), message.size(), 0);
+    std::cout << message.c_str();
+    if (bytesSent < 0) {
+        std::cerr << "Error sending map size to client.\n";
+        close(clientSocket);
+        FD_CLR(clientSocket, &_currentSockets);
+    }
+}
+
+void zappy::Server::incantationEnd(int clientSocket)
+{
+    std::vector<int> oddArray;
+    for (int i = 0; i < playerCount; ++i) {
+        if (i % 2 != 1) {
+            continue;
+        }
+        oddArray.push_back(i);
+    }
+
+    std::stringstream msg;
+    msg << "pie " << 0 << " " << 0 << " " << 1 << std::endl;
+
+    std::string message = msg.str();
+    ssize_t bytesSent = send(clientSocket, message.c_str(), message.size(), 0);
+    std::cout << message.c_str();
+    if (bytesSent < 0) {
+        std::cerr << "Error sending map size to client.\n";
+        close(clientSocket);
+        FD_CLR(clientSocket, &_currentSockets);
+    }
+}
+
 void zappy::Server::sendInitialData(int clientSocket)
 {
     sendWelcome(clientSocket);
@@ -189,23 +255,19 @@ void zappy::Server::sendInitialData(int clientSocket)
     // sendMapContent(clientSocket);
     initTeams(clientSocket);
     addNewPlayer(clientSocket);
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
     movePlayer(clientSocket);
-    // move to
-
-    // 0, 0
-    // 0, 1
-
-    // _x - 1 - n, 0
-    // _y - 1 - n, 0
+    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+    incantation(clientSocket);
+    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+    incantationEnd(clientSocket);
 }
 
 void zappy::Server::sendOtherData(int clientSocket)
 {
     // Example: Send some other message or data
-    // std::string msg = "other_data " + std::to_string(rand() % 100) + "\n";
-    // ssize_t bytesSent = send(clientSocket, msg.c_str(), msg.size(), 0);
-    // if (bytesSent < 0) {
+    // std::string msg = "other_data " + std::to_string(rand() % 100) +
+    // "\n"; ssize_t bytesSent = send(clientSocket, msg.c_str(),
+    // msg.size(), 0); if (bytesSent < 0) {
     //    std::cerr << "Error sending other data to client.\n";
     //    close(clientSocket);
     //    FD_CLR(clientSocket, &_currentSockets);
