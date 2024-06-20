@@ -74,7 +74,7 @@ max_space = 3.0
 snap = 1.0
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_yl60q"]
-graph_offset = Vector2(-77.3411, -19.0736)
+graph_offset = Vector2(-72.0391, -18.0323)
 nodes/movement_anim_speed/node = SubResource("AnimationNodeTimeScale_sbk1e")
 nodes/movement_anim_speed/position = Vector2(400, 120)
 nodes/movement_blend/node = SubResource("AnimationNodeBlendSpace1D_6svfc")
@@ -113,30 +113,30 @@ shape = SubResource("CapsuleShape3D_dthk3")
 [node name="3DGodotRobot" parent="Robot/MeshRoot" instance=ExtResource("6_haw36")]
 
 [node name="Skeleton3D" parent="Robot/MeshRoot/3DGodotRobot/RobotArmature" index="0"]
-bones/0/position = Vector3(-2.94262e-16, 0.864898, 0.0298551)
+bones/0/position = Vector3(-3.41592e-16, 0.862062, 0.0298551)
 bones/0/rotation = Quaternion(0.0149092, 1.19196e-07, 1.77731e-09, 0.999889)
 bones/1/rotation = Quaternion(0.0294489, -1.52236e-14, 7.02117e-09, 0.999566)
-bones/4/position = Vector3(-2.61538e-16, 0.15465, -0.0116304)
+bones/4/position = Vector3(-1.32315e-15, 0.165283, -0.011257)
 bones/4/rotation = Quaternion(0.00540027, -1.19208e-07, -6.43763e-10, 0.999985)
 bones/5/rotation = Quaternion(0.00821238, -4.94291e-14, -1.95798e-09, 0.999966)
-bones/8/position = Vector3(9.98028e-08, 0.0675735, 0.418603)
+bones/8/position = Vector3(9.98179e-08, 0.0756525, 0.418667)
 bones/8/rotation = Quaternion(0.00393964, 1.19208e-07, -4.69641e-10, 0.999992)
-bones/9/position = Vector3(0.267321, 0.081664, -0.0280426)
-bones/9/rotation = Quaternion(-0.520831, -0.460328, -0.51969, 0.496745)
-bones/10/rotation = Quaternion(-0.360964, 0.614522, -0.437921, 0.54799)
+bones/9/position = Vector3(0.267321, 0.0776053, -0.0281851)
+bones/9/rotation = Quaternion(-0.513198, -0.468782, -0.512058, 0.504646)
+bones/10/rotation = Quaternion(-0.357413, 0.617138, -0.434141, 0.550381)
 bones/11/rotation = Quaternion(-0.0175777, -0.091351, 0.0271132, 0.995294)
 bones/12/rotation = Quaternion(0.0209349, 0.0170217, -0.0176714, 0.99948)
-bones/13/position = Vector3(-0.267321, 0.081664, -0.0280426)
-bones/13/rotation = Quaternion(-0.520831, 0.460328, 0.51969, 0.496745)
-bones/14/rotation = Quaternion(-0.360964, -0.614522, 0.437921, 0.54799)
+bones/13/position = Vector3(-0.267321, 0.0776053, -0.0281851)
+bones/13/rotation = Quaternion(-0.513198, 0.468782, 0.512058, 0.504646)
+bones/14/rotation = Quaternion(-0.357413, -0.617138, 0.434141, 0.550381)
 bones/15/rotation = Quaternion(-0.0175777, 0.091351, -0.0271132, 0.995294)
 bones/16/rotation = Quaternion(0.0209349, -0.0170217, 0.0176714, 0.99948)
-bones/17/rotation = Quaternion(0.993316, 0.0204551, -0.00716614, 0.113374)
-bones/18/rotation = Quaternion(0.215021, 0.0082286, 0.0253542, 0.976246)
-bones/19/rotation = Quaternion(-0.59341, 0.00322348, -0.00485496, 0.804879)
-bones/21/rotation = Quaternion(0.993316, -0.0204552, 0.00716615, 0.113374)
-bones/22/rotation = Quaternion(0.215021, -0.00822856, -0.0253543, 0.976246)
-bones/23/rotation = Quaternion(-0.59341, -0.0032235, 0.004855, 0.804879)
+bones/17/rotation = Quaternion(0.991843, 0.0203648, -0.0074178, 0.125611)
+bones/18/rotation = Quaternion(0.242238, 0.00861382, 0.0250581, 0.969855)
+bones/19/rotation = Quaternion(-0.605453, 0.00329582, -0.00480502, 0.79586)
+bones/21/rotation = Quaternion(0.991843, -0.0203648, 0.0074178, 0.125611)
+bones/22/rotation = Quaternion(0.242238, -0.00861377, -0.0250582, 0.969855)
+bones/23/rotation = Quaternion(-0.605453, -0.00329584, 0.00480507, 0.79586)
 
 [node name="Bottom" parent="Robot/MeshRoot/3DGodotRobot/RobotArmature/Skeleton3D" index="0"]
 surface_material_override/0 = SubResource("ShaderMaterial_jxlq4")
@@ -156,7 +156,7 @@ root_node = NodePath("../3DGodotRobot")
 tree_root = SubResource("AnimationNodeBlendTree_yl60q")
 anim_player = NodePath("../3DGodotRobot/AnimationPlayer")
 parameters/movement_anim_speed/scale = 1.0
-parameters/movement_blend/blend_position = -0.148829
+parameters/movement_blend/blend_position = -0.90301
 
 [connection signal="set_movement_direction" from="Robot" to="Robot/MovementController" method="_on_set_movement_direction"]
 [connection signal="set_movement_state" from="Robot" to="Robot/MovementController" method="_on_set_movement_state"]
