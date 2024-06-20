@@ -209,33 +209,43 @@ godot::Genesis::Genesis()
         },
         {
             zappy::Constants::Commands::START_INCANTATION,
-            [](const std::vector<std::string> &response) {
-                std::vector<std::size_t> levels;
+            [this](const std::vector<std::string> &response) {
+                std::vector<std::shared_ptr<zappy::Player>> players;
                 std::size_t x = std::stoi(response.at(1));
                 std::size_t y = std::stoi(response.at(2));
+                std::size_t level = std::stoi(response.at(3));
+                std::string key = std::format("{}:{}", x, y);
 
-                std::transform(response.begin() + 3, response.end(),
-                    std::back_inserter(levels), [](const std::string &elem) {
-                        return std::stoi(elem);
+                std::transform(response.begin() + 4, response.end(),
+                    std::back_inserter(players),
+                    [this](const std::string &elem) {
+                        return _players.at(std::stoi(elem));
                     });
 
-                // TODO(jabolo): Call animation of incantation
-                // TODO(jabolo): Fire timings for incantation
-                // TODO(jabolo): Freeze player
-                // TODO(jabolo): Tint player white
+                std::for_each(
+                    players.begin(), players.end(), [&level](auto &player) {
+                        player->invocation(level, true);
+                    });
+
+                _incantations[key] = players;
             },
         },
         {
             zappy::Constants::Commands::END_INCANTATION,
-            [](const std::vector<std::string> &response) {
+            [this](const std::vector<std::string> &response) {
                 std::size_t x = std::stoi(response.at(1));
                 std::size_t y = std::stoi(response.at(2));
                 std::size_t result = std::stoi(response.at(3));
+                std::string key = std::format("{}:{}", x, y);
+                std::vector<std::shared_ptr<zappy::Player>> players =
+                    _incantations.at(key);
 
-                // TODO(jabolo): Call animation of incantation
-                // TODO(jabolo): Fire timings for incantation
-                // TODO(jabolo): Unfreeze player
-                // TODO(jabolo): Tint player one shade lighter if success
+                std::for_each(
+                    players.begin(), players.end(), [&result](auto &player) {
+                        player->invocation(result, false);
+                    });
+
+                _incantations.erase(key);
             },
         },
     };
