@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://dl2hs0iexs7nv"]
 
-[ext_resource type="Script" path="res://scripts/world.gd" id="1_mxuiy"]
+[ext_resource type="Script" path="res://scripts/world.gd" id="1_k1d7v"]
 [ext_resource type="Shader" path="res://assets/water.gdshader" id="2_68eot"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_bns41"]
@@ -38,7 +38,7 @@ subdivide_width = 25
 subdivide_depth = 25
 
 [node name="Main" type="Node3D"]
-script = ExtResource("1_mxuiy")
+script = ExtResource("1_k1d7v")
 
 [node name="Genesis" type="Genesis" parent="."]
 process_mode = 4

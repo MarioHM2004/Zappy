@@ -71,7 +71,6 @@ static void take_object_action(server_t *server, player_t *player,
         add_action(server->actions, gui_action);
 }
 
-
 static void consume_food(player_t *player, float freq)
 {
     if(change_resource(player->inventory, FOOD, -1)) {
