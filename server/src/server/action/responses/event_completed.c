@@ -9,6 +9,22 @@
 #include "server/command.h"
 #include "server/server.h"
 #include "server/action.h"
+#include <stdlib.h>
+
+action_t *create_event_completed_action(player_t *player,
+    event_type_e event_type, char *response, bool successful)
+{
+    event_completed_t event_completed = {
+        .type = event_type,
+        .response = response,
+        .successful = successful,
+        .player = player
+    };
+    action_t *action = create_action(EVENT_COMPLETED, &event_completed,
+        sizeof(event_completed_t));
+
+    return action;
+}
 
 void event_completed(server_t *server, action_t *action)
 {

@@ -136,7 +136,7 @@ static void egg_death(server_t *server, player_t *player)
         return;
     }
     edi_command(server, client, player);
-    remove_player(server->game, player); 
+    remove_player(server->game, player);
 }
 
 void eject(server_t *server, player_t *player, event_t *event)

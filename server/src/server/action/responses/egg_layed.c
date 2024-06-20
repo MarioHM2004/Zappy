@@ -5,11 +5,24 @@
 ** egg_layed
 */
 
+#include "game/player.h"
 #include "server/client.h"
 #include "server/command.h"
 #include "server/server.h"
 #include "server/action.h"
+#include <stdlib.h>
 #include <sys/queue.h>
+
+action_t *create_egg_layed_action(player_t *player, player_t *egg)
+{
+    egg_shell_t egg_shell = {
+        .egg = egg,
+        .player = player
+    };
+    action_t *action = create_action(EGG_LAYED, &egg_shell, sizeof(egg_shell_t));
+
+    return action;
+}
 
 void egg_layed(server_t *server, action_t *action)
 {

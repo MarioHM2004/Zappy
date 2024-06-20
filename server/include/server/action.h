@@ -11,6 +11,7 @@
 #include "game/event.h"
 #include "game/game.h"
 #include "game/player.h"
+#include "game/resources.h"
 #include <sys/queue.h>
 
 typedef enum {
@@ -101,6 +102,7 @@ action_t *create_action(action_type_e type, void *data, size_t size);
 action_node_t *create_action_node(action_t *a);
 action_list_t *create_action_list(void);
 
+
 void destroy_action(action_t *a);
 void destroy_action_node(action_node_t *an);
 void destroy_action_list(action_list_t *head);
@@ -126,6 +128,23 @@ void incantation_complete(server_t *server, action_t *action);
 void egg_layed(server_t *server, action_t *action);
 void egg_matured(server_t *server, action_t *action);
 void map_refill(server_t *server, action_t *action);
+
+action_t *create_event_completed_action(player_t *player,
+    event_type_e event_type, char *response, bool successful);
+action_t *create_egg_layed_action(player_t *player, player_t *egg);
+action_t *create_egg_matured_action(player_t *egg);
+action_t *create_map_refill_action(map_t *map);
+action_t *create_incantation_start(player_list_t *players, bool successful);
+action_t *create_incantation_complete(player_list_t *players);
+action_t *create_player_broadcast_action(player_t *player, char *text);
+action_t *create_player_dead_action(player_t *player);
+action_t *create_player_eject_action(player_t *player);
+action_t *create_player_fork_action(player_t *player);
+action_t *create_player_inventory_action(player_t *player);
+action_t *create_player_moved_action(player_t *player);
+action_t *create_player_set_action(player_t *player, resource_e resource);
+action_t *create_player_take_action(player_t *player, resource_e resource);
+
 
 #endif // !ACTION_H_
 

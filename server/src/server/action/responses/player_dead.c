@@ -10,6 +10,13 @@
 #include "server/action.h"
 #include <sys/queue.h>
 
+action_t *create_player_dead_action(player_t *player)
+{
+    action_t *action = create_action(PLAYER_DEAD, player, sizeof(player_t));
+
+    return action;
+}
+
 void player_dead(server_t *server, action_t *action)
 {
     client_node_t *node = NULL;

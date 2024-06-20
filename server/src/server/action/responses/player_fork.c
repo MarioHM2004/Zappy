@@ -10,6 +10,13 @@
 #include "server/action.h"
 #include <sys/queue.h>
 
+action_t *create_player_fork_action(player_t *player)
+{
+    action_t *action = create_action(PLAYER_FORK, player,sizeof(player_t));
+
+    return action;
+}
+
 void player_fork(server_t *server, action_t *action)
 {
     client_node_t *node = NULL;

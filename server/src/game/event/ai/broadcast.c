@@ -11,11 +11,13 @@
 #include "game/resources.h"
 #include "libs/lib.h"
 #include "libs/log.h"
+#include "server/action.h"
 #include "server/client.h"
 #include "server/command.h"
 #include "server/server.h"
 #include "game/event.h"
 #include <stdlib.h>
+#include <time.h>
 
 static sound_e determine_direction(position_t delta)
 {
@@ -131,6 +133,32 @@ static int sound_trajectory(map_t *map, player_t *from, player_t *to)
         return 8;
     return -1;
 }
+
+static void broadcast_action(server_t *server, player_t *player,
+    char *response, bool success)
+{
+    action_t *ai_action = NULL;
+    action_t *gui_action = NULL;
+    broadcast_t broadcast = {
+        .player = player,
+        .text = *response
+    };
+
+    if (success) {
+        ai_action = create_event_completed_action(player, BROADCAST,
+            response, success);
+        gui_action = create_action(PLAYER_BROADCAST,
+            (broadcast_t *)&broadcast, sizeof(broadcast_t));
+    } else {
+        ai_action = create_event_completed_action(player, BROADCAST,
+            NULL, success);
+    }
+    if (ai_action)
+        add_action(server->actions, ai_action);
+    if (gui_action)
+        add_action(server->actions, gui_action);
+}
+
 
 void broadcast(server_t *server, player_t *player, event_t *event)
 {

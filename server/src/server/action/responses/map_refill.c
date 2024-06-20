@@ -11,6 +11,13 @@
 #include "server/action.h"
 #include <sys/queue.h>
 
+action_t *create_map_refill_action(map_t *map)
+{
+    action_t *action = create_action(MAP_REFILL, map, 0);
+
+    return action;
+}
+
 void map_refill(server_t *server, action_t *action)
 {
     client_node_t *node = NULL;

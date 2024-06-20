@@ -11,6 +11,13 @@
 #include "server/action.h"
 #include <sys/queue.h>
 
+action_t *create_player_moved_action(player_t *player)
+{
+    action_t *action = create_action(PLAYER_MOVED, player, sizeof(player_t));
+
+    return action;
+}
+
 void player_moved(server_t *server, action_t *action)
 {
     client_node_t *node = NULL;
