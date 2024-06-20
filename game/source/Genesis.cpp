@@ -91,12 +91,6 @@ godot::Genesis::Genesis()
             },
         },
         {
-            zappy::Constants::Commands::PLAYER_INVENTORY,
-            [](const std::vector<std::string> &response) {
-                // TODO(jabolo): find player and update inventory
-            },
-        },
-        {
             zappy::Constants::Commands::PLAYER_JOINED,
             [this](const std::vector<std::string> &response) {
                 std::size_t number = std::stoi(response.at(1));
@@ -123,12 +117,6 @@ godot::Genesis::Genesis()
 
                 _players[number] = player;
                 _teams.at(team)->add_player(player);
-            },
-        },
-        {
-            zappy::Constants::Commands::PLAYER_LEVEL,
-            [](const std::vector<std::string> &response) {
-                // TODO(jabolo): find player and update level
             },
         },
         {
@@ -190,6 +178,58 @@ godot::Genesis::Genesis()
             zappy::Constants::Commands::SERVER_KO,
             [](const std::vector<std::string> &_response) {
                 UtilityFunctions::print(">> critical error: server KO");
+            },
+        },
+        {
+            zappy::Constants::Commands::PLAYER_EXPULSION,
+            [this](const std::vector<std::string> &response) {
+                std::size_t id = std::stoi(response.at(1));
+
+                auto p = _players.find(id);
+
+                if (p == _players.end()) {
+                    return UtilityFunctions::print(
+                        std::format(">> could not find {}", id).c_str());
+                }
+
+                _players.erase(p);
+
+                std::for_each(_teams.begin(), _teams.end(),
+                    [id](const std::pair<const std::string,
+                        std::unique_ptr<zappy::Team>> &team) {
+                        team.second->remove_player(id);
+                    });
+            },
+        },
+        {
+            zappy::Constants::Commands::START_INCANTATION,
+            [](const std::vector<std::string> &response) {
+                std::vector<std::size_t> levels;
+                std::size_t x = std::stoi(response.at(1));
+                std::size_t y = std::stoi(response.at(2));
+
+                std::transform(response.begin() + 3, response.end(),
+                    std::back_inserter(levels), [](const std::string &elem) {
+                        return std::stoi(elem);
+                    });
+
+                // TODO(jabolo): Call animation of incantation
+                // TODO(jabolo): Fire timings for incantation
+                // TODO(jabolo): Freeze player
+                // TODO(jabolo): Tint player white
+            },
+        },
+        {
+            zappy::Constants::Commands::END_INCANTATION,
+            [](const std::vector<std::string> &response) {
+                std::size_t x = std::stoi(response.at(1));
+                std::size_t y = std::stoi(response.at(2));
+                std::size_t result = std::stoi(response.at(3));
+
+                // TODO(jabolo): Call animation of incantation
+                // TODO(jabolo): Fire timings for incantation
+                // TODO(jabolo): Unfreeze player
+                // TODO(jabolo): Tint player one shade lighter if success
             },
         },
     };

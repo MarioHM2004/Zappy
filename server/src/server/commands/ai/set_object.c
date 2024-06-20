@@ -25,5 +25,5 @@ void set_object_command(server_t *server, client_t *client, char *cmd)
     event = create_event(SET_OBJECT, (void *)object, sizeof(object_t));
     if (!event)
         return packet_message(client, ERROR_MESSAGE);
-    add_event(player->events, event, 7.0 / server->game->freq);
+    add_event(player->events, event, get_execution_time(7.0, server->game->freq));
 }

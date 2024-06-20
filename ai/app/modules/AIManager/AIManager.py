@@ -67,10 +67,10 @@ class AIManager:
             # Ignore ebo
             self.recv_data(socket=socket_cl)
 
-            # Recieve CLIENT-NUM and MAP-SIZE: pnw #n X Y O L N msz X Y
+            # Recieve CLIENT-NUM and MAP-SIZE: pnw #n X Y O L N msz X Y posX posY
             data = self.recv_data(socket=socket_cl)
             client_info = data.split()
-            if len(client_info) != 10 or client_info[0] != "pnw" or client_info[7] != "msz":
+            if client_info[0] != "pnw" or client_info[7] != "msz":
                 print("-- Failed to connect to server: Invalid response pnw")
                 return None
             self.client_id = int(client_info[1])

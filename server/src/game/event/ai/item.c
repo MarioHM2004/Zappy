@@ -37,6 +37,13 @@ static resource_e string_to_resource(char message[MAX_OBJECT_LENGTH])
     return -1;
 }
 
+static void consume_food(player_t *player, float freq)
+{
+    if(change_resource(player->inventory, FOOD, -1)) {
+        player->food_status += get_execution_time(126.0, freq);
+    }
+}
+
 void take_object(server_t *server, player_t *player, event_t *event)
 {
     tile_t tile = map_at(server->game->map, player->pos);
@@ -50,6 +57,8 @@ void take_object(server_t *server, player_t *player, event_t *event)
     }
     item = string_to_resource(event->data.object.name);
     if (item != -1 && move_item(tile.resource, player->inventory, item)) {
+        if (item == 0)
+            consume_food(player, server->game->freq);
         log_debug("Player %d took %d from the floor", player->number, item);
         pgt_command(server, client, player, item);
         add_response_to_player(server->clients, player,

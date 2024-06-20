@@ -65,7 +65,7 @@ void game_tick(server_t *server)
         LIST_FOREACH(player_node, team_node->team->players, entries)
             player_tick(server, player_node->player);
     }
-    if (spawn_resources == 20) {
+    if (spawn_resources >= get_execution_time(20, server->game->freq)) {
         log_info("Spawning reosurces");
         spawn_all_resources(server->game->map);
         spawn_resources = 0;

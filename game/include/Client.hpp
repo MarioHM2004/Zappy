@@ -1,6 +1,7 @@
 #include <arpa/inet.h>
 #include <atomic>
 #include <cstring>
+#include <functional>
 #include <netinet/in.h>
 #include <poll.h>
 #include <queue>

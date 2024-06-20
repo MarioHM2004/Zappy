@@ -27,13 +27,7 @@ cmake -B build -G Ninja
 cmake --build build
 ```
 
-4. Run the mock server:
-
-```bash
-./build/server 4242&
-```
-
-5. Open the editor:
+4. Open the editor:
 
 ```bash
 godot
@@ -58,7 +52,7 @@ parameters.
 | `ppo #n X Y O\n`                    | Player’s Position            | [X]  | `#n` player number, `X` width or horizontal position, `Y` height or vertical position, `O` orientation: 1(N), 2(E), 3(S), 4(W)                                                                                                                                                                                                                   |
 | `plv #n L\n`                        | Player’s Level               | [X]  | `#n` player number, `L` player level                                                                                                                                                                                                                                                                                                             |
 | `pin #n X Y q0 q1 q2 q3 q4 q5 q6\n` | Player’s Inventory           | [X]  | `#n` player number, `X` width or horizontal position, `Y` height or vertical position, `q0` resource 0 (food) quantity, `q1` resource 1 (linemate) quantity, `q2` resource 2 (deraumere) quantity, `q3` resource 3 (sibur) quantity, `q4` resource 4 (mendiane) quantity, `q5` resource 5 (phiras) quantity, `q6` resource 6 (thystame) quantity |
-| `pex #n\n`                          | Expulsion                    | [ ]  | `#n` player number                                                                                                                                                                                                                                                                                                                               |
+| `pex #n\n`                          | Expulsion                    | [X]  | `#n` player number                                                                                                                                                                                                                                                                                                                               |
 | `pbc #n M\n`                        | Broadcast                    | [ ]  | `#n` player number, `M` message                                                                                                                                                                                                                                                                                                                  |
 | `pic X Y L #n #n ... \n`            | Start of an Incantation      | [ ]  | `X` width or horizontal position, `Y` height or vertical position, `L` level, `#n` player number (multiple)                                                                                                                                                                                                                                      |
 | `pie X Y R\n`                       | End of an Incantation        | [ ]  | `X` width or horizontal position, `Y` height or vertical position, `R` result                                                                                                                                                                                                                                                                    |

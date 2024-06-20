@@ -87,6 +87,8 @@ static bool assign_team(server_t *server, client_t *client, char *team)
         pnw_command(server, client, player);
         msz_command(server, client, "msz");
         send_guis_player_info(server, player);
+        add_response(client,
+            formatstr(AI_CONNECTION, player->pos.x, player->pos.y));
         return true;
     }
     return false;
