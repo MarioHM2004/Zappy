@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://c3n5r12u87w27"]
+
+[ext_resource type="PackedScene" uid="uid://dpvcu3l5npbeq" path="res://assets/sprites/low_poly_food.glb" id="1_lnkea"]
+
+[node name="Sketchfab_Scene" instance=ExtResource("1_lnkea")]
+
+[node name="Apple" parent="Sketchfab_model/baa739fafca14ff7a5030c51d2963344_fbx/RootNode" index="0"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 15, 0, 5)

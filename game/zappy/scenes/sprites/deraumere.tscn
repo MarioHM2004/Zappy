@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dv2arxqpkpvk2"]
+
+[ext_resource type="PackedScene" uid="uid://r68bmvppjb1r" path="res://assets/sprites/deraumere.glb" id="1_lnq40"]
+
+[node name="Sketchfab_Scene" instance=ExtResource("1_lnq40")]
+
+[node name="Slatinum_Node" parent="Sketchfab_model/db46d8964a4746a89eed42243cccd81c_fbx/RootNode" index="0"]
+transform = Transform3D(0.2, 0, 0, 0, -8.74228e-09, 0.2, 0, -0.2, -8.74228e-09, 0, 0, 0)
