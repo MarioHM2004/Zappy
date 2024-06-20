@@ -11,17 +11,6 @@
 #include "server/action.h"
 #include <sys/queue.h>
 
-action_t *create_player_set_action(player_t *player, resource_e resource)
-{
-    object_t object = {
-        .player = player,
-        .resource = resource
-    };
-    action_t *action = create_action(PLAYER_SET, &object, sizeof(object_t));
-
-    return action;
-}
-
 void player_set(server_t *server, action_t *action)
 {
     client_node_t *node = NULL;

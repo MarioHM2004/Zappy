@@ -12,19 +12,6 @@
 #include <stdlib.h>
 #include <sys/queue.h>
 
-action_t *create_incantation_end_action(player_list_t *players,
-    bool successful)
-{
-    incantation_action_t incantation = {
-        .players = players,
-        .state = successful ? SUCCESSFUL : FAILED
-    };
-    action_t *action = create_action(INCANTATION_END,
-        &incantation, sizeof(incantation_action_t));
-
-    return action;
-}
-
 void incantation_end(server_t *server, action_t *action)
 {
     client_node_t *client_node = NULL;
