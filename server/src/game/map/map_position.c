@@ -21,13 +21,13 @@ position_t dir_at(map_t *map, position_t pos, direction_e dir)
             new_pos.y--;
             break;
         case EAST:
-            new_pos.x++;
+            new_pos.x--;
             break;
         case SOUTH:
             new_pos.y++;
             break;
         case WEST:
-            new_pos.x--;
+            new_pos.x++;
             break;
     }
     return pos_at(map, new_pos);

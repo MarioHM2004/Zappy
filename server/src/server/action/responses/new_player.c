@@ -39,7 +39,8 @@ void new_player(server_t *server, action_t *action)
         return;
     player = get_player_by_fd(server->game->players,
         action->data.client->socket->fd);
-    log_debug("Pos x: %d, y: %d", player->pos.x, player->pos.y);
+    log_debug("Pos x: %d, y: %d, dir: %d",
+        player->pos.x, player->pos.y, player->dir);
     if (!player)
         return;
     pnw_command(server, action->data.client, player);
