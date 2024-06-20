@@ -51,6 +51,7 @@ void destroy_action_list(action_list_t *head)
         destroy_action_node(current);
         current = tmp;
     }
+    free(head);
 }
 
 static void insert_tail(action_list_t *actions, action_node_t *node)

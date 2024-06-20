@@ -6,6 +6,7 @@
 */
 
 #include "libs/log.h"
+
 float get_execution_time(float execution_time, float frequence)
 {
     if (frequence == 0) {

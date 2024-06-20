@@ -27,7 +27,8 @@ void forward(server_t *server, player_t *player, event_t *event)
     log_debug("Player %d moved to %d %d", player->number, player->pos.x,
         player->pos.y);
     if (action)
-        add_action(server->actions, action);}
+        add_action(server->actions, action);
+}
 
 direction_e right_dir(direction_e dir)
 {

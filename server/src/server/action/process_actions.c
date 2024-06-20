@@ -34,17 +34,21 @@ static const action_response_t action_responses[] = {
 void process_actions(server_t *server)
 {
     action_node_t *node = NULL;
+    action_node_t *tmp = NULL;
     size_t len = sizeof(action_responses) / sizeof(action_responses[0]);
 
-    LIST_FOREACH(node, server->actions, entries) {
+    if (!server->actions)
+        return;
+    for (action_node_t *node = LIST_FIRST(server->actions); node; node = tmp) {
         for (size_t i = 0; i < len; i++) {
             if (action_responses[i].type != node->action->type)
                 continue;
             action_responses[i].func(server, node->action);
             break;
         }
+        tmp = LIST_NEXT(node, entries);
+        LIST_REMOVE(node, entries);
+        destroy_action_node(node);
     }
-    destroy_action_list(server->actions);
-    server->actions = create_action_list();
 }
 
