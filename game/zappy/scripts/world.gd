@@ -24,7 +24,7 @@ func create_tile(x, y):
 	
 	add_child(tile_instance)
 
-func _on_genesis_wsize(x, y):
+func create_world(x, y):
 	for i in range(y):
 		for j in range(x):
 			create_tile(j, i)
@@ -33,3 +33,6 @@ func _on_genesis_wsize(x, y):
 	var ocean: PlaneMesh = get_node("Ocean").mesh
 	ocean.size = Vector2(x * 2, y * 2)
 	plane.global_transform.origin = Vector3((x - (x * 0.5)), 0, (y - (y * 0.5)))
+
+func _on_genesis_wsize(x, y):
+	create_world(x, y)

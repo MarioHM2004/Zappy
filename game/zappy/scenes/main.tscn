@@ -5,22 +5,22 @@
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_bns41"]
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_njqeq"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_vaxjb"]
 noise = SubResource("FastNoiseLite_bns41")
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6n472"]
-sky_cover = SubResource("NoiseTexture2D_njqeq")
+sky_cover = SubResource("NoiseTexture2D_vaxjb")
 
-[sub_resource type="Sky" id="Sky_4dbpf"]
+[sub_resource type="Sky" id="Sky_78f65"]
 sky_material = SubResource("ProceduralSkyMaterial_6n472")
 
 [sub_resource type="Environment" id="Environment_qisdi"]
 background_mode = 2
-sky = SubResource("Sky_4dbpf")
+sky = SubResource("Sky_78f65")
 ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4b6ud"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_16s8u"]
 render_priority = 0
 shader = ExtResource("2_68eot")
 shader_parameter/out_color = Color(0, 0.2, 1, 1)
@@ -32,7 +32,7 @@ shader_parameter/specular = 0.5
 shader_parameter/roughness = 0.2
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1law1"]
-material = SubResource("ShaderMaterial_4b6ud")
+material = SubResource("ShaderMaterial_16s8u")
 size = Vector2(0, 0)
 subdivide_width = 25
 subdivide_depth = 25
@@ -42,7 +42,7 @@ script = ExtResource("1_mxuiy")
 
 [node name="Genesis" type="Genesis" parent="."]
 process_mode = 4
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 6.689, 4, 0)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 12, 4, 4)
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5, 0)

@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include "Player.hpp"
-#include "godot_cpp/variant/color.hpp"
+#include <godot_cpp/variant/color.hpp>
 
 #ifndef __TEAM
     #define __TEAM
