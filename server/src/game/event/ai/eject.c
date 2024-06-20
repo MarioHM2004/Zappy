@@ -10,6 +10,7 @@
 #include "libs/log.h"
 #include "server/command.h"
 #include "server/server.h"
+#include <stdbool.h>
 
 static uint ejected_from(map_t *map, player_t *player, position_t pos)
 {
@@ -62,14 +63,13 @@ static void eject_action(server_t *server, player_t *player, bool success)
         add_action(server->actions, ai_action);
 }
 
-static void ejected_action(server_t *server, player_t *player, bool success, uint ejected_pos)
+static void ejected_action(server_t *server, player_t *player, uint ejected_pos)
 {
     action_t *action = NULL;
 
-    if (success)
-        action = create_event_received_action(player, EJECTED,
-            formatstr(EJECTED_RESPONSE, ejected_pos), success);
-    if (action)
+    action = create_event_received_action(player, EJECTED,
+        formatstr(EJECTED_RESPONSE, ejected_pos), true);
+    if(action)
         add_action(server->actions, action);
 }
 
@@ -96,7 +96,7 @@ void eject(server_t *server, player_t *player, event_t *event)
         }
         ejected_pos = ejected_from(server->game->map, tmp->player, new_pos);
         move_player(server->game->map, tmp->player, new_pos);
-        ejected_action(server, tmp->player, true, ejected_from(server->game->map, tmp->player, new_pos));
+        ejected_action(server, tmp->player, ejected_pos);
         log_debug("%d: Ejecting player %d", player->number, tmp->player->number);
     }
     eject_action(server, player, true);
