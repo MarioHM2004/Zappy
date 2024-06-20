@@ -48,13 +48,17 @@ static void take_object_action(server_t *server, player_t *player,
 {
     action_t *ai_action = NULL;
     action_t *gui_action = NULL;
+    object_t object = {
+        .player = player,
+        .resource = resource,
+    };
 
     if (success) {
         log_debug("Player %d took %d from the floor",
             player->number, resource);
         ai_action = create_event_completed_action(player, TAKE_OBJECT,
             TAKE_OBJECT_RESPONSE, true);
-        gui_action = create_player_take_action(player, resource);
+        gui_action = create_action(PLAYER_TAKE, &object, sizeof(object_t));
     } else {
         log_debug("Player %d couldn't take any item from the floor",
             player->number);
@@ -90,13 +94,17 @@ static void set_object_action(server_t *server, player_t *player,
 {
     action_t *ai_action = NULL;
     action_t *gui_action = NULL;
+    object_t object = {
+        .player = player,
+        .resource = resource,
+    };
 
     if (success) {
         log_debug("Player %d set  %d from the floor",
             player->number, resource);
         ai_action = create_event_completed_action(player, SET_OBJECT,
             TAKE_OBJECT_RESPONSE, true);
-        gui_action = create_player_take_action(player, resource);
+        gui_action = create_action(PLAYER_SET, &object, sizeof(object_t));
     } else {
         log_debug("Player %d couldn't set any item from the floor",
             player->number);

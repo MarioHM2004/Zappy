@@ -9,8 +9,38 @@
 #include "game/game.h"
 #include "game/map.h"
 #include "game/player.h"
+#include "server/action.h"
 #include "server/command.h"
+#include <stdbool.h>
 #include <sys/queue.h>
+#include <time.h>
+
+static void incantation_start_action(server_t *server,
+    player_list_t *player_list, player_t *player, bool success)
+{
+    player_node_t *tmp;
+    action_t *ai_action = NULL;
+    action_t *gui_action = NULL;
+    incantation_action_t incantation = {
+        .players = player_list,
+        .state = IN_PROGRESS,
+    };
+
+    if (success) {
+        LIST_FOREACH(tmp, player_list, entries) {
+            ai_action = create_event_completed_action(tmp->player,
+                START_INCANTATION, START_INCANTATION_RESPONSE, success);
+            add_action(server->actions, ai_action);
+        }
+        gui_action = create_action(INCANTATION_START, &incantation,
+            sizeof(incantation_action_t));
+        add_action(server->actions, gui_action);
+    } else {
+        ai_action = create_event_completed_action(player, START_INCANTATION,
+            NULL, success);
+        add_action(server->actions, ai_action);
+    }
+}
 
 void incantation_command(server_t *server, client_t *client, char *cmd)
 {
@@ -29,8 +59,6 @@ void incantation_command(server_t *server, client_t *client, char *cmd)
     event = create_event(START_INCANTATION, (void *)player, sizeof(player_t));
     if (!event)
         return packet_message(client, ERROR_MESSAGE);
-    LIST_FOREACH(tmp, player_list, entries)
-        add_response_to_player(server->clients, tmp->player, START_INCANTATION_RESPONSE);
-    // pic_command(server, client, player, player_list);
+    incantation_start_action(server, player_list, player, true);
     add_event(player->events, event, 300.0 / server->game->freq);
 }

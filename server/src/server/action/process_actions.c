@@ -26,6 +26,7 @@ static const action_response_t action_responses[] = {
     { INCANTATION_COMPLETE, &incantation_complete },
     { EGG_LAYED, &egg_layed },
     { EGG_MATURED, &egg_matured },
+    { EGG_DEATH, &egg_death },
     { MAP_REFILL, &map_refill },
 };
 

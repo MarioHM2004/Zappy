@@ -50,6 +50,7 @@ static void map_action(action_t *a, void *data)
 
 static const action_assign_t action_assignation[] = {
     { EVENT_COMPLETED, &event_completed_assignation },
+    { EVENT_RECEIVED, &new_connection},
     { NEW_GUI, &new_connection },
     { NEW_PLAYER, &new_connection },
     { PLAYER_MOVED, &player_action },
@@ -65,6 +66,7 @@ static const action_assign_t action_assignation[] = {
     { INCANTATION_COMPLETE, &incantation_action },
     { EGG_LAYED, &egg_action },
     { EGG_MATURED, &egg_action },
+    { EGG_DEATH, &player_action},
     { MAP_REFILL, &map_action },
 };
 

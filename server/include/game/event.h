@@ -27,8 +27,14 @@ typedef enum {
     EJECT,
     TAKE_OBJECT,
     SET_OBJECT,
-    START_INCANTATION
+    START_INCANTATION,
+    END_INCANTATION
 } event_type_e;
+
+typedef enum {
+    MESSAGE,
+    EJECTED,
+} event_received_type_e;
 
 typedef struct object_s {
     player_t *player;

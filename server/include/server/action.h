@@ -17,6 +17,7 @@
 typedef enum {
     // response goes to -> AI
     EVENT_COMPLETED, // AI event is completed
+    EVENT_RECEIVED, // AI event is received
     // response goes to -> GUI
     NEW_GUI,
     NEW_PLAYER,
@@ -32,6 +33,7 @@ typedef enum {
     INCANTATION_END,
     INCANTATION_COMPLETE,
     EGG_LAYED,
+    EGG_DEATH,
     EGG_MATURED,
     MAP_REFILL,
 } action_type_e;
@@ -42,6 +44,13 @@ typedef struct event_completed_s {
     char *response;
     bool successful;
 } event_completed_t;
+
+typedef struct event_received_s {
+    event_received_type_e type;
+    player_t *player;
+    char *response;
+    bool successful;
+} event_received_t;
 
 typedef struct egg_shell_s {
     player_t *player;
@@ -61,6 +70,7 @@ typedef struct incantation_action_s {
 
 typedef union {
     event_completed_t event_completed;
+    event_received_t event_received;
     client_t *client;
     player_t *player;
     object_t object;
@@ -112,6 +122,7 @@ void add_action(action_list_t *head, action_t *action);
 void process_actions(server_t *server);
 // action responses
 void event_completed(server_t *server, action_t *action);
+void event_received(server_t *server, action_t *action);
 void new_gui(server_t *server, action_t *action);
 void new_player(server_t *server, action_t *action);
 void player_moved(server_t *server, action_t *action);
@@ -127,24 +138,13 @@ void incantation_end(server_t *server, action_t *action);
 void incantation_complete(server_t *server, action_t *action);
 void egg_layed(server_t *server, action_t *action);
 void egg_matured(server_t *server, action_t *action);
+void egg_death(server_t *server, action_t *action);
 void map_refill(server_t *server, action_t *action);
 
 action_t *create_event_completed_action(player_t *player,
     event_type_e event_type, char *response, bool successful);
-action_t *create_egg_layed_action(player_t *player, player_t *egg);
-action_t *create_egg_matured_action(player_t *egg);
-action_t *create_map_refill_action(map_t *map);
-action_t *create_incantation_start(player_list_t *players, bool successful);
-action_t *create_incantation_complete(player_list_t *players);
-action_t *create_player_broadcast_action(player_t *player, char *text);
-action_t *create_player_dead_action(player_t *player);
-action_t *create_player_eject_action(player_t *player);
-action_t *create_player_fork_action(player_t *player);
-action_t *create_player_inventory_action(player_t *player);
-action_t *create_player_moved_action(player_t *player);
-action_t *create_player_set_action(player_t *player, resource_e resource);
-action_t *create_player_take_action(player_t *player, resource_e resource);
-
+action_t *create_event_received_action(player_t *player,
+    event_received_type_e event_type, char *response, bool successful);
 
 #endif // !ACTION_H_
 
