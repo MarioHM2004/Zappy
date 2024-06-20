@@ -43,6 +43,7 @@ zappy::Player::Player(godot::SceneTree *tree, std::size_t number,
     }
 
     instantiated_scene->set_position(position);
+    instantiated_scene->scale_object_local(godot::Vector3(0.5, 0.5, 0.5));
 
     _robot_scene = instantiated_scene;
     _robot_body = character_body;
@@ -128,11 +129,32 @@ void zappy::Player::tint(godot::Color accent)
         return godot::UtilityFunctions::print("Method `tint` not found");
     }
 
-    godot::Color main_body(0, 0, 0, 255);
-    godot::Color pupils(0, 0, 0, 255);
-    godot::Color eye_bg(255, 255, 255, 255);
+    _accent = accent;
+    _robot_body->call("tint", _main_body, _pupils, _accent, _eye_bg);
+}
 
-    _robot_body->call("tint", main_body, pupils, accent, eye_bg);
+void zappy::Player::invocation(int level, bool init)
+{
+    if (_robot_body == nullptr) {
+        return godot::UtilityFunctions::print("Robot body is null");
+    }
+
+    _frozen = init;
+
+    invocation_anim();
+
+    if (init) {
+        _robot_body->call(
+            "tint", godot::Color(1, 1, 1), _pupils, _accent, _eye_bg);
+        return;
+    }
+
+    _level = level;
+    int factor = level * 0.2;
+    _main_body = godot::Color(_main_body.r + factor, _main_body.g + factor,
+        _main_body.b + factor, _main_body.a);
+    _robot_body->call("tint", _main_body, _pupils, _accent, _eye_bg);
+    idle_anim();
 }
 
 void zappy::Player::invocation_anim() const
@@ -140,8 +162,11 @@ void zappy::Player::invocation_anim() const
     if (_robot_body == nullptr) {
         return godot::UtilityFunctions::print("Robot body is null");
     }
+    if (!_robot_body->has_method("invocation_anim")) {
+        return godot::UtilityFunctions::print(
+            "Method `invocation_anim` not found");
+    }
     _robot_body->call("invocation_anim");
-
 }
 
 void zappy::Player::death_anim() const
@@ -149,6 +174,19 @@ void zappy::Player::death_anim() const
     if (_robot_body == nullptr) {
         return godot::UtilityFunctions::print("Robot body is null");
     }
+    if (!_robot_body->has_method("death_anim")) {
+        return godot::UtilityFunctions::print("Method `death_anim` not found");
+    }
     _robot_body->call("death_anim");
+}
 
+void zappy::Player::idle_anim() const
+{
+    if (_robot_body == nullptr) {
+        return godot::UtilityFunctions::print("Robot body is null");
+    }
+    if (!_robot_body->has_method("idle_anim")) {
+        return godot::UtilityFunctions::print("Method `idle_anim` not found");
+    }
+    _robot_body->call("idle_anim");
 }
