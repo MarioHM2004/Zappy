@@ -55,4 +55,5 @@ environment = SubResource("Environment_qisdi")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 mesh = SubResource("PlaneMesh_1law1")
 
+[connection signal="resource" from="Genesis" to="." method="_on_genesis_resource"]
 [connection signal="wsize" from="Genesis" to="." method="_on_genesis_wsize"]

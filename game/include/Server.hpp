@@ -33,8 +33,8 @@ namespace zappy
         void sendInitialData(int clientSocket);
         void sendPeriodicData();
         void sendOtherData(int clientSocket);
-        void incantation(int clientSocket);
-        void incantationEnd(int clientSocket);
+        void incantation(int clientSocket, int level);
+        void incantationEnd(int clientSocket, int level);
 
       private:
         int playerCount = 9;

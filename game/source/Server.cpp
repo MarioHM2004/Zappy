@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <arpa/inet.h>
+#include <array>
 #include <chrono>
 #include <cstddef>
 #include <cstdio>
@@ -80,9 +81,18 @@ std::string zappy::Server::generate(int x, int y)
     std::random_device rd;
     rng.seed(rd());
     std::uniform_int_distribution<int> dist(0, 5);
-    for (int i = 0; i < 7; ++i) {
-        msg << " " << dist(rng);
+    std::array<int, 7> arr = {0, 0, 0, 0, 0, 0, 0};
+
+    for (int i = 0; i < 2; i++) {
+        arr[i] = dist(rng);
     }
+
+    std::shuffle(arr.begin(), arr.end(), rng);
+
+    for (auto &elem : arr) {
+        msg << " " << elem;
+    }
+
     return msg.str() + "\n";
 }
 
@@ -102,8 +112,8 @@ void zappy::Server::sendMapSize(int clientSocket)
 
 void zappy::Server::sendMapContent(int clientSocket)
 {
-    for (int i = 0; i <= _x; i++) {
-        for (int j = 0; j <= _y; j++) {
+    for (int i = 0; i < _x; i++) {
+        for (int j = 0; j < _y; j++) {
             std::string msg = generate(i, j);
             ssize_t bytesSent = send(clientSocket, msg.c_str(), msg.size(), 0);
             std::cout << msg.c_str();
@@ -198,7 +208,7 @@ void zappy::Server::movePlayer(int clientSocket)
     }
 }
 
-void zappy::Server::incantation(int clientSocket)
+void zappy::Server::incantation(int clientSocket, int level)
 {
     std::vector<int> oddArray;
     for (int i = 0; i < playerCount; ++i) {
@@ -209,7 +219,7 @@ void zappy::Server::incantation(int clientSocket)
     }
 
     std::stringstream msg;
-    msg << "pic " << 0 << " " << 0 << " " << 1;
+    msg << "pic " << 0 << " " << 0 << " " << level;
     for (int i = 0; i < oddArray.size(); ++i) {
         msg << " " << oddArray[i];
     }
@@ -225,7 +235,7 @@ void zappy::Server::incantation(int clientSocket)
     }
 }
 
-void zappy::Server::incantationEnd(int clientSocket)
+void zappy::Server::incantationEnd(int clientSocket, int level)
 {
     std::vector<int> oddArray;
     for (int i = 0; i < playerCount; ++i) {
@@ -252,14 +262,21 @@ void zappy::Server::sendInitialData(int clientSocket)
 {
     sendWelcome(clientSocket);
     sendMapSize(clientSocket);
-    // sendMapContent(clientSocket);
+    sendMapContent(clientSocket);
     initTeams(clientSocket);
     addNewPlayer(clientSocket);
     movePlayer(clientSocket);
     std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-    incantation(clientSocket);
-    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-    incantationEnd(clientSocket);
+    for (int i = 0; i < 6; ++i) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+        std::thread incantationThread(
+            &zappy::Server::incantation, this, clientSocket, i);
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+        std::thread incantationEndThread(
+            &zappy::Server::incantationEnd, this, clientSocket, i);
+        incantationThread.join();
+        incantationEndThread.join();
+    }
 }
 
 void zappy::Server::sendOtherData(int clientSocket)

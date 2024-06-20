@@ -16,14 +16,16 @@
 #include <godot_cpp/classes/window.hpp>
 #include <godot_cpp/core/object.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
+#include <godot_cpp/variant/variant.hpp>
 #include <godot_cpp/variant/vector3.hpp>
 
 void godot::Genesis::_bind_methods()
 {
-    // TODO(jabolo): fix string_view mismatch to use signals from Common.hpp
     ADD_SIGNAL(MethodInfo("error", PropertyInfo(Variant::STRING, "value")));
     ADD_SIGNAL(MethodInfo("wsize", PropertyInfo(Variant::INT, "x"),
         PropertyInfo(Variant::INT, "y")));
+    ADD_SIGNAL(MethodInfo("resource", PropertyInfo(Variant::STRING, "kind"),
+        PropertyInfo(Variant::INT, "x"), PropertyInfo(Variant::INT, "y")));
 }
 
 godot::Genesis::Genesis()
@@ -42,8 +44,8 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::TILE_CONTENT,
             [this](const std::vector<std::string> &response) {
-                std::size_t x = std::stoi(response.at(1));
-                std::size_t y = std::stoi(response.at(2));
+                int x = std::stoi(response.at(1));
+                int y = std::stoi(response.at(2));
 
                 std::vector<std::size_t> resources;
                 std::transform(response.begin() + 3, response.end(),
@@ -54,10 +56,15 @@ godot::Genesis::Genesis()
 
                 for (auto it = resources.begin(); it != resources.end();
                      ++it) {
-                    _world->set_resource(x, y,
+                    zappy::ResourceType kind =
                         static_cast<zappy::ResourceType>(
-                            std::distance(resources.begin(), it)),
-                        *it);
+                            std::distance(resources.begin(), it));
+                    if (*it > 0) {
+                        emit_signal("resource",
+                            zappy::World::resource_to_string(kind).c_str(), x,
+                            y);
+                    }
+                    _world->set_resource(x, y, kind, *it);
                 }
             },
         },

@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/node3d.hpp>
 #include <godot_cpp/classes/object.hpp>
 #include <godot_cpp/classes/packed_scene.hpp>
+#include <godot_cpp/variant/color.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/variant/vector3.hpp>
 
@@ -44,9 +45,12 @@ zappy::Player::Player(godot::SceneTree *tree, std::size_t number,
 
     instantiated_scene->set_position(position);
     instantiated_scene->scale_object_local(godot::Vector3(0.5, 0.5, 0.5));
+    character_body->rotate_object_local(
+        godot::Vector3(0, 1, 0), 90 * orientation);
 
     _robot_scene = instantiated_scene;
     _robot_body = character_body;
+    _orientation = orientation;
 
     spawn();
 }
@@ -146,14 +150,13 @@ void zappy::Player::invocation(int level, bool init)
     if (init) {
         _robot_body->call(
             "tint", godot::Color(1, 1, 1), _pupils, _accent, _eye_bg);
+        _level = level;
         return;
     }
 
-    _level = level;
-    int factor = level * 0.2;
-    _main_body = godot::Color(_main_body.r + factor, _main_body.g + factor,
-        _main_body.b + factor, _main_body.a);
+    _main_body = get_accent_color(_level);
     _robot_body->call("tint", _main_body, _pupils, _accent, _eye_bg);
+
     idle_anim();
 }
 
@@ -189,4 +192,17 @@ void zappy::Player::idle_anim() const
         return godot::UtilityFunctions::print("Method `idle_anim` not found");
     }
     _robot_body->call("idle_anim");
+}
+
+godot::Color zappy::Player::get_accent_color(std::size_t level)
+{
+    if (level == 6) {
+        return godot::Color(1, 1, 1, 1);
+    }
+
+    if (level > 6) {
+        return godot::Color(1, 0, 0, 1);
+    }
+
+    return godot::Color(level * 0.17, level * 0.17, level * 0.17, 1);
 }

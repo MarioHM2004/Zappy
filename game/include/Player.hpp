@@ -57,6 +57,8 @@ namespace zappy
         void invocation_anim() const;
         void death_anim() const;
         void idle_anim() const;
+
+        static godot::Color get_accent_color(std::size_t level);
     };
 } // namespace zappy
 
