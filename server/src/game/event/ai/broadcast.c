@@ -11,11 +11,14 @@
 #include "game/resources.h"
 #include "libs/lib.h"
 #include "libs/log.h"
+#include "server/action.h"
 #include "server/client.h"
 #include "server/command.h"
 #include "server/server.h"
 #include "game/event.h"
+#include <stdbool.h>
 #include <stdlib.h>
+#include <time.h>
 
 static sound_e determine_direction(position_t delta)
 {
@@ -132,6 +135,41 @@ static int sound_trajectory(map_t *map, player_t *from, player_t *to)
     return -1;
 }
 
+static void broadcast_receiver_action(server_t *server, player_t *player,
+    char *message)
+{
+    action_t *action = create_event_received_action(player, MESSAGE,
+        message, true);
+
+    if (action)
+        add_action(server->actions, action);
+}
+
+static void broadcast_action(server_t *server, player_t *player,
+    char *response, bool success)
+{
+    action_t *ai_action = NULL;
+    action_t *gui_action = NULL;
+    broadcast_t broadcast = {
+        .player = player,
+        .text = *response
+    };
+
+    if (success) {
+        ai_action = create_event_completed_action(player, BROADCAST,
+            BROADCAST_SENDER, success);
+        gui_action = create_action(PLAYER_BROADCAST,
+            &broadcast, sizeof(broadcast_t));
+    } else {
+        ai_action = create_event_completed_action(player, BROADCAST,
+            NULL, success);
+    }
+    if (ai_action)
+        add_action(server->actions, ai_action);
+    if (gui_action)
+        add_action(server->actions, gui_action);
+}
+
 void broadcast(server_t *server, player_t *player, event_t *event)
 {
     player_node_t *tmp = NULL;
@@ -150,9 +188,8 @@ void broadcast(server_t *server, player_t *player, event_t *event)
         }
         log_debug("Player %d received %s from %d with dir %d", tmp->player->number,
             event->data.broadcast.text, sound_dir, tmp->player->dir);
-        add_response_to_player(server->clients, tmp->player,
+        broadcast_receiver_action(server, tmp->player,
             formatstr(BROADCAST_RECEIVER, sound_dir, event->data.broadcast.text));
     }
-    pbc_command(server, client, player, event->data.broadcast.text);
-    add_response_to_player(server->clients, player, BROADCAST_SENDER);
+    broadcast_action(server, player, event->data.broadcast.text, true);
 }

@@ -14,7 +14,9 @@
 #include "game/event.h"
 #include "libs/lib.h"
 #include "libs/log.h"
+#include "server/action.h"
 #include "server/server.h"
+#include <stdbool.h>
 #include <time.h>
 
 static position_t first_position_in_row(game_t *game, direction_e player_dir,
@@ -90,6 +92,21 @@ static uint look_total_tiles(uint level)
     return total_tiles;
 }
 
+static void look_action(server_t *server, player_t *player,
+    tile_t *look_tiles, uint total_tiles)
+{
+    char *look_content = get_look_content(look_tiles, total_tiles);
+    action_t *action = NULL;
+
+    if (!look_content)
+        action = create_event_completed_action(player, LOOK, NULL, false);
+    else
+        action = create_event_completed_action(player, LOOK,
+        look_content, true);
+    if (action)
+        add_action(server->actions, action);
+}
+
 void look(server_t *server, player_t *player, event_t *event)
 {
     position_t row_pos = player->pos;
@@ -111,6 +128,5 @@ void look(server_t *server, player_t *player, event_t *event)
         }
         row_pos = dir_at(server->game->map, row_pos, player->dir);
     }
-    add_response_to_player(server->clients, player,
-        get_look_content(look_tiles, total_tiles));
+    look_action(server, player, look_tiles, total_tiles);
 }

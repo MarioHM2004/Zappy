@@ -8,14 +8,20 @@
 //take object, set object
 
 #include "game/event.h"
+#include "game/game.h"
 #include "game/map.h"
 #include "game/player.h"
 #include "game/resources.h"
 #include "libs/log.h"
+#include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include "server/action.h"
 #include "server/client.h"
 #include "server/command.h"
 #include "server/server.h"
+#include "server/action.h"
 
 message_to_resource_t msg_to_resource[TOTAL_RESOURCES] = {
     { "food", FOOD },
@@ -37,6 +43,35 @@ static resource_e string_to_resource(char message[MAX_OBJECT_LENGTH])
     return -1;
 }
 
+static void take_object_action(server_t *server, player_t *player,
+    resource_e resource, bool success)
+{
+    action_t *ai_action = NULL;
+    action_t *gui_action = NULL;
+    object_t object = {
+        .player = player,
+        .resource = resource,
+    };
+
+    if (success) {
+        log_debug("Player %d took %d from the floor",
+            player->number, resource);
+        ai_action = create_event_completed_action(player, TAKE_OBJECT,
+            TAKE_OBJECT_RESPONSE, true);
+        gui_action = create_action(PLAYER_TAKE, &object, sizeof(object_t));
+    } else {
+        log_debug("Player %d couldn't take any item from the floor",
+            player->number);
+        ai_action = create_event_completed_action(player, TAKE_OBJECT,
+            NULL, false);
+    }
+    if (ai_action)
+        add_action(server->actions, ai_action);
+    if (gui_action)
+        add_action(server->actions, gui_action);
+}
+
+
 static void consume_food(player_t *player, float freq)
 {
     if(change_resource(player->inventory, FOOD, -1)) {
@@ -47,50 +82,64 @@ static void consume_food(player_t *player, float freq)
 void take_object(server_t *server, player_t *player, event_t *event)
 {
     tile_t tile = map_at(server->game->map, player->pos);
-    resource_e item;
-    uint *resource;
+    resource_e item = -1;
     client_t *client = get_client_by_fd(server->clients, player->fd);
 
     if (event->type != TAKE_OBJECT || !client) {
-        add_response_to_player(server->clients, player, ERROR_MESSAGE);
+        take_object_action(server, player, item, false);
         return;
     }
-    item = string_to_resource(event->data.object.name);
+    item = event->data.object.resource;
     if (item != -1 && move_item(tile.resource, player->inventory, item)) {
-        if (item == 0)
+          if (item == 0)
             consume_food(player, server->game->freq);
-        log_debug("Player %d took %d from the floor", player->number, item);
-        pgt_command(server, client, player, item);
-        add_response_to_player(server->clients, player,
-            TAKE_OBJECT_RESPONSE);
-    } else {
-        log_debug("Player %d couldn't take any item from the floor",
-            player->number);
-        add_response_to_player(server->clients, player, ERROR_MESSAGE);
+        take_object_action(server, player, item, true);
     }
+    else
+        take_object_action(server, player, item, false);
+}
+
+static void set_object_action(server_t *server, player_t *player,
+    resource_e resource, bool success)
+{
+    action_t *ai_action = NULL;
+    action_t *gui_action = NULL;
+    object_t object = {
+        .player = player,
+        .resource = resource,
+    };
+
+    if (success) {
+        log_debug("Player %d set  %d from the floor",
+            player->number, resource);
+        ai_action = create_event_completed_action(player, SET_OBJECT,
+            TAKE_OBJECT_RESPONSE, true);
+        gui_action = create_action(PLAYER_SET, &object, sizeof(object_t));
+    } else {
+        log_debug("Player %d couldn't set any item from the floor",
+            player->number);
+        ai_action = create_event_completed_action(player, SET_OBJECT,
+            NULL, false);
+    }
+    if (ai_action)
+        add_action(server->actions, ai_action);
+    if (gui_action)
+        add_action(server->actions, gui_action);
 }
 
 void set_object(server_t *server, player_t *player, event_t *event)
 {
     tile_t tile = map_at(server->game->map, player->pos);
-    resource_e item;
-    uint *resource;
+    resource_e item = -1;
     client_t *client = get_client_by_fd(server->clients, player->fd);
 
     if (event->type != SET_OBJECT || !client) {
-        add_response_to_player(server->clients, player, ERROR_MESSAGE);
+        set_object_action(server, player, item, false);
         return;
     }
-    item = string_to_resource(event->data.object.name);
-    if (item != -1 && move_item(player->inventory, tile.resource, item)) {
-        log_debug("Player %d set %d on the floor", player->number, item);
-        pdr_command(server, client, player, item);
-        add_response_to_player(server->clients, player,
-            SET_OBJECT_RESPONSE);
-    } else {
-        log_debug("Player %d couldn't set %s on the floor",
-        player->number, item);
-        add_response_to_player(server->clients, player, ERROR_MESSAGE);
-    }
-
+    item = event->data.object.resource;
+    if (item != -1 && move_item(player->inventory, tile.resource, item))
+        set_object_action(server, player, item, true);
+    else
+        set_object_action(server, player, item, false);
 }

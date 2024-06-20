@@ -75,7 +75,7 @@
     #define FORK_RESPONSE "ok"
     #define EJECT_REQUEST "Eject"
     #define EJECT_RESPONSE "ok"
-    #define EJECTED_PLAYER "eject: %d"
+    #define EJECTED_RESPONSE "eject: %d"
     #define DEATH_RESPONSE "dead"
     #define TAKE_OBJECT_REQUEST "Take %s"
     #define TAKE_OBJECT_RESPONSE "ok"
@@ -118,8 +118,7 @@ void enw_command(server_t *server, client_t *client, player_t *player,
     player_t *egg);
 void pbc_command(server_t *server, client_t *client,
     player_t *player, char *msg);
-void pic_command(server_t *server, client_t *client,
-    player_t *player, player_list_t *p_number);
+void pic_command(server_t *server, client_t *client, player_list_t *players);
 void pie_command(server_t *server, client_t *client,
     player_t *player, bool res);
 void pdr_command(server_t *server, client_t *client,

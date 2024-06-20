@@ -11,6 +11,7 @@
     #include <sys/types.h>
     #include "packet.h"
     #include "parser.h"
+    #include "server/action.h"
     #include "socket.h"
     #include "client.h"
     #include "game/game.h"
@@ -24,6 +25,7 @@ typedef struct server_s {
     socket_t *socket;
     client_list_t *clients;
     game_t *game;
+    action_list_t *actions;
     fd_set read_fds;
     fd_set write_fds;
     fd_set except_fds;
