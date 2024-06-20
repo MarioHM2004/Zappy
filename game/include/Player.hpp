@@ -24,8 +24,12 @@ namespace zappy
         std::size_t _level = 0;
         Orientation _orientation = NORTH;
         std::string _path = "res://scenes/robot.tscn";
-        std::unique_ptr<Inventory> _inventory;
+        std::unique_ptr<Inventory> _inventory = std::make_unique<Inventory>();
         bool _frozen = false;
+        godot::Color _accent;
+        godot::Color _main_body = godot::Color(0, 0, 0, 255);
+        godot::Color _pupils = godot::Color(0, 0, 0, 255);
+        godot::Color _eye_bg = godot::Color(255, 255, 255, 255);
 
         godot::SceneTree *_tree;
         godot::Node3D *_robot_scene = nullptr;
@@ -49,6 +53,10 @@ namespace zappy
 
         void spawn();
         void tint(godot::Color accent);
+        void invocation(int level, bool init);
+        void invocation_anim() const;
+        void death_anim() const;
+        void idle_anim() const;
     };
 } // namespace zappy
 

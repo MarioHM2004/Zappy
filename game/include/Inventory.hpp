@@ -12,6 +12,7 @@ namespace zappy
         ResourceData _data;
 
       public:
+        Inventory();
         ResourceData &get_all();
         std::size_t get_resource(ResourceType kind) const;
 

@@ -1,6 +1,11 @@
 #include "Inventory.hpp"
 #include <algorithm>
 
+zappy::Inventory::Inventory()
+{
+    _data.fill(0);
+}
+
 zappy::ResourceData &zappy::Inventory::get_all()
 {
     return _data;

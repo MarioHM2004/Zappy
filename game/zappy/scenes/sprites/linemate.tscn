@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://djyisd30bq6c2"]
+
+[ext_resource type="PackedScene" uid="uid://5i1qt5o6h21k" path="res://assets/sprites/linemate.glb" id="1_208qo"]
+
+[node name="Sketchfab_Scene" instance=ExtResource("1_208qo")]
+
+[node name="Prytonite_Node" parent="Sketchfab_model/db46d8964a4746a89eed42243cccd81c_fbx/RootNode" index="0"]
+transform = Transform3D(0.2, 0, 0, 0, -8.74228e-09, 0.2, 0, -0.2, -8.74228e-09, 0, 0, 0)

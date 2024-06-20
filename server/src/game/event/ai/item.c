@@ -72,6 +72,13 @@ static void take_object_action(server_t *server, player_t *player,
 }
 
 
+static void consume_food(player_t *player, float freq)
+{
+    if(change_resource(player->inventory, FOOD, -1)) {
+        player->food_status += get_execution_time(126.0, freq);
+    }
+}
+
 void take_object(server_t *server, player_t *player, event_t *event)
 {
     tile_t tile = map_at(server->game->map, player->pos);
@@ -83,8 +90,11 @@ void take_object(server_t *server, player_t *player, event_t *event)
         return;
     }
     item = event->data.object.resource;
-    if (item != -1 && move_item(tile.resource, player->inventory, item))
+    if (item != -1 && move_item(tile.resource, player->inventory, item)) {
+          if (item == 0)
+            consume_food(player, server->game->freq);
         take_object_action(server, player, item, true);
+    }
     else
         take_object_action(server, player, item, false);
 }

@@ -1,5 +1,6 @@
 #include <memory>
 #include <string>
+#include <vector>
 #include "Client.hpp"
 #include "Team.hpp"
 #include "World.hpp"
@@ -43,6 +44,9 @@ namespace godot
         std::unordered_map<std::string, std::unique_ptr<zappy::Team>> _teams;
         std::unordered_map<std::size_t, std::shared_ptr<zappy::Player>>
             _players;
+        std::unordered_map<std::string,
+            std::vector<std::shared_ptr<zappy::Player>>>
+            _incantations;
 
       protected:
         static void _bind_methods();
