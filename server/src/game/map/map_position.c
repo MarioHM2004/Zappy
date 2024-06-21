@@ -7,10 +7,7 @@
 
 #include "game/game.h"
 #include "game/map.h"
-#include "game/player.h"
-#include "libs/log.h"
 #include <stdlib.h>
-#include <time.h>
 
 position_t dir_at(map_t *map, position_t pos, direction_e dir)
 {
@@ -21,13 +18,13 @@ position_t dir_at(map_t *map, position_t pos, direction_e dir)
             new_pos.y--;
             break;
         case EAST:
-            new_pos.x--;
+            new_pos.x++;
             break;
         case SOUTH:
             new_pos.y++;
             break;
         case WEST:
-            new_pos.x++;
+            new_pos.x--;
             break;
     }
     return pos_at(map, new_pos);
