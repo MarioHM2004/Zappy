@@ -20,7 +20,6 @@ static void broadcast_receivers(server_t *server, action_t *action)
     client_t *client = NULL;
     uint count = 0;
 
-    log_fatal(action->data.broadcast.text);
     if (action->data.broadcast.sound_dir == NULL)
         return;
     LIST_FOREACH(player_tmp, server->game->players, entries) {
