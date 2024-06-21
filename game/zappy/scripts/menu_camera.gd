@@ -50,10 +50,10 @@ func _ready():
 	create_world(10, 10)
 
 func _process(delta):
-	var rotation = rotation_speed * delta
+	var r = rotation_speed * delta
 
 	if tile_parent:
-		tile_parent.rotate_y(rotation)
+		tile_parent.rotate_y(r)
 		
 	if ocean_plane:
-		ocean_plane.rotate_y(rotation)
+		ocean_plane.rotate_y(r)

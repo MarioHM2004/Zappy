@@ -50,6 +50,7 @@ namespace godot
         bool _setup = false;
         std::string _address = "127.0.0.1";
         std::size_t _port = 4242;
+        bool _console_focused = false;
 
       protected:
         static void _bind_methods();
@@ -68,6 +69,8 @@ namespace godot
         void key_input(const Ref<InputEventKey> &key);
         void mouse_input(const Ref<InputEventMouseMotion> &mouse);
         void handle_settings(String address, String port);
+        void handle_console(String command);
+        void handle_focus(bool active);
     };
 } // namespace godot
 

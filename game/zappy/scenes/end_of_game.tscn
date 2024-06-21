@@ -2,7 +2,7 @@
 
 [ext_resource type="FontFile" uid="uid://cmu113j8p0lqt" path="res://assets/OpenSans-VariableFont_wdth,wght.ttf" id="1_drh3g"]
 [ext_resource type="PackedScene" uid="uid://b2l3611l2tfu7" path="res://assets/Robot/3DGodotRobot.glb" id="1_xh1a0"]
-[ext_resource type="Script" path="res://scenes/endOfGame.gd" id="2_rmbyd"]
+[ext_resource type="Script" path="res://scripts/endOfGame.gd" id="2_rmbyd"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_akkqd"]
 

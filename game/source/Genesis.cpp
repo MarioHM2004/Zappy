@@ -35,6 +35,10 @@ void godot::Genesis::_bind_methods()
     ADD_SIGNAL(MethodInfo("gameover"));
     ClassDB::bind_method(
         D_METHOD("handle_settings"), &Genesis::handle_settings);
+    ClassDB::bind_method(D_METHOD("handle_console"), &Genesis::handle_console);
+    ClassDB::bind_method(D_METHOD("handle_focus"), &Genesis::handle_focus);
+    ADD_SIGNAL(
+        MethodInfo("last_command", PropertyInfo(Variant::STRING, "command")));
 }
 
 godot::Genesis::Genesis()
@@ -317,6 +321,16 @@ godot::Genesis::Genesis()
                 }
             },
         },
+        {zappy::Constants::Commands::UNKNOWN_COMMAND,
+            [](const std::vector<std::string> &_response) {
+                UtilityFunctions::print("Unknown command");
+            }},
+        {
+            zappy::Constants::Commands::BAD_PARAMETER,
+            [](const std::vector<std::string> &_response) {
+                UtilityFunctions::print("Invalid argument");
+            },
+        },
     };
 }
 
@@ -341,6 +355,15 @@ void godot::Genesis::_ready()
         settings->set_visible(true);
         Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_VISIBLE);
         settings->connect("server_address", Callable(this, "handle_settings"));
+    }
+
+    Control *console = Object::cast_to<Control>(
+        get_tree()->get_root()->get_child(0)->get_child(5));
+
+    if (console) {
+        console->set_visible(false);
+        console->connect("server_command", Callable(this, "handle_console"));
+        console->connect("console_focus", Callable(this, "handle_focus"));
     }
 }
 
@@ -386,7 +409,7 @@ void godot::Genesis::_process(double delta)
 
 void godot::Genesis::_input(const Ref<InputEvent> &event)
 {
-    if (!_setup) {
+    if (!_setup || _console_focused) {
         return;
     }
 
@@ -424,8 +447,8 @@ void godot::Genesis::key_input(const Ref<InputEventKey> &key)
         case KEY_ESCAPE:
             Input::get_singleton()->set_mouse_mode(is_pressed
                     ? (key->get_keycode() == KEY_ESCAPE
-                              ? Input::MouseMode::MOUSE_MODE_VISIBLE
-                              : Input::MouseMode::MOUSE_MODE_HIDDEN)
+                            ? Input::MouseMode::MOUSE_MODE_VISIBLE
+                            : Input::MouseMode::MOUSE_MODE_HIDDEN)
                     : Input::get_singleton()->get_mouse_mode());
             break;
         default: break;
@@ -499,8 +522,28 @@ void godot::Genesis::handle_settings(String address, String port)
         settings->set_visible(false);
     }
 
+    Control *console = Object::cast_to<Control>(
+        get_tree()->get_root()->get_child(0)->get_child(5));
+
+    if (console) {
+        console->set_visible(true);
+    }
+
     _setup = true;
     _socket->start_polling();
+}
+
+void godot::Genesis::handle_console(String command)
+{
+    CharString utf8_str = command.utf8();
+    const char *c_str = utf8_str.get_data();
+
+    dispatch(std::string(c_str));
+}
+
+void godot::Genesis::handle_focus(bool active)
+{
+    _console_focused = active;
 }
 
 void godot::Genesis::dispatch(const std::string &payload)
@@ -532,6 +575,8 @@ void godot::Genesis::tick()
         if (response.empty()) {
             continue;
         }
+
+        emit_signal("last_command", message.c_str());
 
         std::string command = response.at(0);
 
