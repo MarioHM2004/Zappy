@@ -56,3 +56,12 @@ void zappy::Team::remove_player(std::size_t id)
         return player->get_number() == id;
     });
 }
+
+void zappy::Team::clear_players()
+{
+    std::for_each(_players.begin(), _players.end(),
+        [](const std::shared_ptr<Player> &player) {
+            player->destroy();
+        });
+    _players.clear();
+}

@@ -27,6 +27,7 @@ namespace zappy
         const Player &get_player_at(std::size_t index);
         void add_player(std::shared_ptr<zappy::Player> player);
         void remove_player(std::size_t id);
+        void clear_players();
     };
 } // namespace zappy
 
