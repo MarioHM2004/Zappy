@@ -20,6 +20,8 @@ static void eject_receivers(server_t *server, action_t *action)
     uint count = 0;
 
     LIST_FOREACH(player_tmp, action->data.eject.players, entries) {
+        if (action->data.eject.player == player_tmp->player)
+            continue;
         client = get_client_by_fd(server->clients, player_tmp->player->fd);
         if (!client)
             continue;
