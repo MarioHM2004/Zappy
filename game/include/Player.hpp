@@ -17,6 +17,12 @@ namespace zappy
 {
     enum Orientation { NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3 };
 
+    enum PlayerState {
+        EGG = 0,
+        PLAYER = 1,
+        DEAD = 2,
+    };
+
     class Player {
       private:
         godot::Vector3 _position;
@@ -24,6 +30,7 @@ namespace zappy
         std::size_t _level = 0;
         Orientation _orientation = NORTH;
         std::string _path = "res://scenes/robot.tscn";
+        std::string _egg_path = "res://scenes/sprites/egg.tscn";
         std::unique_ptr<Inventory> _inventory = std::make_unique<Inventory>();
         bool _frozen = false;
         godot::Color _accent;
@@ -34,6 +41,9 @@ namespace zappy
         godot::SceneTree *_tree;
         godot::Node3D *_robot_scene = nullptr;
         godot::CharacterBody3D *_robot_body = nullptr;
+        godot::Node3D *_egg_scene = nullptr;
+
+        PlayerState _state = EGG;
 
       public:
         Player(godot::SceneTree *tree, std::size_t number,
@@ -50,8 +60,11 @@ namespace zappy
         void set_position(godot::Vector3 position);
         void set_orientation(Orientation orientation);
         Orientation get_orientation() const;
+        void set_accent_color(godot::Color color);
+        PlayerState get_state() const;
 
         void spawn();
+        void lay_egg();
         void tint(godot::Color accent);
         void invocation(int level, bool init);
         void invocation_anim() const;
@@ -60,6 +73,7 @@ namespace zappy
         void destroy();
 
         static godot::Color get_accent_color(std::size_t level);
+        static godot::Node3D *instantiate(std::string &path);
     };
 } // namespace zappy
 
