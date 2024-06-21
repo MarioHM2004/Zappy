@@ -201,7 +201,7 @@ class AIManager:
         if cmd.startswith("broadcast"):
             return "broadcast"
         if cmd.startswith("take"):
-            if s_data.startswith("pgt"):
+            if s_data.startswith("pgt") or s_data == "ok":
                 s_data = cmd.split(" ")[1]
                 cmd = "take"
             else:

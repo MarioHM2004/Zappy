@@ -86,7 +86,7 @@ class Algorithm:
                         case 0:
                             str_take = "take " + item
                             scores[str_take] = 3
-                            self.objective = "inventory"
+                            self.objective = "right"
                         case 1:
                             scores["left"] = 1
                             self.objective = "forward"
