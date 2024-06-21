@@ -7,14 +7,20 @@
 #include <vector>
 #include "Common.hpp"
 #include <godot_cpp/classes/character_body3d.hpp>
+#include <godot_cpp/classes/control.hpp>
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/global_constants.hpp>
 #include <godot_cpp/classes/input_event_mouse_motion.hpp>
+#include <godot_cpp/classes/object.hpp>
 #include <godot_cpp/classes/packed_scene.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
+#include <godot_cpp/classes/viewport.hpp>
 #include <godot_cpp/classes/window.hpp>
+#include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/object.hpp>
+#include <godot_cpp/variant/callable.hpp>
+#include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/variant/variant.hpp>
 #include <godot_cpp/variant/vector3.hpp>
@@ -27,6 +33,8 @@ void godot::Genesis::_bind_methods()
     ADD_SIGNAL(MethodInfo("resource", PropertyInfo(Variant::STRING, "kind"),
         PropertyInfo(Variant::INT, "x"), PropertyInfo(Variant::INT, "y")));
     ADD_SIGNAL(MethodInfo("gameover"));
+    ClassDB::bind_method(
+        D_METHOD("handle_settings"), &Genesis::handle_settings);
 }
 
 godot::Genesis::Genesis()
@@ -295,20 +303,22 @@ void godot::Genesis::_ready()
         set_process_mode(ProcessMode::PROCESS_MODE_INHERIT);
     }
 
-    if (_socket == nullptr) {
-        _socket = std::make_unique<zappy::TCPSocket>("127.0.0.1", 4242);
-    }
+    Control *settings = Object::cast_to<Control>(
+        get_tree()->get_root()->get_child(0)->get_child(4));
 
-    if (!_socket->connected()) {
-        emit_signal("error", std::strerror(errno));
-        return UtilityFunctions::print("Socket is not ready, aborting...");
+    if (settings) {
+        settings->set_visible(true);
+        Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_VISIBLE);
+        settings->connect("server_address", Callable(this, "handle_settings"));
     }
-
-    _socket->start_polling();
 }
 
 void godot::Genesis::_process(double delta)
 {
+    if (!_setup) {
+        return;
+    }
+
     _ellapsed += delta;
 
     if (_ellapsed > 0.2) {
@@ -345,6 +355,10 @@ void godot::Genesis::_process(double delta)
 
 void godot::Genesis::_input(const Ref<InputEvent> &event)
 {
+    if (!_setup) {
+        return;
+    }
+
     if (auto key = Object::cast_to<InputEventKey>(*event)) {
         key_input(key);
     } else if (auto mouse = Object::cast_to<InputEventMouseMotion>(*event)) {
@@ -379,8 +393,8 @@ void godot::Genesis::key_input(const Ref<InputEventKey> &key)
         case KEY_ESCAPE:
             Input::get_singleton()->set_mouse_mode(is_pressed
                     ? (key->get_keycode() == KEY_ESCAPE
-                              ? Input::MouseMode::MOUSE_MODE_VISIBLE
-                              : Input::MouseMode::MOUSE_MODE_HIDDEN)
+                            ? Input::MouseMode::MOUSE_MODE_VISIBLE
+                            : Input::MouseMode::MOUSE_MODE_HIDDEN)
                     : Input::get_singleton()->get_mouse_mode());
             break;
         default: break;
@@ -410,6 +424,52 @@ void godot::Genesis::mouse_input(const Ref<InputEventMouseMotion> &mouse)
     camera_rotation.x = std::clamp(camera_rotation.x, -pi_half, pi_half);
 
     set_rotation(camera_rotation);
+}
+
+void godot::Genesis::handle_settings(String address, String port)
+{
+    if (_setup) {
+        return UtilityFunctions::print("Socket already setup!");
+    }
+
+    if (address.is_empty()) {
+        _address = "127.0.0.1";
+    } else {
+        CharString utf8_str = address.utf8();
+        const char* c_str = utf8_str.get_data();
+        if (c_str && *c_str != '\0') {
+            _address = std::string(c_str);
+        } else {
+            _address = "127.0.0.1";
+        }
+    }
+
+    if (port.is_empty()) {
+        _port = 4242;
+    } else {
+        CharString port_utf8_str = port.utf8();
+        _port = std::stoi(std::string(port_utf8_str.get_data()));
+    }
+
+    _socket = std::make_unique<zappy::TCPSocket>(_address, _port);
+
+    if (!_socket->connected()) {
+        emit_signal("error", std::strerror(errno));
+        return UtilityFunctions::print("Socket is not ready, aborting...");
+    }
+
+    Input::get_singleton()->set_mouse_mode(
+        Input::MouseMode::MOUSE_MODE_HIDDEN);
+
+    Control *settings = Object::cast_to<Control>(
+        get_tree()->get_root()->get_child(0)->get_child(4));
+
+    if (settings) {
+        settings->set_visible(false);
+    }
+
+    _setup = true;
+    _socket->start_polling();
 }
 
 void godot::Genesis::dispatch(const std::string &payload)

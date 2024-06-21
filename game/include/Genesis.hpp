@@ -47,6 +47,9 @@ namespace godot
         std::unordered_map<std::string,
             std::vector<std::shared_ptr<zappy::Player>>>
             _incantations;
+        bool _setup = false;
+        std::string _address = "127.0.0.1";
+        std::size_t _port = 4242;
 
       protected:
         static void _bind_methods();
@@ -64,6 +67,7 @@ namespace godot
         void tick();
         void key_input(const Ref<InputEventKey> &key);
         void mouse_input(const Ref<InputEventMouseMotion> &mouse);
+        void handle_settings(String address, String port);
     };
 } // namespace godot
 
