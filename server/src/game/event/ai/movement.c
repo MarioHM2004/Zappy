@@ -13,7 +13,6 @@
 #include "server/action.h"
 #include "server/command.h"
 #include <stdbool.h>
-#include <time.h>
 
 void forward(server_t *server, player_t *player, event_t *event)
 {

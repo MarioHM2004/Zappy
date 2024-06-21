@@ -19,20 +19,14 @@ void broadcast_command(server_t *server, client_t *client, char *cmd)
     char broadcast_text[MAX_BROADCAST_LENGTH];
 
     if (sscanf(cmd, "broadcast %1023s", broadcast_text) == -1) {
-        log_debug("1111");
         return packet_message(client, ERROR_MESSAGE);
     }
     broadcast = create_broadcast(player, broadcast_text);
-    if (!player || !broadcast) {
-        log_debug("22222");
+    if (!player || !broadcast)
         return packet_message(client, ERROR_MESSAGE);
-    }
-    log_fatal("%s", broadcast->text),
     event = create_event(BROADCAST, (void *)broadcast, sizeof(broadcast_t));
-    if (!event) {
-        log_debug("44444");
+    if (!event)
         return packet_message(client, ERROR_MESSAGE);
-    }
     add_event(player->events, event,
         get_execution_time(7.0, server->game->freq));
 }

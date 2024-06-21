@@ -13,11 +13,6 @@ static void event_completed_assignation(action_t *a, void *data)
     a->data.event_completed = *((event_completed_t *)data);
 }
 
-static void event_received_assignation(action_t *a, void *data)
-{
-    a->data.event_received= *((event_received_t *)data);
-}
-
 static void new_connection(action_t *a, void *data)
 {
     a->data.client = (client_t *)data;
@@ -48,6 +43,11 @@ static void egg_action(action_t *a, void *data)
     a->data.egg_shell = *((egg_shell_t *) data);
 }
 
+static void eject_action(action_t *a, void *data)
+{
+    a->data.eject = *((eject_t *)data);
+}
+
 static void map_action(action_t *a, void *data)
 {
     a->data.map = (map_t *)data;
@@ -55,16 +55,15 @@ static void map_action(action_t *a, void *data)
 
 static const action_assign_t action_assignation[] = {
     { EVENT_COMPLETED, &event_completed_assignation },
-    { EVENT_RECEIVED, &event_received_assignation },
     { NEW_GUI, &new_connection },
     { NEW_PLAYER, &new_connection },
-    { PLAYER_EJECT, &player_action },
     { PLAYER_INVENTORY, &player_action },
     { PLAYER_SET, &object_action },
     { PLAYER_TAKE, &object_action },
-    { PLAYER_BROADCAST, &broadcast_action },
     { PLAYER_FORK, &player_action },
     { PLAYER_DEAD, &player_action },
+    { PLAYER_BROADCAST, &broadcast_action },
+    { PLAYER_EJECT, &eject_action },
     { INCANTATION_START, &incantation_action },
     { INCANTATION_END, &incantation_action },
     { INCANTATION_COMPLETE, &incantation_action },

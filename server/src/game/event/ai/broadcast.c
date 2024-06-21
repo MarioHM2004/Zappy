@@ -18,6 +18,7 @@
 #include "game/event.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 static sound_e determine_direction(position_t delta)
@@ -135,61 +136,41 @@ static int sound_trajectory(map_t *map, player_t *from, player_t *to)
     return -1;
 }
 
-static void broadcast_receiver_action(server_t *server, player_t *player,
-    char *message)
-{
-    action_t *action = create_event_received_action(player, MESSAGE,
-        message, true);
-
-    if (action)
-        add_action(server->actions, action);
-}
-
 static void broadcast_action(server_t *server, player_t *player,
-    char *response, bool success)
+    char *response, int *sound_dir)
 {
-    action_t *ai_action = NULL;
-    action_t *gui_action = NULL;
+    action_t *action = NULL;
     broadcast_t broadcast = {
         .player = player,
-        .text = *response
+        .text = *response,
+        .sound_dir = sound_dir
     };
 
-    if (success) {
-        ai_action = create_event_completed_action(player, BROADCAST,
-            BROADCAST_SENDER, success);
-        gui_action = create_action(PLAYER_BROADCAST,
+    action = create_action(PLAYER_BROADCAST,
             &broadcast, sizeof(broadcast_t));
-    } else {
-        ai_action = create_event_completed_action(player, BROADCAST,
-            NULL, success);
-    }
-    if (ai_action)
-        add_action(server->actions, ai_action);
-    if (gui_action)
-        add_action(server->actions, gui_action);
+    add_action(server->actions, action);
 }
 
 void broadcast(server_t *server, player_t *player, event_t *event)
 {
     player_node_t *tmp = NULL;
-    client_t *client = get_client_by_fd(server->clients, player->fd);
-    int sound_dir = 0;
+    int *sound_dir =
+        calloc(get_player_list_size(server->game->players), sizeof(int));
+    uint count = 0;
 
-    if (event->type != BROADCAST || !client)
+    if (event->type != BROADCAST || !sound_dir)
         return;
     LIST_FOREACH(tmp, server->game->players, entries) {
         if (tmp->player == player || tmp->player->state != ALIVE)
             continue;
-        sound_dir = sound_trajectory(server->game->map, player, tmp->player);
-        if (sound_dir == -1) {
+        sound_dir[count] = sound_trajectory(server->game->map, player, tmp->player);
+        if (sound_dir[count] == -1) {
             log_debug("Error while sending message");
             continue;
         }
         log_debug("Player %d received %s from %d with dir %d", tmp->player->number,
-            event->data.broadcast.text, sound_dir, tmp->player->dir);
-        broadcast_receiver_action(server, tmp->player,
-            formatstr(BROADCAST_RECEIVER, sound_dir, event->data.broadcast.text));
+            event->data.broadcast.text, sound_dir[count], tmp->player->dir);
+        count++;
     }
-    broadcast_action(server, player, event->data.broadcast.text, true);
+    broadcast_action(server, player, event->data.broadcast.text, sound_dir);
 }

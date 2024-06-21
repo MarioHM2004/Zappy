@@ -5,12 +5,16 @@
 ** eject
 */
 
+#include "game/event.h"
 #include "game/game.h"
+#include "game/player.h"
 #include "libs/lib.h"
 #include "libs/log.h"
+#include "server/action.h"
 #include "server/command.h"
 #include "server/server.h"
 #include <stdbool.h>
+#include <time.h>
 
 static uint ejected_from(map_t *map, player_t *player, position_t pos)
 {
@@ -43,33 +47,23 @@ static void handle_egg_death(server_t *server, player_t *player)
     remove_player(server->game, player);
 }
 
-static void eject_action(server_t *server, player_t *player, bool success)
-{
-    action_t *gui_action = NULL;
-    action_t *ai_action = NULL;
-
-    if (success) {
-        ai_action = create_event_completed_action(player, EJECT,
-            EJECT_RESPONSE, success);
-        gui_action = create_action(PLAYER_EJECT, player, sizeof(player_t *));
-
-    } else {
-        ai_action = create_event_completed_action(player, EJECT,
-            NULL, success);
-    }
-    if (gui_action)
-        add_action(server->actions, gui_action);
-    if (ai_action)
-        add_action(server->actions, ai_action);
-}
-
-static void ejected_action(server_t *server, player_t *player, uint ejected_pos)
+static void eject_action(server_t *server, player_t *player,
+    player_list_t *player_list, int *eject_dir)
 {
     action_t *action = NULL;
+    eject_t eject = {
+        .player = player,
+        .players = player_list,
+        .eject_dir = eject_dir
+    };
 
-    action = create_event_received_action(player, EJECTED,
-        formatstr(EJECTED_RESPONSE, ejected_pos), true);
-    if(action)
+    if (player_list)
+        action = create_action(PLAYER_EJECT,
+            &eject, sizeof(eject_t));
+    else
+        action = create_event_completed_action(player, EJECT,
+            NULL, false);
+    if (action)
         add_action(server->actions, action);
 }
 
@@ -81,9 +75,11 @@ void eject(server_t *server, player_t *player, event_t *event)
         get_players_on_tile(server->game->players, player->pos, -1);
     player_node_t *tmp = NULL;
     uint ejected_pos = 0;
+    int *eject_dir = calloc(get_player_list_size(players), sizeof(int));
+    uint count = 0;
 
     if (tile.players == 1 || players == NULL) {
-        eject_action(server, player, false);
+        eject_action(server, player, NULL, NULL);
         return;
     }
     LIST_FOREACH(tmp, players, entries) {
@@ -95,9 +91,10 @@ void eject(server_t *server, player_t *player, event_t *event)
             continue;
         }
         ejected_pos = ejected_from(server->game->map, tmp->player, new_pos);
+        eject_dir[count] = ejected_pos;
         move_player(server->game->map, tmp->player, new_pos);
-        ejected_action(server, tmp->player, ejected_pos);
         log_debug("%d: Ejecting player %d", player->number, tmp->player->number);
+        count++;
     }
-    eject_action(server, player, true);
+    eject_action(server, player, players, eject_dir);
 }

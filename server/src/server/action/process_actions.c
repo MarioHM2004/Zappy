@@ -11,16 +11,15 @@
 
 static const action_response_t action_responses[] = {
     { EVENT_COMPLETED, &event_completed },
-    { EVENT_RECEIVED, &event_received },
     { NEW_GUI, &new_gui },
     { NEW_PLAYER, &new_player },
-    { PLAYER_EJECT, &player_eject },
     { PLAYER_INVENTORY, &player_inventory },
     { PLAYER_SET, &player_set },
     { PLAYER_TAKE, &player_take },
-    { PLAYER_BROADCAST, &player_broadcast },
     { PLAYER_FORK, &player_fork },
     { PLAYER_DEAD, &player_dead },
+    { PLAYER_BROADCAST, &player_broadcast },
+    { PLAYER_EJECT, &player_eject },
     { INCANTATION_START, &incantation_start },
     { INCANTATION_END, &incantation_end },
     { INCANTATION_COMPLETE, &incantation_complete },

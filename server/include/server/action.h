@@ -17,17 +17,16 @@
 typedef enum {
     // response goes to -> AI
     EVENT_COMPLETED, // AI event is completed
-    EVENT_RECEIVED, // AI event is received
     // response goes to -> GUI
     NEW_GUI,
     NEW_PLAYER,
-    PLAYER_EJECT,
     PLAYER_INVENTORY,
     PLAYER_SET,
     PLAYER_TAKE,
-    PLAYER_BROADCAST,
     PLAYER_FORK,
     PLAYER_DEAD,
+    PLAYER_BROADCAST,
+    PLAYER_EJECT,
     INCANTATION_START,
     INCANTATION_END,
     INCANTATION_COMPLETE,
@@ -43,13 +42,6 @@ typedef struct event_completed_s {
     char *response;
     bool successful;
 } event_completed_t;
-
-typedef struct event_received_s {
-    event_received_type_e type;
-    player_t *player;
-    char *response;
-    bool successful;
-} event_received_t;
 
 typedef struct egg_shell_s {
     player_t *player;
@@ -69,11 +61,11 @@ typedef struct incantation_action_s {
 
 typedef union {
     event_completed_t event_completed;
-    event_received_t event_received;
     client_t *client;
     player_t *player;
     object_t object;
     broadcast_t broadcast;
+    eject_t eject;
     incantation_action_t incantation;
     egg_shell_t egg_shell;
     map_t *map;
@@ -147,9 +139,7 @@ void egg_death(server_t *server, action_t *action);
 void map_refill(server_t *server, action_t *action);
 
 action_t *create_event_completed_action(player_t *player,
-    event_type_e event_type, char *response, bool successful);
-action_t *create_event_received_action(player_t *player,
-    event_received_type_e event_type, char *response, bool successful);
+    event_type_e event_type, void *response, bool successful);
 
 #endif // !ACTION_H_
 

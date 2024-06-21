@@ -20,10 +20,11 @@ static const action_event_t action_events[] = {
     { FORWARD, &player_moved },
     { TURN_RIGHT, &player_moved },
     { TURN_LEFT, &player_moved },
+    { BROADCAST, &player_broadcast }
 };
 
 action_t *create_event_completed_action(player_t *player,
-    event_type_e event_type, char *response, bool successful)
+    event_type_e event_type, void *response, bool successful)
 {
     event_completed_t event_completed = {
         .type = event_type,
