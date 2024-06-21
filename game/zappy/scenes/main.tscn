@@ -1,7 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://dl2hs0iexs7nv"]
+[gd_scene load_steps=17 format=3 uid="uid://dl2hs0iexs7nv"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_k1d7v"]
 [ext_resource type="Shader" path="res://assets/water.gdshader" id="2_68eot"]
+[ext_resource type="Script" path="res://scripts/connect.gd" id="3_iuebm"]
+[ext_resource type="FontFile" uid="uid://cmu113j8p0lqt" path="res://assets/OpenSans-VariableFont_wdth,wght.ttf" id="4_5c6v6"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_bns41"]
 
@@ -37,6 +39,16 @@ size = Vector2(0, 0)
 subdivide_width = 25
 subdivide_depth = 25
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vkcgs"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u3ah2"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gmy11"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0hfhp"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l6ah3"]
+
 [node name="Main" type="Node3D"]
 script = ExtResource("1_k1d7v")
 
@@ -54,6 +66,101 @@ environment = SubResource("Environment_qisdi")
 [node name="Ocean" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 mesh = SubResource("PlaneMesh_1law1")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_iuebm")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 107.0
+offset_bottom = 161.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 80
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer4" type="MarginContainer" parent="Control/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 350)
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("4_5c6v6")
+theme_override_font_sizes/font_size = 50
+text = "Please, input the server port  and address..."
+
+[node name="MarginContainer3" type="MarginContainer" parent="Control/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("4_5c6v6")
+theme_override_font_sizes/font_size = 30
+text = "Address:"
+
+[node name="ServerIp" type="LineEdit" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("4_5c6v6")
+theme_override_font_sizes/font_size = 25
+placeholder_text = "127.0.0.1"
+expand_to_text_length = true
+
+[node name="Label2" type="Label" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_fonts/font = ExtResource("4_5c6v6")
+theme_override_font_sizes/font_size = 30
+text = "Port:"
+
+[node name="ServerPort" type="LineEdit" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("4_5c6v6")
+theme_override_font_sizes/font_size = 25
+placeholder_text = "4242"
+max_length = 6
+expand_to_text_length = true
+
+[node name="ConnectBtn" type="Button" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_colors/font_pressed_color = Color(0.98808, 0.541696, 0, 1)
+theme_override_colors/font_hover_color = Color(0.859363, 0.729024, 0.121389, 0.945098)
+theme_override_fonts/font = ExtResource("4_5c6v6")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxEmpty_vkcgs")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_u3ah2")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_gmy11")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_0hfhp")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_l6ah3")
+text = "Connect
+"
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
 
 [connection signal="gameover" from="Genesis" to="." method="_on_genesis_gameover"]
 [connection signal="resource" from="Genesis" to="." method="_on_genesis_resource"]
