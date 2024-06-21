@@ -21,7 +21,6 @@ typedef enum {
     // response goes to -> GUI
     NEW_GUI,
     NEW_PLAYER,
-    PLAYER_MOVED,
     PLAYER_EJECT,
     PLAYER_INVENTORY,
     PLAYER_SET,
