@@ -26,6 +26,7 @@ void godot::Genesis::_bind_methods()
         PropertyInfo(Variant::INT, "y")));
     ADD_SIGNAL(MethodInfo("resource", PropertyInfo(Variant::STRING, "kind"),
         PropertyInfo(Variant::INT, "x"), PropertyInfo(Variant::INT, "y")));
+    ADD_SIGNAL(MethodInfo("gameover"));
 }
 
 godot::Genesis::Genesis()
@@ -253,6 +254,28 @@ godot::Genesis::Genesis()
                     });
 
                 _incantations.erase(key);
+            },
+        },
+        {
+            zappy::Constants::Commands::END_GAME,
+            [this](const std::vector<std::string> &response) {
+                std::string team = response.at(1);
+
+                if (team == "GRAPHIC") {
+                    emit_signal("gameover");
+                    return;
+                }
+
+                auto t = _teams.find(team);
+
+                if (t == _teams.end()) {
+                    return UtilityFunctions::print(
+                        std::format(">> could not find team {}", team)
+                            .c_str());
+                }
+
+                t->second->clear_players();
+                _teams.erase(t);
             },
         },
     };
