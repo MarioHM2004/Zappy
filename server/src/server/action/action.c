@@ -58,7 +58,6 @@ static const action_assign_t action_assignation[] = {
     { EVENT_RECEIVED, &event_received_assignation },
     { NEW_GUI, &new_connection },
     { NEW_PLAYER, &new_connection },
-    { PLAYER_MOVED, &player_action },
     { PLAYER_EJECT, &player_action },
     { PLAYER_INVENTORY, &player_action },
     { PLAYER_SET, &object_action },

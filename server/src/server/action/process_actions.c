@@ -14,7 +14,6 @@ static const action_response_t action_responses[] = {
     { EVENT_RECEIVED, &event_received },
     { NEW_GUI, &new_gui },
     { NEW_PLAYER, &new_player },
-    { PLAYER_MOVED, &player_moved },
     { PLAYER_EJECT, &player_eject },
     { PLAYER_INVENTORY, &player_inventory },
     { PLAYER_SET, &player_set },

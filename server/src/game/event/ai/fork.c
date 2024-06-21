@@ -35,7 +35,7 @@ static void fork_action(server_t *server, player_t *player, player_t *egg, bool 
     if (success) {
         ai_action = create_event_completed_action(player, FORK,
             FORK_RESPONSE, success);
-        gui_action = create_action(EGG_LAYED, egg, sizeof(egg_shell_t));
+        gui_action = create_action(EGG_LAYED, &egg, sizeof(egg_shell_t));
     } else
         ai_action = create_event_completed_action(player, FORK, NULL, false);
     if (ai_action)
@@ -60,3 +60,4 @@ void fork_player(server_t *server, player_t *player, event_t *event)
         player->number, player->pos.x, player->pos.y);
     fork_action(server, player, new_player, true);
 }
+
