@@ -10,6 +10,7 @@
 #include "game/resources.h"
 #include "game/team.h"
 #include "libs/log.h"
+#include "server/action.h"
 #include "server/server.h"
 #include <stdlib.h>
 #include <time.h>
@@ -46,7 +47,6 @@ static bool valid_tick() {
     clock_t diff = elapsed_time - last_time;
 
     if (diff >= CLOCKS_PER_SEC) {
-        //log_info("tick={%d}", elapsed_time / CLOCKS_PER_SEC);
         last_time = elapsed_time;
         return true;
     }
@@ -58,6 +58,8 @@ void game_tick(server_t *server)
     team_node_t *team_node = NULL;
     player_node_t *player_node = NULL;
     static uint spawn_resources = 0;
+    action_t *action = NULL;
+
     if (!valid_tick())
         return;
     LIST_FOREACH(team_node, server->game->teams, entries) {
@@ -67,6 +69,8 @@ void game_tick(server_t *server)
     }
     if (spawn_resources >= get_execution_time(20, server->game->freq)) {
         log_info("Spawning reosurces");
+        action = create_action(MAP_REFILL, server->game->map, sizeof(map_t *));
+        add_action(server->actions, action);
         spawn_all_resources(server->game->map);
         spawn_resources = 0;
     }

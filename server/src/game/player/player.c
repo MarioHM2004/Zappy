@@ -6,29 +6,10 @@
 */
 
 #include "game/player.h"
-#include "game/event.h"
 #include "game/game.h"
-#include "game/resources.h"
 #include "libs/log.h"
 #include "server/action.h"
-#include "server/client.h"
-#include "server/command.h"
-#include <sys/queue.h>
-#include <time.h>
-
-bool add_response_to_player(client_list_t *client_list, player_t *player
-    , char *response)
-{
-    client_t *client = NULL;
-
-    if (!player || !client_list)
-        return false;
-    client = get_client_by_fd(client_list, player->fd);
-    if (!client)
-        return false;
-    add_response(client, response);
-    return true;
-}
+#include "server/server.h"
 
 bool move_player(map_t *map,player_t *player, position_t new_pos)
 {
@@ -54,6 +35,7 @@ static void handle_player_hunger(server_t *server, player_t *player)
         else {
             log_info("Player %d DIED", player->number);
             action = create_action(PLAYER_DEAD, player, sizeof(player_t *));
+            add_action(server->actions, action);
             player->state = DEAD;
         }
     }
