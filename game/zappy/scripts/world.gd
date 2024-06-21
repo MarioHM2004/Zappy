@@ -2,6 +2,17 @@ extends Node3D
 
 var offset = 0.25
 
+var map: Dictionary = {
+	food = {},
+	egg = {},
+	linemate = {},
+	mendiane = {},
+	phiras = {},
+	sibur = {},
+	thystame = {},
+	deraumere = {}
+};
+
 func create_tile(x, y):
 	var tile_scene = preload ("res://assets/tile.gltf")
 	var tile_instance = tile_scene.instantiate()
@@ -23,7 +34,7 @@ func create_tile(x, y):
 	static_body.scale = Vector3(2, 2, 2)
 
 	tile_instance.add_child(static_body)
-	
+
 	add_child(tile_instance)
 
 func create_food(x, y):
@@ -42,6 +53,7 @@ func create_food(x, y):
 	food_instance.add_child(static_body)
 	
 	add_child(food_instance)
+	map["food"][str(x) + "," + str(y)] = food_instance
 
 func create_egg(x, y):
 	var egg_scene = preload ("res://scenes/sprites/egg.tscn")
@@ -59,6 +71,7 @@ func create_egg(x, y):
 	egg_instance.add_child(static_body)
 	
 	add_child(egg_instance)
+	map["egg"][str(x) + "," + str(y)] = egg_instance
 
 func create_linemate(x, y):
 	var linemate_scene = preload ("res://scenes/sprites/linemate.tscn")
@@ -76,6 +89,7 @@ func create_linemate(x, y):
 	linemate_instance.add_child(static_body)
 	
 	add_child(linemate_instance)
+	map["linemate"][str(x) + "," + str(y)] = linemate_instance
 	
 func create_mendiane(x, y):
 	var mendiane_scene = preload ("res://scenes/sprites/mendiane.tscn")
@@ -93,6 +107,7 @@ func create_mendiane(x, y):
 	mendiane_instance.add_child(static_body)
 	
 	add_child(mendiane_instance)
+	map["mendiane"][str(x) + "," + str(y)] = mendiane_instance
 
 func create_phiras(x, y):
 	var phiras_scene = preload ("res://scenes/sprites/phiras.tscn")
@@ -110,6 +125,7 @@ func create_phiras(x, y):
 	phiras_instance.add_child(static_body)
 	
 	add_child(phiras_instance)
+	map["phiras"][str(x) + "," + str(y)] = phiras_instance
 	
 func create_sibur(x, y):
 	var sibur_scene = preload ("res://scenes/sprites/sibur.tscn")
@@ -127,6 +143,7 @@ func create_sibur(x, y):
 	sibur_instance.add_child(static_body)
 	
 	add_child(sibur_instance)
+	map["sibur"][str(x) + "," + str(y)] = sibur_instance
 	
 func create_thystame(x, y):
 	var thystame_scene = preload ("res://scenes/sprites/thystame.tscn")
@@ -144,6 +161,7 @@ func create_thystame(x, y):
 	thystame_instance.add_child(static_body)
 	
 	add_child(thystame_instance)
+	map["thystame"][str(x) + "," + str(y)] = thystame_instance
 	
 func create_deraumere(x, y):
 	var thystame_scene = preload ("res://scenes/sprites/deraumere.tscn")
@@ -161,6 +179,7 @@ func create_deraumere(x, y):
 	thystame_instance.add_child(static_body)
 	
 	add_child(thystame_instance)
+	map["deraumere"][str(x) + "," + str(y)] = thystame_instance
 
 func create_world(x, y):
 	for i in range(y):
@@ -172,8 +191,24 @@ func create_world(x, y):
 	ocean.size = Vector2(x * 2, y * 2)
 	plane.global_transform.origin = Vector3((x - (x * 0.5)), 0, (y - (y * 0.5)))
 
+func clear_resources(x, y):
+	var pos_key = str(x) + "," + str(y)
+	for key in map:
+		var root = map[key]
+		if root.has(pos_key):
+			var resource = root[pos_key]
+			if resource != null:
+				resource.queue_free()
+				root.erase(pos_key)
+
 func _on_genesis_wsize(x, y):
 	create_world(x, y)
 
 func _on_genesis_resource(kind, x, y):
+	clear_resources(x, y)
 	return Callable(self, kind).bind(x, y).call()
+
+
+func _on_genesis_gameover():
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	get_tree().change_scene_to_file("res://scenes/end_of_game.tscn")
