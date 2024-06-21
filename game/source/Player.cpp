@@ -206,3 +206,13 @@ godot::Color zappy::Player::get_accent_color(std::size_t level)
 
     return godot::Color(level * 0.17, level * 0.17, level * 0.17, 1);
 }
+
+void zappy::Player::destroy()
+{
+    if (_robot_scene == nullptr) {
+        return godot::UtilityFunctions::print("Robot scene is null");
+    }
+
+    // TODO(jabolo): Death animation
+    _robot_scene->queue_free();
+}
