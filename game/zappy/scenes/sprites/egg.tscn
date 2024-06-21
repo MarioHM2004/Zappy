@@ -1,6 +1,44 @@
-[gd_scene load_steps=2 format=3 uid="uid://bnnm1qy1ehua5"]
+[gd_scene load_steps=5 format=3 uid="uid://bnnm1qy1ehua5"]
 
 [ext_resource type="PackedScene" uid="uid://da54rhi4mt4yu" path="res://assets/sprites/lowpoly_egg.glb" id="1_rclo2"]
+
+[sub_resource type="Animation" id="Animation_ihxbl"]
+resource_name = "levitate"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sketchfab_model/root/Correction matrix/GLTF_SceneRootNode/UnityGlTF_correctionMatrix_0/node_egg-chicken_(5)_-256036_1:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.3, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_bdmlq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sketchfab_model/root/Correction matrix/GLTF_SceneRootNode/UnityGlTF_correctionMatrix_0/node_egg-chicken_(5)_-256036_1:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_voenl"]
+_data = {
+"RESET": SubResource("Animation_bdmlq"),
+"levitate": SubResource("Animation_ihxbl")
+}
 
 [node name="Sketchfab_Scene" instance=ExtResource("1_rclo2")]
 
@@ -8,4 +46,10 @@
 transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, -0.5, 0, 0.5, -2.18557e-08, 0, 0, 0)
 
 [node name="node_egg-chicken_(5)_-256036_1" parent="Sketchfab_model/root/Correction matrix/GLTF_SceneRootNode/UnityGlTF_correctionMatrix_0" index="0"]
-transform = Transform3D(100, 0, 0, 0, -4.37116e-06, -100, 0, 100, -4.37115e-06, 0, 0, 0)
+transform = Transform3D(100, 0, 7.2005e-21, -2.71051e-20, -4.37116e-06, -100, 0, 100, -4.37115e-06, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
+libraries = {
+"": SubResource("AnimationLibrary_voenl")
+}
+autoplay = "levitate"
