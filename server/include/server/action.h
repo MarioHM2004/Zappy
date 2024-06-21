@@ -97,6 +97,7 @@ typedef struct action_list_s {
 
 typedef void (*action_assign_f)(action_t *, void *);
 typedef void (*action_response_f)(server_t *, action_t *);
+typedef void (*action_event_f)(server_t *, action_t *);
 
 typedef struct action_assign_s {
     action_type_e type;
@@ -107,6 +108,11 @@ typedef struct action_response_s {
     action_type_e type;
     action_response_f func;
 } action_response_t;
+
+typedef struct action_event_s {
+    event_type_e type;
+    action_event_f func;
+} action_event_t;
 
 action_t *create_action(action_type_e type, void *data, size_t size);
 action_node_t *create_action_node(action_t *a);

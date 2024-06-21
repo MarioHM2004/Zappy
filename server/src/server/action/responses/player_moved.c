@@ -18,7 +18,7 @@ void player_moved(server_t *server, action_t *action)
 
     if (!server || !action)
         return;
-    command = formatstr(PPO_REQUEST, action->data.player->number);
+    command = formatstr(PPO_REQUEST, action->data.event_completed.player->number);
     if (!command)
         return;
     LIST_FOREACH(node, server->clients, entries) {
