@@ -142,43 +142,5 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_t0v7c")
 text = "Quit
 "
 
-[node name="MarginContainer3" type="MarginContainer" parent="Control/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 400)
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 8
-theme_override_fonts/font = ExtResource("2_hod5n")
-theme_override_font_sizes/font_size = 30
-text = "Address:"
-
-[node name="ServerIp" type="LineEdit" parent="Control/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
-theme_override_fonts/font = ExtResource("2_hod5n")
-theme_override_font_sizes/font_size = 25
-placeholder_text = "127.0.0.1"
-expand_to_text_length = true
-
-[node name="Label2" type="Label" parent="Control/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-theme_override_fonts/font = ExtResource("2_hod5n")
-theme_override_font_sizes/font_size = 30
-text = "Port:"
-
-[node name="ServerPort" type="LineEdit" parent="Control/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 8
-theme_override_fonts/font = ExtResource("2_hod5n")
-theme_override_font_sizes/font_size = 25
-placeholder_text = "4242"
-max_length = 6
-expand_to_text_length = true
-
 [connection signal="button_down" from="Control/MarginContainer/VBoxContainer/StartBtn" to="Control" method="_on_start_btn_pressed"]
 [connection signal="button_down" from="Control/MarginContainer/VBoxContainer/QuitBtn" to="Control" method="_on_quit_btn_pressed"]
