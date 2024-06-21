@@ -46,7 +46,8 @@ void zappy::Team::add_player(std::shared_ptr<zappy::Player> player)
     }
 
     _count += 1;
-    player->tint(_color);
+    player->lay_egg();
+    player->set_accent_color(_color);
     _players.push_back(std::move(player));
 }
 
