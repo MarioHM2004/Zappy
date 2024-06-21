@@ -158,10 +158,6 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_l6ah3")
 text = "Connect
 "
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
-
 [connection signal="gameover" from="Genesis" to="." method="_on_genesis_gameover"]
 [connection signal="resource" from="Genesis" to="." method="_on_genesis_resource"]
 [connection signal="wsize" from="Genesis" to="." method="_on_genesis_wsize"]
