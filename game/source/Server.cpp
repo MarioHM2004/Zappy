@@ -235,6 +235,21 @@ void zappy::Server::incantation(int clientSocket, int level)
     }
 }
 
+void zappy::Server::gameOver(int clientSocket, std::string teamName)
+{
+    std::stringstream msg;
+    msg << "seg " << teamName << std::endl;
+    std::string message = msg.str();
+    ssize_t bytesSent = send(clientSocket, message.c_str(), message.size(), 0);
+    std::cout << message.c_str();
+
+    if (bytesSent < 0) {
+        std::cerr << "Error sending map size to client.\n";
+        close(clientSocket);
+        FD_CLR(clientSocket, &_currentSockets);
+    }
+}
+
 void zappy::Server::incantationEnd(int clientSocket, int level)
 {
     std::vector<int> oddArray;
@@ -276,7 +291,12 @@ void zappy::Server::sendInitialData(int clientSocket)
             &zappy::Server::incantationEnd, this, clientSocket, i);
         incantationThread.join();
         incantationEndThread.join();
+        sendMapContent(clientSocket);
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+    gameOver(clientSocket, "1");
+    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    gameOver(clientSocket, "GRAPHIC");
 }
 
 void zappy::Server::sendOtherData(int clientSocket)

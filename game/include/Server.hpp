@@ -35,6 +35,7 @@ namespace zappy
         void sendOtherData(int clientSocket);
         void incantation(int clientSocket, int level);
         void incantationEnd(int clientSocket, int level);
+        void gameOver(int clientSocket, std::string teamName);
 
       private:
         int playerCount = 9;
