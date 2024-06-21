@@ -7,7 +7,8 @@
 import socket
 
 import app.const as const
-import app.modules.Drone.Algorithm.Algorithm as algo
+# import app.modules.Drone.Algorithm.Algorithm as algo
+import app.modules.Drone.Algorithm_v2.Algorithm_v2 as algo
 import app.modules.Drone.Inventory.Inventory as inv
 
 
@@ -24,16 +25,7 @@ class Drone:
         self.connect_nbr: int = 0
         self.algo: algo.Algorithm = algo.Algorithm()
         self.inventory: inv.Inventory = inv.Inventory()
-
-    # def __process_payload(self, payload: str) -> None:
-    #     """
-    #     Updates the drone's internal variables with the payload.
-
-    #     Args:
-    #         payload (str): Drone information coming from the server.
-    #     """
-
-    #     raise NotImplementedError
+        self.last_cmd: str = ""
 
     def __build_algo_payload(self) -> const.AlgoPayload:
         """
@@ -54,6 +46,7 @@ class Drone:
             "orientation": self.orientation,
             "connect_nbr": self.connect_nbr,
             "inventory": self.inventory,
+            "last_cmd": self.last_cmd
         }
 
     def parse_payload(self, cmd: str, payload: str) -> None:
@@ -81,6 +74,11 @@ class Drone:
                     self.connect_nbr = int(payload)
                 case "eject":
                     print(f"eject: {payload}")
+                case "incantation":
+                    print(f"TO DO: parse incantation payload: {payload}")
+                case "take":
+                    self.inventory.add_item(payload, 1)
+                    print(f"Inventory: {self.inventory}")
         except Exception as e:
             print(f"Error parsing payload: {e}")
 
@@ -93,7 +91,7 @@ class Drone:
             str: The action (command) taken by the drone.
         """
 
-        print(f"[TEST] Drone {self.team} at ({self.x_position}, {self.y_position} - orientation: {self.orientation}) with {self.life} life, {self.incantation_lvl} elevation, {self.connect_nbr} connect nbr and Inventory: {self.inventory}")
+        print(f"**info [Drone {self.team} at ({self.x_position}, {self.y_position} - orientation: {self.orientation}) with {self.life} life, {self.incantation_lvl} elevation, {self.connect_nbr} connect nbr and Inventory: {self.inventory}]\n")
 
         action: str | None = None
 
@@ -101,39 +99,11 @@ class Drone:
 
         if action is None or action not in const.CMD_FUNC and action.startswith("broadcast") is False and action.startswith("take") is False and action.startswith("set") is False:
             return "ko"
-
-        #! Most likely will change for a better implementation
-        # if action.find("broadcast") != -1:
-        #     return const.CMD_FUNC[action](self, action)
-        # return const.CMD_FUNC[action](self, None)
+        if len(self.last_cmd) == 0:
+            self.last_cmd = "look"
+            return "look"
+        self.last_cmd = action
         return action
-
-    # def take_decision(self, payload: str) -> str:
-    #     """
-    #     Decides what action (command) to take based on the payload.
-
-    #     Args:
-    #         payload (str): Information coming from the server.
-
-    #     Returns:
-    #         str: The action (command) taken by the drone.
-    #     """
-
-    #     action: str | None = None
-
-
-    #     # self.__process_payload(payload)  # Payload -> Internal Variables
-
-    #     action = self.algo.choose_decision(self.__build_algo_payload())
-
-    #     if action is None or action not in const.CMD_FUNC:
-    #         return "ko"
-
-    #     #! Most likely will change for a better implementation
-    #     # if action.find("broadcast") != -1:
-    #     #     return const.CMD_FUNC[action](self, action)
-    #     # return const.CMD_FUNC[action](self, None)
-    #     return action
 
     def __str__(self) -> str:
         return f"Drone {self.team} at ({self.x_position}, {self.y_position}) with {self.life} life, {self.incantation_lvl} elevation, {self.connect_nbr} connect number and Inventory: {self.inventory}"

@@ -58,12 +58,12 @@ def cmd_right(drone: Drone, payload) -> str:
 
 # takes 7/f
 def cmd_look(drone: Drone, payload) -> str:
-    print(f"look: {drone.view}")
+    print(f"[LOOK]: {drone.view}")
     return "look"
 
 # takes 1/f
 def cmd_inventory(drone: Drone, payload) -> str:
-    print(f"inventory: {drone.inventory}")
+    print(f"[INVENTORY]: {drone.inventory}")
     return "inventory"
 
 # takes 7/f
@@ -85,7 +85,6 @@ def cmd_eject(drone: Drone, payload) -> str:
 
 # takes 7/f
 def cmd_take(drone: Drone, payload) -> str:
-    print(f"Helper take: {payload}")
     return "take"
 
 # takes 7/f
@@ -95,4 +94,8 @@ def cmd_set(drone: Drone, payload) -> str:
 
 # takes 300/f
 def cmd_incantation(drone: Drone, payload) -> str:
+    print(f"Helper incantation")
+    if drone.incantation_lvl < 8:
+        drone.incantation_lvl += 1
+
     return "incantation"
