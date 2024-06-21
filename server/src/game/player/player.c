@@ -10,9 +10,11 @@
 #include "game/game.h"
 #include "game/resources.h"
 #include "libs/log.h"
+#include "server/action.h"
 #include "server/client.h"
 #include "server/command.h"
 #include <sys/queue.h>
+#include <time.h>
 
 bool add_response_to_player(client_list_t *client_list, player_t *player
     , char *response)
@@ -42,17 +44,16 @@ bool move_player(map_t *map,player_t *player, position_t new_pos)
 
 static void handle_player_hunger(server_t *server, player_t *player)
 {
-    client_t *client = get_client_by_fd(server->clients, player->fd);
+    action_t *action = NULL;
 
-    if (player->state != ALIVE || !client)
+    if (player->state != ALIVE)
         return;
     if (player->food_status == 0) {
         if (change_resource(player->inventory, FOOD, -1))
             player->food_status = 126;
         else {
             log_info("Player %d DIED", player->number);
-            add_response_to_player(server->clients, player, DEATH_RESPONSE);
-            pdi_command(server, client, player);
+            action = create_action(PLAYER_DEAD, player, sizeof(player_t *));
             player->state = DEAD;
         }
     }

@@ -34,6 +34,7 @@ typedef enum {
 typedef enum {
     MESSAGE,
     EJECTED,
+    DEATH
 } event_received_type_e;
 
 typedef struct object_s {

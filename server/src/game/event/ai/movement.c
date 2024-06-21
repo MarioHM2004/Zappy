@@ -17,6 +17,7 @@
 #include <stdbool.h>
 #include <time.h>
 
+
 void forward(server_t *server, player_t *player, event_t *event)
 {
     position_t new_pos = dir_at(server->game->map, player->pos, player->dir);
