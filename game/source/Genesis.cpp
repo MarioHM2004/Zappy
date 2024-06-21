@@ -95,14 +95,12 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::TIME_UNIT_MODIFICATION,
             [this](const std::vector<std::string> &response) {
-                // TODO(jabolo): verify if this is the correct command
                 _socket->time_unit(std::stoi(response.at(1)));
             },
         },
         {
             zappy::Constants::Commands::TIME_UNIT_REQUEST,
             [this](const std::vector<std::string> &response) {
-                // TODO(jabolo): verify if this is the correct command
                 _socket->time_unit(std::stoi(response.at(1)));
             },
         },
@@ -286,6 +284,39 @@ godot::Genesis::Genesis()
                 _teams.erase(t);
             },
         },
+        {
+            zappy::Constants::Commands::EGG_CONNECTION,
+            [this](const std::vector<std::string> &response) {
+                std::size_t id = std::stoi(response.at(1));
+
+                auto player = _players.find(id);
+                if (player == _players.end()) {
+                    return UtilityFunctions::print(
+                        std::format(">> could not find player {}", id)
+                            .c_str());
+                }
+
+                player->second->spawn();
+            },
+        },
+        {
+            zappy::Constants::Commands::EGG_DEATH,
+            [this](const std::vector<std::string> &response) {
+                std::size_t id = std::stoi(response.at(1));
+
+                auto player = _players.find(id);
+                if (player == _players.end()) {
+                    return UtilityFunctions::print(
+                        std::format(">> could not find player {}", id)
+                            .c_str());
+                }
+
+                if (player->second->get_state() == zappy::PlayerState::EGG) {
+                    player->second->destroy();
+                    _players.erase(player);
+                }
+            },
+        },
     };
 }
 
@@ -393,8 +424,8 @@ void godot::Genesis::key_input(const Ref<InputEventKey> &key)
         case KEY_ESCAPE:
             Input::get_singleton()->set_mouse_mode(is_pressed
                     ? (key->get_keycode() == KEY_ESCAPE
-                            ? Input::MouseMode::MOUSE_MODE_VISIBLE
-                            : Input::MouseMode::MOUSE_MODE_HIDDEN)
+                              ? Input::MouseMode::MOUSE_MODE_VISIBLE
+                              : Input::MouseMode::MOUSE_MODE_HIDDEN)
                     : Input::get_singleton()->get_mouse_mode());
             break;
         default: break;
@@ -436,7 +467,7 @@ void godot::Genesis::handle_settings(String address, String port)
         _address = "127.0.0.1";
     } else {
         CharString utf8_str = address.utf8();
-        const char* c_str = utf8_str.get_data();
+        const char *c_str = utf8_str.get_data();
         if (c_str && *c_str != '\0') {
             _address = std::string(c_str);
         } else {
