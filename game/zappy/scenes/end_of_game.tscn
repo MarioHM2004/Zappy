@@ -1,0 +1,173 @@
+[gd_scene load_steps=17 format=3 uid="uid://c3pobiekotk6n"]
+
+[ext_resource type="FontFile" uid="uid://cmu113j8p0lqt" path="res://assets/OpenSans-VariableFont_wdth,wght.ttf" id="1_drh3g"]
+[ext_resource type="PackedScene" uid="uid://b2l3611l2tfu7" path="res://assets/Robot/3DGodotRobot.glb" id="1_xh1a0"]
+[ext_resource type="Script" path="res://scenes/endOfGame.gd" id="2_rmbyd"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_akkqd"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_4cwva"]
+noise = SubResource("FastNoiseLite_akkqd")
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_85ba2"]
+sky_cover = SubResource("NoiseTexture2D_4cwva")
+
+[sub_resource type="Sky" id="Sky_tmfuq"]
+sky_material = SubResource("ProceduralSkyMaterial_85ba2")
+
+[sub_resource type="Environment" id="Environment_cma4o"]
+background_mode = 2
+sky = SubResource("Sky_tmfuq")
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u12wd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qsali"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ct506"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wi70s"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6x5lq"]
+
+[sub_resource type="Animation" id="Animation_ujqa4"]
+resource_name = "cameraMove"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Background/SubViewportContainer/SubViewport/Camera3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 1.16075, 0.760243), Vector3(0.100634, 1.16075, 0.760243), Vector3(0.0670895, 1.21126, 0.786221), Vector3(0.123407, 1.18601, 0.773232)]
+}
+
+[sub_resource type="Animation" id="Animation_cc6fp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Background/SubViewportContainer/SubViewport/Camera3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1.16075, 0.760243)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_moktk"]
+_data = {
+"RESET": SubResource("Animation_cc6fp"),
+"cameraMove": SubResource("Animation_ujqa4")
+}
+
+[node name="EndOfGame" type="CanvasLayer"]
+
+[node name="Background" type="Node3D" parent="."]
+
+[node name="3DGodotRobot" parent="Background" instance=ExtResource("1_xh1a0")]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Background"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="SubViewport" parent="Background/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="Background/SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 0.889281, -0.457362, 0, 0.457362, 0.889281, 0, 1.16075, 0.760243)
+
+[node name="Environment" type="WorldEnvironment" parent="Background"]
+environment = SubResource("Environment_cma4o")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_rmbyd")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 80
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer"]
+layout_mode = 2
+
+[node name="EndTittle" type="Label" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 0.615686)
+theme_override_fonts/font = ExtResource("1_drh3g")
+theme_override_font_sizes/font_size = 62
+text = "Thanks for playing!"
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="HomeBtn" type="Button" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0, 0, 0, 0.615686)
+theme_override_colors/font_pressed_color = Color(0.98808, 0.541696, 0, 1)
+theme_override_colors/font_hover_color = Color(0.859363, 0.729024, 0.121389, 0.945098)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 0.615686)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 0.615686)
+theme_override_fonts/font = ExtResource("1_drh3g")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxEmpty_u12wd")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_qsali")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_ct506")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_wi70s")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_6x5lq")
+text = "Home"
+
+[node name="QuitBtn" type="Button" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0, 0, 0, 0.615686)
+theme_override_colors/font_pressed_color = Color(0.98808, 0.541696, 0, 1)
+theme_override_colors/font_hover_color = Color(0.859363, 0.729024, 0.121389, 0.945098)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 0.615686)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 0.615686)
+theme_override_fonts/font = ExtResource("1_drh3g")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxEmpty_u12wd")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_qsali")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_ct506")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_wi70s")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_6x5lq")
+text = "Quit"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_moktk")
+}
+autoplay = "cameraMove"
+speed_scale = 0.2
