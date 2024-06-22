@@ -203,8 +203,9 @@ godot::Genesis::Genesis()
         },
         {
             zappy::Constants::Commands::SERVER_KO,
-            [](const std::vector<std::string> &_response) {
-                UtilityFunctions::print("critical error: server KO");
+            [this](const std::vector<std::string> &_response) {
+                emit_signal(
+                    "error", "Critical error, server is not responding");
             },
         },
         {
@@ -220,13 +221,15 @@ godot::Genesis::Genesis()
                     return;
                 }
 
-                _players.erase(p);
-
                 std::for_each(_teams.begin(), _teams.end(),
                     [id](const std::pair<const std::string,
                         std::unique_ptr<zappy::Team>> &team) {
                         team.second->remove_player(id);
                     });
+
+                p->second->destroy();
+
+                _players.erase(p);
             },
         },
         {
@@ -325,14 +328,86 @@ godot::Genesis::Genesis()
                 }
             },
         },
-        {zappy::Constants::Commands::UNKNOWN_COMMAND,
-            [](const std::vector<std::string> &_response) {
-                UtilityFunctions::print("Unknown command");
-            }},
+        {
+            zappy::Constants::Commands::UNKNOWN_COMMAND,
+            [this](const std::vector<std::string> &_response) {
+                emit_signal(
+                    "error", "Unknown command, please check your input");
+            },
+        },
         {
             zappy::Constants::Commands::BAD_PARAMETER,
-            [](const std::vector<std::string> &_response) {
-                UtilityFunctions::print("Invalid argument");
+            [this](const std::vector<std::string> &_response) {
+                emit_signal(
+                    "error", "Invalid parameter, please check your input");
+            },
+        },
+        {
+            zappy::Constants::Commands::EGG_LAYING,
+            [this](const std::vector<std::string> &response) {
+                std::size_t id = std::stoi(response.at(1));
+                std::shared_ptr<zappy::Player> player = _players.at(id);
+
+                emit_signal("resource",
+                    zappy::World::resource_to_string(zappy::EGGY).c_str(),
+                    player->get_position().x, player->get_position().z);
+                player->egg_anim();
+            },
+        },
+        {
+            zappy::Constants::Commands::RESOURCE_DROPPING,
+            [this](const std::vector<std::string> &response) {
+                std::size_t id = std::stoi(response.at(1));
+                std::shared_ptr<zappy::Player> player = _players.at(id);
+                player->drop_anim();
+            },
+        },
+        {
+            zappy::Constants::Commands::RESOURCE_COLLECTING,
+            [this](const std::vector<std::string> &response) {
+                std::size_t id = std::stoi(response.at(1));
+                std::shared_ptr<zappy::Player> player = _players.at(id);
+                player->drop_anim();
+            },
+        },
+        {
+            zappy::Constants::Commands::PLAYER_DEATH,
+            [this](const std::vector<std::string> &response) {
+                std::size_t id = std::stoi(response.at(1));
+
+                auto p = _players.find(id);
+
+                if (p == _players.end()) {
+                    emit_signal(
+                        "error", std::format("could not find {}", id).c_str());
+                    return;
+                }
+
+                p->second->death_anim();
+            },
+        },
+        {
+            zappy::Constants::Commands::EGG_LAID,
+            [](const std::vector<std::string> &response) {
+                UtilityFunctions::print("egg laid");
+            },
+        },
+        {
+            zappy::Constants::Commands::SERVER_MESSAGE,
+            [](const std::vector<std::string> &response) {
+                std::string message = response.at(1);
+
+                UtilityFunctions::print(
+                    std::format("server message: `{}`", message).c_str());
+            },
+        },
+        {
+            zappy::Constants::Commands::BROADCAST,
+            [](const std::vector<std::string> &response) {
+                std::string message = response.at(1);
+
+                UtilityFunctions::print(
+                    std::format("broadcast: `{}`", message).c_str());
             },
         },
     };

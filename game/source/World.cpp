@@ -84,6 +84,7 @@ std::string zappy::World::resource_to_string(ResourceType resource)
         case MENDIANE: return "create_mendiane";
         case PHIRAS: return "create_phiras";
         case THYSTAME: return "create_thystame";
+        case EGGY: return "create_egg";
         default: return "";
     }
 }
