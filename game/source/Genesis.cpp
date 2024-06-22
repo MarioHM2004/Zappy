@@ -87,7 +87,7 @@ godot::Genesis::Genesis()
                 std::string message = response.at(1);
 
                 UtilityFunctions::print(
-                    std::format(">> echo: `{}`", message).c_str());
+                    std::format("echo: `{}`", message).c_str());
             },
         },
         {
@@ -120,17 +120,19 @@ godot::Genesis::Genesis()
                 std::string team = response.at(6);
 
                 UtilityFunctions::print(
-                    std::format(">> player joined: `{}`", number).c_str());
+                    std::format("player joined: `{}`", number).c_str());
 
                 if (_teams.find(team) == _teams.end()) {
-                    return UtilityFunctions::print(
-                        std::format(">> team not found: `{}`", team).c_str());
+                    emit_signal("error",
+                        std::format("team not found: `{}`", team).c_str());
+                    return;
                 }
 
                 if (_players.find(number) != _players.end()) {
-                    return UtilityFunctions::print(
-                        std::format(">> player already exists: `{}`", number)
+                    emit_signal("error",
+                        std::format("player already exists: `{}`", number)
                             .c_str());
+                    return;
                 }
 
                 std::shared_ptr<zappy::Player> player =
@@ -149,9 +151,10 @@ godot::Genesis::Genesis()
                 std::string name = response.at(1);
 
                 if (_teams.find(name) != _teams.end()) {
-                    return UtilityFunctions::print(
-                        std::format(">> team already exists: `{}`", name)
+                    emit_signal("error",
+                        std::format("team already exists: `{}`", name)
                             .c_str());
+                    return;
                 }
 
                 _teams[name] = std::make_unique<zappy::Team>(name);
@@ -201,7 +204,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::SERVER_KO,
             [](const std::vector<std::string> &_response) {
-                UtilityFunctions::print(">> critical error: server KO");
+                UtilityFunctions::print("critical error: server KO");
             },
         },
         {
@@ -212,8 +215,9 @@ godot::Genesis::Genesis()
                 auto p = _players.find(id);
 
                 if (p == _players.end()) {
-                    return UtilityFunctions::print(
-                        std::format(">> could not find {}", id).c_str());
+                    emit_signal(
+                        "error", std::format("could not find {}", id).c_str());
+                    return;
                 }
 
                 _players.erase(p);
@@ -279,9 +283,9 @@ godot::Genesis::Genesis()
                 auto t = _teams.find(team);
 
                 if (t == _teams.end()) {
-                    return UtilityFunctions::print(
-                        std::format(">> could not find team {}", team)
-                            .c_str());
+                    emit_signal("error",
+                        std::format("could not find team {}", team).c_str());
+                    return;
                 }
 
                 t->second->clear_players();
@@ -295,9 +299,9 @@ godot::Genesis::Genesis()
 
                 auto player = _players.find(id);
                 if (player == _players.end()) {
-                    return UtilityFunctions::print(
-                        std::format(">> could not find player {}", id)
-                            .c_str());
+                    emit_signal("error",
+                        std::format("could not find player {}", id).c_str());
+                    return;
                 }
 
                 player->second->spawn();
@@ -310,9 +314,9 @@ godot::Genesis::Genesis()
 
                 auto player = _players.find(id);
                 if (player == _players.end()) {
-                    return UtilityFunctions::print(
-                        std::format(">> could not find player {}", id)
-                            .c_str());
+                    emit_signal("error",
+                        std::format("could not find player {}", id).c_str());
+                    return;
                 }
 
                 if (player->second->get_state() == zappy::PlayerState::EGG) {
@@ -483,7 +487,8 @@ void godot::Genesis::mouse_input(const Ref<InputEventMouseMotion> &mouse)
 void godot::Genesis::handle_settings(String address, String port)
 {
     if (_setup) {
-        return UtilityFunctions::print("Socket already setup!");
+        emit_signal("error", "Socket already setup!");
+        return;
     }
 
     if (address.is_empty()) {
@@ -509,7 +514,8 @@ void godot::Genesis::handle_settings(String address, String port)
 
     if (!_socket->connected()) {
         emit_signal("error", std::strerror(errno));
-        return UtilityFunctions::print("Socket is not ready, aborting...");
+        emit_signal("error", "Socket is not ready, aborting...");
+        return;
     }
 
     Input::get_singleton()->set_mouse_mode(
@@ -537,8 +543,38 @@ void godot::Genesis::handle_console(String command)
 {
     CharString utf8_str = command.utf8();
     const char *c_str = utf8_str.get_data();
+    std::string str = std::string(c_str);
 
-    dispatch(std::string(c_str));
+    if (str.starts_with("!")) {
+        str = str.substr(1);
+        std::vector<std::string> response;
+        std::istringstream iss(str);
+
+        for (std::string token; std::getline(iss, token, ' ');) {
+            response.push_back(token);
+        }
+
+        if (response.empty()) {
+            return;
+        }
+
+        std::string command = response.at(0);
+
+        std::transform(command.begin(), command.end(), command.begin(),
+            [](unsigned char c) {
+                return std::tolower(c);
+            });
+
+        if (_callbacks.find(command) != _callbacks.end()) {
+            _callbacks.at(command)(response);
+        } else {
+            emit_signal("error",
+                std::format("unknown command: `{}`", command).c_str());
+            return;
+        }
+    }
+
+    dispatch(str);
 }
 
 void godot::Genesis::handle_focus(bool active)
@@ -588,8 +624,9 @@ void godot::Genesis::tick()
         if (_callbacks.find(command) != _callbacks.end()) {
             _callbacks.at(command)(response);
         } else {
-            UtilityFunctions::print(
-                std::format(">> unknown command: `{}`", command).c_str());
+            emit_signal("error",
+                std::format("unknown command: `{}`", command).c_str());
+            return;
         }
     }
 }
