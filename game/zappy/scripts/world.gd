@@ -191,21 +191,21 @@ func create_world(x, y):
 	ocean.size = Vector2(x * 2, y * 2)
 	plane.global_transform.origin = Vector3((x - (x * 0.5)), 0, (y - (y * 0.5)))
 
-func clear_resources(x, y):
+func clear_resources(kind, x, y):
+	var key = kind.split("_")[1]
 	var pos_key = str(x) + "," + str(y)
-	for key in map:
-		var root = map[key]
-		if root.has(pos_key):
-			var resource = root[pos_key]
-			if resource != null:
-				resource.queue_free()
-				root.erase(pos_key)
+	var root = map[key]
+	if root.has(pos_key):
+		var resource = root[pos_key]
+		if resource != null:
+			resource.queue_free()
+			root.erase(pos_key)
 
 func _on_genesis_wsize(x, y):
 	create_world(x, y)
 
 func _on_genesis_resource(kind, x, y):
-	clear_resources(x, y)
+	clear_resources(kind, x, y)
 	return Callable(self, kind).bind(x, y).call()
 
 
