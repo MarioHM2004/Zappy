@@ -92,6 +92,11 @@
     #define END_INCANTATION_RESPONSE "current level: %d"
     #define AI_CONNECTION "%d %d"
 
+typedef struct expulsion_thread_s {
+    socket_t *socket;
+    char *msg;
+} expulsion_thread_t;
+
 typedef void (*client_command_func_t)(server_t *, client_t *, char *);
 
 typedef struct client_command_s {
