@@ -136,6 +136,7 @@ void pgt_command(server_t *server, client_t *client,
 void player_move(server_t *server, client_t *client, char *cmd);
 void player_die(server_t *server, client_t *client, char *cmd);
 void incantation_start_gui(server_t *server, client_t *client, char *cmd);
+void incantation_end_gui(server_t *server, client_t *client, char *cmd);
 
 // AI
 void forward_command(server_t *server, client_t *client, char *cmd);

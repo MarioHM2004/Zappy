@@ -47,6 +47,7 @@ static const client_command_t gui_commands[] = {
     {"player_move", &player_move},
     {"player_die", &player_die},
     {"incantation_start", &incantation_start_gui},
+    {"incantation_end", &incantation_end_gui},
     {"", NULL}
 };
 
