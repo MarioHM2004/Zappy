@@ -91,5 +91,24 @@ class Inventory:
         except Exception as e:
             print(f"Error updating inventory: {e}")
 
+    def getInventory(self, object: str) -> int:
+        match object:
+            case "food":
+                return self.food
+            case "linemate":
+                return self.linemate
+            case "deraumere":
+                return self.deraumere
+            case "sibur":
+                return self.sibur
+            case "mendiane":
+                return self.mendiane
+            case "phiras":
+                return self.phiras
+            case "thystame":
+                return self.thystame
+            case _:
+                raise ValueError(f"Item {object} not found")
+
     def __str__(self) -> str:
         return f"food={self.food}, linemate={self.linemate}, deraumere={self.deraumere}, sibur={self.sibur}, mendiane={self.mendiane}, phiras={self.phiras}, thystame={self.thystame}"

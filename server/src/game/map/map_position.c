@@ -7,10 +7,7 @@
 
 #include "game/game.h"
 #include "game/map.h"
-#include "game/player.h"
-#include "libs/log.h"
 #include <stdlib.h>
-#include <time.h>
 
 position_t dir_at(map_t *map, position_t pos, direction_e dir)
 {

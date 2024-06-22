@@ -11,11 +11,15 @@
 #include "game/resources.h"
 #include "libs/lib.h"
 #include "libs/log.h"
+#include "server/action.h"
 #include "server/client.h"
 #include "server/command.h"
 #include "server/server.h"
 #include "game/event.h"
+#include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 static sound_e determine_direction(position_t delta)
 {
@@ -132,27 +136,41 @@ static int sound_trajectory(map_t *map, player_t *from, player_t *to)
     return -1;
 }
 
+static void broadcast_action(server_t *server, player_t *player,
+    char *response, int *sound_dir)
+{
+    action_t *action = NULL;
+    broadcast_t broadcast = {
+        .player = player,
+        .text = *response,
+        .sound_dir = sound_dir
+    };
+
+    action = create_action(PLAYER_BROADCAST,
+            &broadcast, sizeof(broadcast_t));
+    add_action(server->actions, action);
+}
+
 void broadcast(server_t *server, player_t *player, event_t *event)
 {
     player_node_t *tmp = NULL;
-    client_t *client = get_client_by_fd(server->clients, player->fd);
-    int sound_dir = 0;
+    int *sound_dir =
+        calloc(get_player_list_size(server->game->players), sizeof(int));
+    uint count = 0;
 
-    if (event->type != BROADCAST || !client)
+    if (event->type != BROADCAST || !sound_dir)
         return;
     LIST_FOREACH(tmp, server->game->players, entries) {
         if (tmp->player == player || tmp->player->state != ALIVE)
             continue;
-        sound_dir = sound_trajectory(server->game->map, player, tmp->player);
-        if (sound_dir == -1) {
+        sound_dir[count] = sound_trajectory(server->game->map, player, tmp->player);
+        if (sound_dir[count] == -1) {
             log_debug("Error while sending message");
             continue;
         }
         log_debug("Player %d received %s from %d with dir %d", tmp->player->number,
-            event->data.broadcast.text, sound_dir, tmp->player->dir);
-        add_response_to_player(server->clients, tmp->player,
-            formatstr(BROADCAST_RECEIVER, sound_dir, event->data.broadcast.text));
+            event->data.broadcast.text, sound_dir[count], tmp->player->dir);
+        count++;
     }
-    pbc_command(server, client, player, event->data.broadcast.text);
-    add_response_to_player(server->clients, player, BROADCAST_SENDER);
+    broadcast_action(server, player, event->data.broadcast.text, sound_dir);
 }

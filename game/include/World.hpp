@@ -2,6 +2,7 @@
 #include <array>
 #include <string>
 #include <vector>
+#include <string_view>
 
 #ifndef __WORLD
     #define __WORLD
@@ -49,6 +50,8 @@ namespace zappy
         void clear_tile(std::size_t x, std::size_t y);
         void clear();
         std::string dump() const;
+
+        static std::string resource_to_string(ResourceType resource);
     };
 } // namespace zappy
 

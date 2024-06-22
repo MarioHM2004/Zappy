@@ -46,7 +46,8 @@ void zappy::Team::add_player(std::shared_ptr<zappy::Player> player)
     }
 
     _count += 1;
-    player->tint(_color);
+    player->lay_egg();
+    player->set_accent_color(_color);
     _players.push_back(std::move(player));
 }
 
@@ -55,4 +56,13 @@ void zappy::Team::remove_player(std::size_t id)
     std::erase_if(_players, [id](const std::shared_ptr<Player> &player) {
         return player->get_number() == id;
     });
+}
+
+void zappy::Team::clear_players()
+{
+    std::for_each(_players.begin(), _players.end(),
+        [](const std::shared_ptr<Player> &player) {
+            player->destroy();
+        });
+    _players.clear();
 }

@@ -8,9 +8,10 @@
 #ifndef EVENT_H_
 #define EVENT_H_
 
-
 #include <sys/types.h>
+#include "game/game.h"
 #include "game/player.h"
+#include "game/resources.h"
 
 #define MAX_BROADCAST_LENGTH 1024
 #define MAX_OBJECT_LENGTH 16
@@ -27,18 +28,26 @@ typedef enum {
     EJECT,
     TAKE_OBJECT,
     SET_OBJECT,
-    START_INCANTATION
+    START_INCANTATION,
+    END_INCANTATION
 } event_type_e;
 
 typedef struct object_s {
-    player_t player;
-    char name[MAX_OBJECT_LENGTH];
+    player_t *player;
+    resource_e resource;
 } object_t;
 
 typedef struct broadcast_s {
-    player_t player;
+    player_t *player;
+    int *sound_dir;
     char text[MAX_BROADCAST_LENGTH];
 } broadcast_t;
+
+typedef struct eject_s {
+    player_t *player;
+    player_list_t *players;
+    int *eject_dir;
+} eject_t;
 
 typedef union {
     player_t player;

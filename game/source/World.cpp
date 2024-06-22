@@ -1,4 +1,5 @@
 #include "World.hpp"
+#include <string_view>
 
 zappy::World::World(std::size_t x, std::size_t y)
     : _map(x, std::vector<TileData>(y))
@@ -71,4 +72,18 @@ std::string zappy::World::dump() const
         }
     }
     return result;
+}
+
+std::string zappy::World::resource_to_string(ResourceType resource)
+{
+    switch (resource) {
+        case FOOD: return "create_food";
+        case LINEMATE: return "create_linemate";
+        case DERAUMERE: return "create_deraumere";
+        case SIBUR: return "create_sibur";
+        case MENDIANE: return "create_mendiane";
+        case PHIRAS: return "create_phiras";
+        case THYSTAME: return "create_thystame";
+        default: return "";
+    }
 }

@@ -125,10 +125,10 @@ class AIManager:
             # cmd = self.drone.take_decision(payload=payload)
             cmd = self.drone.take_decision()
 
-            print(f"[TEST] cmd: {cmd}")
+            print(f"[CMD]: {cmd}")
 
             if self.drone.frozen is True:
-                print("[TEST] Drone is frozen")
+                print("___test: Drone is frozen")
                 return True
 
             if cmd == "ko":
@@ -137,20 +137,20 @@ class AIManager:
             # if eject, we need to check if egg is ejected
             if cmd == "eject":
                 if self.execute_cmd(cmd=cmd) == "eject_failed":
-                    print("[TEST] eject failed")
+                    print("___test: eject failed")
                     return True
                 elif self.execute_cmd(cmd="inventory") == "ko":
                     return False
                 return True
             elif cmd == "incantation":
                 if self.execute_cmd(cmd=cmd) == "incantation_failed":
-                    print("[TEST] incantation failed")
+                    print("___test: incantation failed")
                     return True
                 return True
             elif cmd.startswith("take"):
                 aux = self.execute_cmd(cmd=cmd)
                 if aux == "take_failed":
-                    print("[TEST] take failed")
+                    print("___test: take failed")
                     return True
                 if aux == "ko":
                     return False
@@ -158,7 +158,7 @@ class AIManager:
             elif cmd.startswith("set"):
                 aux = self.execute_cmd(cmd=cmd)
                 if aux == "set_failed":
-                    print("[TEST] set failed")
+                    print("___test: set failed")
                     return True
                 if aux == "ko":
                     return False
@@ -172,7 +172,7 @@ class AIManager:
         return True
 
     def handle_data(self, data: str) -> bool:
-        print(f"[TEST] Data: {data}")
+        print(f"___test: Data: {data}")
         if data.startswith("dead"):
             return self.handle_pdi(data=data)
         return True
@@ -190,6 +190,7 @@ class AIManager:
         # check if is dead
         if self.handle_data(data=s_data) is False:
             return "ko"
+
         # check if cmd is valid
         if cmd == "eject" and s_data == "ko":
             return "eject_failed"
@@ -200,7 +201,8 @@ class AIManager:
         if cmd.startswith("broadcast"):
             return "broadcast"
         if cmd.startswith("take"):
-            if s_data == "ok":
+            if s_data.startswith("pgt") or s_data == "ok":
+                s_data = cmd.split(" ")[1]
                 cmd = "take"
             else:
                 return "take_failed"
@@ -209,6 +211,7 @@ class AIManager:
                 cmd = "set"
             else:
                 return "set_failed"
+
         # parse payload
         self.drone.parse_payload(cmd=cmd, payload=s_data)
         return const.CMD_FUNC[cmd](self.drone, "")

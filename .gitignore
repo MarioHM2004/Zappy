@@ -12,4 +12,4 @@ server/build/
 .cache/
 build/
 .clang-format
-server/compile_commands.json
+*/compile_commands.json

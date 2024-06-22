@@ -19,10 +19,10 @@ event_t *create_event(event_type_e type, void *data, size_t size)
     event->size = size;
     if (event->type == BROADCAST)
         event->data.broadcast = *(broadcast_t *)data;
+    else if (event->type == TAKE_OBJECT || event->type == SET_OBJECT)
+        event->data.object = *(object_t *)data;
     else
         event->data.player = *(player_t *)data;
-    if (event->type == TAKE_OBJECT || event->type == SET_OBJECT)
-        event->data.object = *(object_t *)data;
     return event;
 }
 

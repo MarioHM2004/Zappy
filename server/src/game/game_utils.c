@@ -6,6 +6,7 @@
 */
 
 #include "libs/log.h"
+
 float get_execution_time(float execution_time, float frequence)
 {
     if (frequence == 0) {
@@ -13,4 +14,5 @@ float get_execution_time(float execution_time, float frequence)
         return execution_time;
     }
     return execution_time / frequence;
+
 }

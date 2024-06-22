@@ -7,23 +7,38 @@
 #include <vector>
 #include "Common.hpp"
 #include <godot_cpp/classes/character_body3d.hpp>
+#include <godot_cpp/classes/control.hpp>
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/global_constants.hpp>
 #include <godot_cpp/classes/input_event_mouse_motion.hpp>
+#include <godot_cpp/classes/object.hpp>
 #include <godot_cpp/classes/packed_scene.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
+#include <godot_cpp/classes/viewport.hpp>
 #include <godot_cpp/classes/window.hpp>
+#include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/object.hpp>
+#include <godot_cpp/variant/callable.hpp>
+#include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
+#include <godot_cpp/variant/variant.hpp>
 #include <godot_cpp/variant/vector3.hpp>
 
 void godot::Genesis::_bind_methods()
 {
-    // TODO(jabolo): fix string_view mismatch to use signals from Common.hpp
     ADD_SIGNAL(MethodInfo("error", PropertyInfo(Variant::STRING, "value")));
     ADD_SIGNAL(MethodInfo("wsize", PropertyInfo(Variant::INT, "x"),
         PropertyInfo(Variant::INT, "y")));
+    ADD_SIGNAL(MethodInfo("resource", PropertyInfo(Variant::STRING, "kind"),
+        PropertyInfo(Variant::INT, "x"), PropertyInfo(Variant::INT, "y")));
+    ADD_SIGNAL(MethodInfo("gameover"));
+    ClassDB::bind_method(
+        D_METHOD("handle_settings"), &Genesis::handle_settings);
+    ClassDB::bind_method(D_METHOD("handle_console"), &Genesis::handle_console);
+    ClassDB::bind_method(D_METHOD("handle_focus"), &Genesis::handle_focus);
+    ADD_SIGNAL(
+        MethodInfo("last_command", PropertyInfo(Variant::STRING, "command")));
 }
 
 godot::Genesis::Genesis()
@@ -42,8 +57,8 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::TILE_CONTENT,
             [this](const std::vector<std::string> &response) {
-                std::size_t x = std::stoi(response.at(1));
-                std::size_t y = std::stoi(response.at(2));
+                int x = std::stoi(response.at(1));
+                int y = std::stoi(response.at(2));
 
                 std::vector<std::size_t> resources;
                 std::transform(response.begin() + 3, response.end(),
@@ -54,10 +69,15 @@ godot::Genesis::Genesis()
 
                 for (auto it = resources.begin(); it != resources.end();
                      ++it) {
-                    _world->set_resource(x, y,
+                    zappy::ResourceType kind =
                         static_cast<zappy::ResourceType>(
-                            std::distance(resources.begin(), it)),
-                        *it);
+                            std::distance(resources.begin(), it));
+                    if (*it > 0) {
+                        emit_signal("resource",
+                            zappy::World::resource_to_string(kind).c_str(), x,
+                            y);
+                    }
+                    _world->set_resource(x, y, kind, *it);
                 }
             },
         },
@@ -79,14 +99,12 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::TIME_UNIT_MODIFICATION,
             [this](const std::vector<std::string> &response) {
-                // TODO(jabolo): verify if this is the correct command
                 _socket->time_unit(std::stoi(response.at(1)));
             },
         },
         {
             zappy::Constants::Commands::TIME_UNIT_REQUEST,
             [this](const std::vector<std::string> &response) {
-                // TODO(jabolo): verify if this is the correct command
                 _socket->time_unit(std::stoi(response.at(1)));
             },
         },
@@ -107,6 +125,12 @@ godot::Genesis::Genesis()
                 if (_teams.find(team) == _teams.end()) {
                     return UtilityFunctions::print(
                         std::format(">> team not found: `{}`", team).c_str());
+                }
+
+                if (_players.find(number) != _players.end()) {
+                    return UtilityFunctions::print(
+                        std::format(">> player already exists: `{}`", number)
+                            .c_str());
                 }
 
                 std::shared_ptr<zappy::Player> player =
@@ -203,33 +227,108 @@ godot::Genesis::Genesis()
         },
         {
             zappy::Constants::Commands::START_INCANTATION,
-            [](const std::vector<std::string> &response) {
-                std::vector<std::size_t> levels;
+            [this](const std::vector<std::string> &response) {
+                std::vector<std::shared_ptr<zappy::Player>> players;
                 std::size_t x = std::stoi(response.at(1));
                 std::size_t y = std::stoi(response.at(2));
+                std::size_t level = std::stoi(response.at(3));
+                std::string key = std::format("{}:{}", x, y);
 
-                std::transform(response.begin() + 3, response.end(),
-                    std::back_inserter(levels), [](const std::string &elem) {
-                        return std::stoi(elem);
+                std::transform(response.begin() + 4, response.end(),
+                    std::back_inserter(players),
+                    [this](const std::string &elem) {
+                        return _players.at(std::stoi(elem));
                     });
 
-                // TODO(jabolo): Call animation of incantation
-                // TODO(jabolo): Fire timings for incantation
-                // TODO(jabolo): Freeze player
-                // TODO(jabolo): Tint player white
+                std::for_each(
+                    players.begin(), players.end(), [&level](auto &player) {
+                        player->invocation(level, true);
+                    });
+
+                _incantations[key] = players;
             },
         },
         {
             zappy::Constants::Commands::END_INCANTATION,
-            [](const std::vector<std::string> &response) {
+            [this](const std::vector<std::string> &response) {
                 std::size_t x = std::stoi(response.at(1));
                 std::size_t y = std::stoi(response.at(2));
                 std::size_t result = std::stoi(response.at(3));
+                std::string key = std::format("{}:{}", x, y);
+                std::vector<std::shared_ptr<zappy::Player>> players =
+                    _incantations.at(key);
 
-                // TODO(jabolo): Call animation of incantation
-                // TODO(jabolo): Fire timings for incantation
-                // TODO(jabolo): Unfreeze player
-                // TODO(jabolo): Tint player one shade lighter if success
+                std::for_each(
+                    players.begin(), players.end(), [&result](auto &player) {
+                        player->invocation(result, false);
+                    });
+
+                _incantations.erase(key);
+            },
+        },
+        {
+            zappy::Constants::Commands::END_GAME,
+            [this](const std::vector<std::string> &response) {
+                std::string team = response.at(1);
+
+                if (team == "GRAPHIC") {
+                    emit_signal("gameover");
+                    return;
+                }
+
+                auto t = _teams.find(team);
+
+                if (t == _teams.end()) {
+                    return UtilityFunctions::print(
+                        std::format(">> could not find team {}", team)
+                            .c_str());
+                }
+
+                t->second->clear_players();
+                _teams.erase(t);
+            },
+        },
+        {
+            zappy::Constants::Commands::EGG_CONNECTION,
+            [this](const std::vector<std::string> &response) {
+                std::size_t id = std::stoi(response.at(1));
+
+                auto player = _players.find(id);
+                if (player == _players.end()) {
+                    return UtilityFunctions::print(
+                        std::format(">> could not find player {}", id)
+                            .c_str());
+                }
+
+                player->second->spawn();
+            },
+        },
+        {
+            zappy::Constants::Commands::EGG_DEATH,
+            [this](const std::vector<std::string> &response) {
+                std::size_t id = std::stoi(response.at(1));
+
+                auto player = _players.find(id);
+                if (player == _players.end()) {
+                    return UtilityFunctions::print(
+                        std::format(">> could not find player {}", id)
+                            .c_str());
+                }
+
+                if (player->second->get_state() == zappy::PlayerState::EGG) {
+                    player->second->destroy();
+                    _players.erase(player);
+                }
+            },
+        },
+        {zappy::Constants::Commands::UNKNOWN_COMMAND,
+            [](const std::vector<std::string> &_response) {
+                UtilityFunctions::print("Unknown command");
+            }},
+        {
+            zappy::Constants::Commands::BAD_PARAMETER,
+            [](const std::vector<std::string> &_response) {
+                UtilityFunctions::print("Invalid argument");
             },
         },
     };
@@ -249,20 +348,31 @@ void godot::Genesis::_ready()
         set_process_mode(ProcessMode::PROCESS_MODE_INHERIT);
     }
 
-    if (_socket == nullptr) {
-        _socket = std::make_unique<zappy::TCPSocket>("127.0.0.1", 4242);
+    Control *settings = Object::cast_to<Control>(
+        get_tree()->get_root()->get_child(0)->get_child(4));
+
+    if (settings) {
+        settings->set_visible(true);
+        Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_VISIBLE);
+        settings->connect("server_address", Callable(this, "handle_settings"));
     }
 
-    if (!_socket->connected()) {
-        emit_signal("error", std::strerror(errno));
-        return UtilityFunctions::print("Socket is not ready, aborting...");
-    }
+    Control *console = Object::cast_to<Control>(
+        get_tree()->get_root()->get_child(0)->get_child(5));
 
-    _socket->start_polling();
+    if (console) {
+        console->set_visible(false);
+        console->connect("server_command", Callable(this, "handle_console"));
+        console->connect("console_focus", Callable(this, "handle_focus"));
+    }
 }
 
 void godot::Genesis::_process(double delta)
 {
+    if (!_setup) {
+        return;
+    }
+
     _ellapsed += delta;
 
     if (_ellapsed > 0.2) {
@@ -299,6 +409,10 @@ void godot::Genesis::_process(double delta)
 
 void godot::Genesis::_input(const Ref<InputEvent> &event)
 {
+    if (!_setup || _console_focused) {
+        return;
+    }
+
     if (auto key = Object::cast_to<InputEventKey>(*event)) {
         key_input(key);
     } else if (auto mouse = Object::cast_to<InputEventMouseMotion>(*event)) {
@@ -333,8 +447,8 @@ void godot::Genesis::key_input(const Ref<InputEventKey> &key)
         case KEY_ESCAPE:
             Input::get_singleton()->set_mouse_mode(is_pressed
                     ? (key->get_keycode() == KEY_ESCAPE
-                              ? Input::MouseMode::MOUSE_MODE_VISIBLE
-                              : Input::MouseMode::MOUSE_MODE_HIDDEN)
+                            ? Input::MouseMode::MOUSE_MODE_VISIBLE
+                            : Input::MouseMode::MOUSE_MODE_HIDDEN)
                     : Input::get_singleton()->get_mouse_mode());
             break;
         default: break;
@@ -366,6 +480,72 @@ void godot::Genesis::mouse_input(const Ref<InputEventMouseMotion> &mouse)
     set_rotation(camera_rotation);
 }
 
+void godot::Genesis::handle_settings(String address, String port)
+{
+    if (_setup) {
+        return UtilityFunctions::print("Socket already setup!");
+    }
+
+    if (address.is_empty()) {
+        _address = "127.0.0.1";
+    } else {
+        CharString utf8_str = address.utf8();
+        const char *c_str = utf8_str.get_data();
+        if (c_str && *c_str != '\0') {
+            _address = std::string(c_str);
+        } else {
+            _address = "127.0.0.1";
+        }
+    }
+
+    if (port.is_empty()) {
+        _port = 4242;
+    } else {
+        CharString port_utf8_str = port.utf8();
+        _port = std::stoi(std::string(port_utf8_str.get_data()));
+    }
+
+    _socket = std::make_unique<zappy::TCPSocket>(_address, _port);
+
+    if (!_socket->connected()) {
+        emit_signal("error", std::strerror(errno));
+        return UtilityFunctions::print("Socket is not ready, aborting...");
+    }
+
+    Input::get_singleton()->set_mouse_mode(
+        Input::MouseMode::MOUSE_MODE_HIDDEN);
+
+    Control *settings = Object::cast_to<Control>(
+        get_tree()->get_root()->get_child(0)->get_child(4));
+
+    if (settings) {
+        settings->set_visible(false);
+    }
+
+    Control *console = Object::cast_to<Control>(
+        get_tree()->get_root()->get_child(0)->get_child(5));
+
+    if (console) {
+        console->set_visible(true);
+    }
+
+    _setup = true;
+    _socket->start_polling();
+}
+
+void godot::Genesis::handle_console(String command)
+{
+    CharString utf8_str = command.utf8();
+    const char *c_str = utf8_str.get_data();
+
+    dispatch(std::string(c_str));
+}
+
+void godot::Genesis::handle_focus(bool active)
+{
+    _console_focused = active;
+}
+
 void godot::Genesis::dispatch(const std::string &payload)
 {
     _socket->send_message(payload);
@@ -395,6 +575,8 @@ void godot::Genesis::tick()
         if (response.empty()) {
             continue;
         }
+
+        emit_signal("last_command", message.c_str());
 
         std::string command = response.at(0);
 

@@ -98,8 +98,7 @@ void zappy::TCPSocket::poll_socket()
             pos = std::find(message.begin(), message.end(), '\n');
         }
 
-        std::this_thread::sleep_for(
-            std::chrono::milliseconds(_time_unit * 10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 

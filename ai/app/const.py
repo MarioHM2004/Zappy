@@ -14,6 +14,8 @@ import app.modules.Drone.Inventory.Inventory as inv
 # Type hint for the payload that will be sent to the algorithm
 AlgoPayload = dict[str, Union[int, str, list[str], inv.Inventory, bool, None]]
 
+INVENTORY: list[str] = ["food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"]
+
 # Commands
 CMD_FUNC: list[str, Callable] = {
     "forward": dh.cmd_forward,

@@ -56,34 +56,34 @@
     #define INVALID_PARAMETERS "sbp"
 
     // AI
-    #define FORWARD_REQUEST "Forward"
+    #define FORWARD_REQUEST "forward"
     #define FORWARD_RESPONSE "ok"
-    #define RIGHT_REQUEST "Right"
+    #define RIGHT_REQUEST "right"
     #define RIGHT_RESPONSE "ok"
-    #define LEFT_REQUEST "Left"
+    #define LEFT_REQUEST "left"
     #define LEFT_RESPONSE "ok"
-    #define LOOK_REQUEST "Look"
+    #define LOOK_REQUEST "look"
     // #define LOOK_RESPONSE "[%s, %s]" /* csv of tile info (tile info is space separated) */
-    #define INVENTORY_REQUEST "Inventory"
+    #define INVENTORY_REQUEST "inventory"
     #define INVENTORY_RESPONSE "[linemate %d, deraumere %d, sibur %d, mendiane %d, phiras %d, thystame %d]"
-    #define BROADCAST_REQUEST "Broadcast %s"
+    #define BROADCAST_REQUEST "broadcast %s"
     #define BROADCAST_SENDER "ok"
     #define BROADCAST_RECEIVER "message %d, %s"
-    #define CONNECT_NBR_REQUEST "Connect_nbr"
+    #define CONNECT_NBR_REQUEST "connect_nbr"
     #define CONNECT_NBR_RESPONSE "%d"
-    #define FORK_REQUEST "Fork"
+    #define FORK_REQUEST "fork"
     #define FORK_RESPONSE "ok"
-    #define EJECT_REQUEST "Eject"
+    #define EJECT_REQUEST "eject"
     #define EJECT_RESPONSE "ok"
-    #define EJECTED_PLAYER "eject: %d"
+    #define EJECTED_RESPONSE "eject: %d"
     #define DEATH_RESPONSE "dead"
-    #define TAKE_OBJECT_REQUEST "Take %s"
+    #define TAKE_OBJECT_REQUEST "take %s"
     #define TAKE_OBJECT_RESPONSE "ok"
-    #define SET_OBJECT_REQUEST "Set %s"
+    #define SET_OBJECT_REQUEST "set %s"
     #define SET_OBJECT_RESPONSE "ok"
-    #define START_INCANTATION_REQUEST "Incantation"
-    #define START_INCANTATION_RESPONSE "Elevation underway"
-    #define END_INCANTATION_RESPONSE "Current level: %d"
+    #define START_INCANTATION_REQUEST "incantation"
+    #define START_INCANTATION_RESPONSE "elevation underway"
+    #define END_INCANTATION_RESPONSE "current level: %d"
     #define AI_CONNECTION "%d %d"
 
 typedef void (*client_command_func_t)(server_t *, client_t *, char *);
@@ -118,8 +118,7 @@ void enw_command(server_t *server, client_t *client, player_t *player,
     player_t *egg);
 void pbc_command(server_t *server, client_t *client,
     player_t *player, char *msg);
-void pic_command(server_t *server, client_t *client,
-    player_t *player, player_list_t *p_number);
+void pic_command(server_t *server, client_t *client, player_list_t *players);
 void pie_command(server_t *server, client_t *client,
     player_t *player, bool res);
 void pdr_command(server_t *server, client_t *client,

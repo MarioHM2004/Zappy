@@ -1,0 +1,52 @@
+[gd_scene load_steps=5 format=3 uid="uid://dv2arxqpkpvk2"]
+
+[ext_resource type="PackedScene" uid="uid://r68bmvppjb1r" path="res://assets/sprites/deraumere.glb" id="1_lnq40"]
+
+[sub_resource type="Animation" id="Animation_cpl24"]
+resource_name = "levitate"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sketchfab_model/db46d8964a4746a89eed42243cccd81c_fbx/RootNode/Slatinum_Node:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-6.31089e-30, 10.4124, -4.55139e-07)]
+}
+
+[sub_resource type="Animation" id="Animation_fstrl"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sketchfab_model/db46d8964a4746a89eed42243cccd81c_fbx/RootNode/Slatinum_Node:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_48nkp"]
+_data = {
+"RESET": SubResource("Animation_fstrl"),
+"levitate": SubResource("Animation_cpl24")
+}
+
+[node name="Sketchfab_Scene" instance=ExtResource("1_lnq40")]
+
+[node name="Slatinum_Node" parent="Sketchfab_model/db46d8964a4746a89eed42243cccd81c_fbx/RootNode" index="0"]
+transform = Transform3D(0.2, 0, 0, 0, -8.74228e-09, 0.2, 0, -0.2, -8.74228e-09, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
+libraries = {
+"": SubResource("AnimationLibrary_48nkp")
+}
+autoplay = "levitate"
