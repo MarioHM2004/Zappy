@@ -125,15 +125,18 @@ class AIManager:
             # cmd = self.drone.take_decision(payload=payload)
             cmd = self.drone.take_decision()
 
-            print(f"[CMD]: {cmd}")
 
             if self.drone.frozen is True:
                 print("___test: Drone is frozen")
+                aux = self.recv_data(socket=self.socket)
+                print(f"-------FROZEN RECV: {aux}")
                 return True
+
 
             if cmd == "ko":
                 return False
 
+            print(f"[CMD]: {cmd}")
             # if eject, we need to check if egg is ejected
             if cmd == "eject":
                 if self.execute_cmd(cmd=cmd) == "eject_failed":
