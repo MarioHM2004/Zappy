@@ -65,6 +65,11 @@ class Drone:
             return
 
         try:
+            if payload.startswith("elevation underway"):
+                self.frozen = True
+                return
+            else:
+                self.frozen = False
             match cmd:
                 case "look":
                     self.view = payload.split(',')
@@ -74,8 +79,6 @@ class Drone:
                     self.connect_nbr = int(payload)
                 case "eject":
                     print(f"eject: {payload}")
-                case "incantation":
-                    print(f"TO DO: parse incantation payload: {payload}")
                 case "take":
                     self.inventory.add_item(payload, 1)
                     print(f"Inventory: {self.inventory}")

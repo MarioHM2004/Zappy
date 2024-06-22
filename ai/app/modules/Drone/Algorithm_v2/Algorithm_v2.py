@@ -62,11 +62,10 @@ class Algorithm:
 
         if self.__all_objects_recollected(payload):
             scores = self.__reset_scores(scores)
-            if payload.get("last_cmd") == "incantation":
-                scores["forward"] = 1
+            if payload.get("last_cmd") != "incantation" and payload.get("elevation") == 1:
+                scores["incantation"] = 1
+                self.objective.append("inventory")
                 return scores
-            scores["incantation"] = 1
-            return scores
         if len(self.objective) == 0 and payload.get("last_cmd") != "look":
             scores["look"] = 1
             return scores

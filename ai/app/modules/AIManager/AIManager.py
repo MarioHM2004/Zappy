@@ -125,15 +125,21 @@ class AIManager:
             # cmd = self.drone.take_decision(payload=payload)
             cmd = self.drone.take_decision()
 
-            print(f"[CMD]: {cmd}")
-
+            # incantation
             if self.drone.frozen is True:
                 print("___test: Drone is frozen")
+                aux = self.recv_data(socket=self.socket)
+                if aux.startswith("current level"):
+                    self.drone.frozen = False
+                    print(f"___test: Drone was level: {self.drone.incantation_lvl}")
+                    self.drone.incantation_lvl = int(aux.split()[2])
+                    print(f"___test: Drone is now level: {self.drone.incantation_lvl}")
                 return True
 
             if cmd == "ko":
                 return False
 
+            print(f"[CMD]: {cmd}")
             # if eject, we need to check if egg is ejected
             if cmd == "eject":
                 if self.execute_cmd(cmd=cmd) == "eject_failed":

@@ -94,8 +94,5 @@ def cmd_set(drone: Drone, payload) -> str:
 
 # takes 300/f
 def cmd_incantation(drone: Drone, payload) -> str:
-    print(f"Helper incantation")
-    if drone.incantation_lvl < 8:
-        drone.incantation_lvl += 1
-
+    print("incantation in progress")
     return "incantation"
