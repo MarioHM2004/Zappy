@@ -47,6 +47,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::MAP_SIZE,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(MAP_SIZE, response.size());
                 int x = std::stoi(response.at(1));
                 int y = std::stoi(response.at(2));
 
@@ -57,6 +58,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::TILE_CONTENT,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(TILE_CONTENT, response.size());
                 int x = std::stoi(response.at(1));
                 int y = std::stoi(response.at(2));
 
@@ -83,7 +85,8 @@ godot::Genesis::Genesis()
         },
         {
             zappy::Constants::Commands::ECHO,
-            [](const std::vector<std::string> &response) {
+            [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(ECHO, response.size());
                 std::string message = response.at(1);
 
                 UtilityFunctions::print(
@@ -111,6 +114,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::PLAYER_JOINED,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(PLAYER_JOINED, response.size());
                 std::size_t number = std::stoi(response.at(1));
                 std::size_t x = std::stoi(response.at(2));
                 std::size_t y = std::stoi(response.at(3));
@@ -118,9 +122,6 @@ godot::Genesis::Genesis()
                     static_cast<zappy::Orientation>(std::stoi(response.at(4)));
                 std::size_t level = std::stoi(response.at(5));
                 std::string team = response.at(6);
-
-                UtilityFunctions::print(
-                    std::format("player joined: `{}`", number).c_str());
 
                 if (_teams.find(team) == _teams.end()) {
                     emit_signal("error",
@@ -148,6 +149,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::TEAM_NAMES,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(TEAM_NAMES, response.size());
                 std::string name = response.at(1);
 
                 if (_teams.find(name) != _teams.end()) {
@@ -163,6 +165,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::PLAYER_POSITION,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(PLAYER_POSITION, response.size());
                 std::shared_ptr<zappy::Player> player =
                     _players.at(std::stoi(response.at(1)));
                 std::size_t x = std::stoi(response.at(2));
@@ -174,6 +177,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::PLAYER_LEVEL,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(PLAYER_LEVEL, response.size());
                 std::shared_ptr<zappy::Player> player =
                     _players.at(std::stoi(response.at(1)));
                 std::size_t level = std::stoi(response.at(2));
@@ -184,6 +188,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::PLAYER_INVENTORY,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(PLAYER_INVENTORY, response.size());
                 std::size_t number = std::stoi(response.at(1));
                 std::size_t x = std::stoi(response.at(2));
                 std::size_t y = std::stoi(response.at(3));
@@ -211,6 +216,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::PLAYER_EXPULSION,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(PLAYER_EXPULSION, response.size());
                 std::size_t id = std::stoi(response.at(1));
 
                 auto p = _players.find(id);
@@ -235,6 +241,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::START_INCANTATION,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(START_INCANTATION, response.size());
                 std::vector<std::shared_ptr<zappy::Player>> players;
                 std::size_t x = std::stoi(response.at(1));
                 std::size_t y = std::stoi(response.at(2));
@@ -258,6 +265,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::END_INCANTATION,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(END_INCANTATION, response.size());
                 std::size_t x = std::stoi(response.at(1));
                 std::size_t y = std::stoi(response.at(2));
                 std::size_t result = std::stoi(response.at(3));
@@ -276,10 +284,16 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::END_GAME,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(END_GAME, response.size());
                 std::string team = response.at(1);
 
                 if (team == "GRAPHIC") {
                     emit_signal("gameover");
+                    for (auto &team : _teams) {
+                        team.second->clear_players();
+                    }
+                    _teams.clear();
+                    _players.clear();
                     return;
                 }
 
@@ -298,6 +312,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::EGG_CONNECTION,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(EGG_CONNECTION, response.size());
                 std::size_t id = std::stoi(response.at(1));
 
                 auto player = _players.find(id);
@@ -313,6 +328,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::EGG_DEATH,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(EGG_DEATH, response.size());
                 std::size_t id = std::stoi(response.at(1));
 
                 auto player = _players.find(id);
@@ -345,6 +361,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::EGG_LAYING,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(EGG_LAYING, response.size());
                 std::size_t id = std::stoi(response.at(1));
                 std::shared_ptr<zappy::Player> player = _players.at(id);
 
@@ -357,6 +374,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::RESOURCE_DROPPING,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(RESOURCE_DROPPING, response.size());
                 std::size_t id = std::stoi(response.at(1));
                 std::shared_ptr<zappy::Player> player = _players.at(id);
                 player->drop_anim();
@@ -365,6 +383,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::RESOURCE_COLLECTING,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(RESOURCE_COLLECTING, response.size());
                 std::size_t id = std::stoi(response.at(1));
                 std::shared_ptr<zappy::Player> player = _players.at(id);
                 player->drop_anim();
@@ -373,6 +392,7 @@ godot::Genesis::Genesis()
         {
             zappy::Constants::Commands::PLAYER_DEATH,
             [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(PLAYER_DEATH, response.size());
                 std::size_t id = std::stoi(response.at(1));
 
                 auto p = _players.find(id);
@@ -388,13 +408,14 @@ godot::Genesis::Genesis()
         },
         {
             zappy::Constants::Commands::EGG_LAID,
-            [](const std::vector<std::string> &response) {
+            [](const std::vector<std::string> &_response) {
                 UtilityFunctions::print("egg laid");
             },
         },
         {
             zappy::Constants::Commands::SERVER_MESSAGE,
-            [](const std::vector<std::string> &response) {
+            [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(SERVER_MESSAGE, response.size());
                 std::string message = response.at(1);
 
                 UtilityFunctions::print(
@@ -403,7 +424,8 @@ godot::Genesis::Genesis()
         },
         {
             zappy::Constants::Commands::BROADCAST,
-            [](const std::vector<std::string> &response) {
+            [this](const std::vector<std::string> &response) {
+                CHECK_ARGCOUNT(BROADCAST, response.size());
                 std::string message = response.at(1);
 
                 UtilityFunctions::print(
@@ -526,8 +548,8 @@ void godot::Genesis::key_input(const Ref<InputEventKey> &key)
         case KEY_ESCAPE:
             Input::get_singleton()->set_mouse_mode(is_pressed
                     ? (key->get_keycode() == KEY_ESCAPE
-                            ? Input::MouseMode::MOUSE_MODE_VISIBLE
-                            : Input::MouseMode::MOUSE_MODE_HIDDEN)
+                              ? Input::MouseMode::MOUSE_MODE_VISIBLE
+                              : Input::MouseMode::MOUSE_MODE_HIDDEN)
                     : Input::get_singleton()->get_mouse_mode());
             break;
         default: break;
@@ -645,8 +667,9 @@ void godot::Genesis::handle_console(String command)
         } else {
             emit_signal("error",
                 std::format("unknown command: `{}`", command).c_str());
-            return;
         }
+
+        return;
     }
 
     dispatch(str);
@@ -701,7 +724,6 @@ void godot::Genesis::tick()
         } else {
             emit_signal("error",
                 std::format("unknown command: `{}`", command).c_str());
-            return;
         }
     }
 }

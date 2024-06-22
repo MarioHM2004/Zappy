@@ -101,12 +101,12 @@ void incantation(server_t *server, player_t *player, event_t *event)
     player_node_t *tmp = NULL;
 
     (void)event;
+    players = get_players_on_tile(server->game->players, player->pos, ALIVE);
     if (!valid_incantation_tile(tile, incantations[player->level - 1])) {
         log_debug("%d: Invalid incantation\n", player->number);
-        incantation_action(server, NULL, player, false);
+        incantation_action(server, players, player, false);
         return;
     }
-    players = get_players_on_tile(server->game->players, player->pos, ALIVE);
     if (players == NULL)
         return;
     LIST_FOREACH(tmp, players, entries) {

@@ -143,7 +143,6 @@ void zappy::Player::tint(godot::Color accent)
     _robot_body->call("tint", _main_body, _pupils, _accent, _eye_bg);
 }
 
-
 void zappy::Player::invocation(int level, bool init)
 {
     if (_state != PlayerState::PLAYER) {
@@ -187,8 +186,7 @@ void zappy::Player::egg_anim() const
         return godot::UtilityFunctions::print("Robot body is null");
     }
     if (!_robot_body->has_method("egg_anim")) {
-        return godot::UtilityFunctions::print(
-            "Method `egg_anim` not found");
+        return godot::UtilityFunctions::print("Method `egg_anim` not found");
     }
     _robot_body->call("egg_anim");
 }
@@ -241,12 +239,12 @@ godot::Color zappy::Player::get_accent_color(std::size_t level)
 
 void zappy::Player::destroy()
 {
-    if (_robot_scene == nullptr) {
-        return godot::UtilityFunctions::print("Robot scene is null");
+    if (_robot_scene != nullptr) {
+        _robot_scene->queue_free();
     }
-
-    // TODO(jabolo): Death animation
-    _robot_scene->queue_free();
+    if (_egg_scene != nullptr) {
+        _egg_scene->queue_free();
+    }
 }
 
 godot::Node3D *zappy::Player::instantiate(std::string &path)

@@ -22,6 +22,6 @@ func _on_genesis_last_error(error: String):
 	timer.start()
 
 	var current_time = Time.get_unix_time_from_system()
-	errorLabel.text = Time.get_time_string_from_system() + " " + error
+	errorLabel.text = Time.get_time_string_from_system() + " - " + error
 	last_error_time = current_time
-
+	print("[error] ", error)

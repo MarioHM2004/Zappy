@@ -1,5 +1,7 @@
 #include "Client.hpp"
-#include <format>
+#ifdef __ZAPPY_DEBUG
+    #include <format>
+#endif
 #include <thread>
 #include <godot_cpp/variant/utility_functions.hpp>
 
@@ -35,8 +37,10 @@ bool zappy::TCPSocket::pop_message(std::string &msg)
     if (!_message_queue.empty()) {
         msg = _message_queue.front();
         _message_queue.pop();
+#ifdef __ZAPPY_DEBUG
         godot::UtilityFunctions::print(
             std::format("[socket] >> `{}`", msg).c_str());
+#endif
         _mutex->unlock();
         return true;
     }

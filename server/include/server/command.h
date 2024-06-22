@@ -34,7 +34,7 @@
     #define PIN_RESPONSE "pin %d %d %d %d %d %d %d %d %d %d"
     #define PEX_RESPONSE "pex %d"
     #define PBC_RESPONSE "pbc %d %s"
-    #define PIC_RESPONSE "pic %d %d %s" /* %s == player_numbers */
+    #define PIC_RESPONSE "pic %d %d %d %s" /* %s == player_numbers */
     #define PIE_RESPONSE "pie %d %d %d"
     #define PFK_RESPONSE "pfk %d"
     #define PDR_RESPONSE "pdr %d %d"
@@ -91,6 +91,11 @@
     #define START_INCANTATION_RESPONSE "elevation underway"
     #define END_INCANTATION_RESPONSE "current level: %d"
     #define AI_CONNECTION "%d %d"
+
+typedef struct expulsion_thread_s {
+    socket_t *socket;
+    char *msg;
+} expulsion_thread_t;
 
 typedef void (*client_command_func_t)(server_t *, client_t *, char *);
 

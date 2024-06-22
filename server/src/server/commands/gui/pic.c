@@ -26,9 +26,10 @@ void pic_command(server_t *server, client_t *client, player_list_t *players)
         if (LIST_NEXT(node, entries))
             player_numbers = safe_strcat(player_numbers, " ");
     }
+    node = LIST_FIRST(players);
     response = formatstr(PIC_RESPONSE,
-        (int)LIST_FIRST(players)->player->pos.x,
-        (int)LIST_FIRST(players)->player->pos.y, player_numbers);
+        (int)node->player->pos.x, (int)node->player->pos.y,
+        node->player->level, player_numbers);
     add_response(client, response);
     if (response)
         free(response);
