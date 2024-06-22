@@ -212,12 +212,15 @@ text = "Console:
 [node name="HBoxContainer" type="HBoxContainer" parent="Console/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="CodeEdit" type="CodeEdit" parent="Console/MarginContainer/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(250, 0)
+[node name="Console" type="LineEdit" parent="Console/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(275, 0)
 layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
 theme_override_fonts/font = ExtResource("4_5c6v6")
-theme_override_font_sizes/font_size = 25
-placeholder_text = "type here"
+theme_override_font_sizes/font_size = 20
+placeholder_text = "Type a command..."
+expand_to_text_length = true
 
 [node name="sendBtn" type="Button" parent="Console/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -278,5 +281,5 @@ theme_override_font_sizes/font_size = 25
 [connection signal="last_command" from="Genesis" to="Console" method="_on_genesis_last_command"]
 [connection signal="resource" from="Genesis" to="." method="_on_genesis_resource"]
 [connection signal="wsize" from="Genesis" to="." method="_on_genesis_wsize"]
-[connection signal="focus_entered" from="Console/MarginContainer/VBoxContainer/HBoxContainer/CodeEdit" to="Console" method="_on_code_edit_focus_entered"]
-[connection signal="focus_exited" from="Console/MarginContainer/VBoxContainer/HBoxContainer/CodeEdit" to="Console" method="_on_code_edit_focus_exited"]
+[connection signal="focus_entered" from="Console/MarginContainer/VBoxContainer/HBoxContainer/Console" to="Console" method="_on_code_edit_focus_entered"]
+[connection signal="focus_exited" from="Console/MarginContainer/VBoxContainer/HBoxContainer/Console" to="Console" method="_on_code_edit_focus_exited"]

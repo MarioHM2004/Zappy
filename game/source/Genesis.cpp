@@ -215,8 +215,8 @@ godot::Genesis::Genesis()
                 auto p = _players.find(id);
 
                 if (p == _players.end()) {
-                    emit_signal("error",
-                        std::format("could not find {}", id).c_str());
+                    emit_signal(
+                        "error", std::format("could not find {}", id).c_str());
                     return;
                 }
 
@@ -284,8 +284,7 @@ godot::Genesis::Genesis()
 
                 if (t == _teams.end()) {
                     emit_signal("error",
-                        std::format("could not find team {}", team)
-                            .c_str());
+                        std::format("could not find team {}", team).c_str());
                     return;
                 }
 
@@ -301,8 +300,7 @@ godot::Genesis::Genesis()
                 auto player = _players.find(id);
                 if (player == _players.end()) {
                     emit_signal("error",
-                        std::format("could not find player {}", id)
-                            .c_str());
+                        std::format("could not find player {}", id).c_str());
                     return;
                 }
 
@@ -317,8 +315,7 @@ godot::Genesis::Genesis()
                 auto player = _players.find(id);
                 if (player == _players.end()) {
                     emit_signal("error",
-                        std::format("could not find player {}", id)
-                            .c_str());
+                        std::format("could not find player {}", id).c_str());
                     return;
                 }
 
@@ -546,8 +543,38 @@ void godot::Genesis::handle_console(String command)
 {
     CharString utf8_str = command.utf8();
     const char *c_str = utf8_str.get_data();
+    std::string str = std::string(c_str);
 
-    dispatch(std::string(c_str));
+    if (str.starts_with("!")) {
+        str = str.substr(1);
+        std::vector<std::string> response;
+        std::istringstream iss(str);
+
+        for (std::string token; std::getline(iss, token, ' ');) {
+            response.push_back(token);
+        }
+
+        if (response.empty()) {
+            return;
+        }
+
+        std::string command = response.at(0);
+
+        std::transform(command.begin(), command.end(), command.begin(),
+            [](unsigned char c) {
+                return std::tolower(c);
+            });
+
+        if (_callbacks.find(command) != _callbacks.end()) {
+            _callbacks.at(command)(response);
+        } else {
+            emit_signal("error",
+                std::format("unknown command: `{}`", command).c_str());
+            return;
+        }
+    }
+
+    dispatch(str);
 }
 
 void godot::Genesis::handle_focus(bool active)
