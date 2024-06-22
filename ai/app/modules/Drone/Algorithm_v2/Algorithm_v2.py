@@ -24,7 +24,7 @@ class Algorithm:
         self.take: str = "take"
         self.set: str = "set"
         self.incantation: str = "incantation"
-        self.objective: str = ""
+        self.objective: list[str] = []
 
     def __reset_scores(self, scores: dict[str, float]) -> dict[str, float]:
         """
@@ -54,19 +54,20 @@ class Algorithm:
         objects_in_view = dict()
         position_object = int
 
-        # scores = self.__reset_scores(scores)
-
-        # print(f"******************OBJECTIVE: {self.objective}")
-        if self.objective != "":
+        if len(self.objective) > 0:
             scores = self.__reset_scores(scores)
-            scores[self.objective] = 1
-            self.objective = ""
+            scores[self.objective[0]] = 1
+            self.objective.pop(0)
             return scores
+
         if self.__all_objects_recollected(payload):
             scores = self.__reset_scores(scores)
-            scores["fork"] = 1
+            if payload.get("last_cmd") == "incantation":
+                scores["forward"] = 1
+                return scores
+            scores["incantation"] = 1
             return scores
-        if self.objective == "" and payload.get("last_cmd") != "look":
+        if len(self.objective) == 0 and payload.get("last_cmd") != "look":
             scores["look"] = 1
             return scores
 
@@ -86,17 +87,30 @@ class Algorithm:
                         case 0:
                             str_take = "take " + item
                             scores[str_take] = 3
-                            self.objective = "right"
-                        case 1:
-                            scores["left"] = 1
-                            self.objective = "forward"
+                            self.objective.clear()
+                            return scores
                         case 2:
                             scores["forward"] = 2
                             str_take = "take " + item
-                            self.objective = str_take
+                            self.objective.clear()
+                            self.objective.append(str_take)
+                            return scores
+                        case 1:
+                            scores["left"] = 1
+                            self.objective.clear()
+                            self.objective.append("forward")
+                            self.objective.append("right")
+                            self.objective.append("forward")
+                            self.objective.append("take " + item)
+                            return scores
                         case 3:
                             scores["right"] = 1
-                            self.objective = "forward"
+                            self.objective.clear()
+                            self.objective.append("forward")
+                            self.objective.append("left")
+                            self.objective.append("forward")
+                            self.objective.append("take " + item)
+                            return scores
                     break
         return scores
 
