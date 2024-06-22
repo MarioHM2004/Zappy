@@ -18,13 +18,20 @@
 #include <time.h>
 
 incantation_t incantations[INCANTATION_NUM] = {
-    {1, 1, 1, 0, 0, 0, 0, 0},
-    {2, 2, 1, 1, 1, 0, 0, 0},
-    {3, 2, 2, 0, 1, 0, 2, 0},
-    {4, 4, 1, 1, 2, 0, 1, 0},
-    {5, 4, 1, 2, 1, 3, 0, 0},
-    {6, 6, 1, 2, 3, 0, 1, 0},
-    {7, 6, 2, 2, 2, 2, 2, 1}
+    { .level = 1,  .players = 1, .linemate = 1, .deraumere = 0, .sibur = 0,
+        .mendiane = 0, .phiras = 0, .thystame = 0 },
+    { .level = 2,  .players = 2, .linemate = 1, .deraumere = 1, .sibur = 1,
+        .mendiane = 0, .phiras = 0, .thystame = 0 },
+    { .level = 3,  .players = 2, .linemate = 2, .deraumere = 0, .sibur = 1,
+        .mendiane = 0, .phiras = 2, .thystame = 0 },
+    { .level = 4,  .players = 4, .linemate = 1, .deraumere = 1, .sibur = 2,
+        .mendiane = 0, .phiras = 1, .thystame = 0 },
+    { .level = 5,  .players = 4, .linemate = 1, .deraumere = 2, .sibur = 1,
+        .mendiane = 3, .phiras = 0, .thystame = 0 },
+    { .level = 6,  .players = 6, .linemate = 1, .deraumere = 2, .sibur = 3,
+        .mendiane = 0, .phiras = 1, .thystame = 0 },
+    { .level = 7,  .players = 6, .linemate = 2, .deraumere = 2, .sibur = 2,
+        .mendiane = 2, .phiras = 2, .thystame = 1 }
 };
 
 bool valid_incantation_tile(tile_t tile, incantation_t incantation)
@@ -58,47 +65,37 @@ static void remove_incantation_items(resources_t *resource, int level)
     change_resource(resource, THYSTAME, -incantation.thystame);
 }
 
-static void gui_incantation_action(server_t *server, player_list_t *player_list,
-    player_t *player, bool success)
-{
-    action_t *action = NULL;
-    incantation_action_t incantation = {
-        .players = player_list,
-        .state = success ? SUCCESSFUL : FAILED,
-    };
-
-    if (success) {
-        action = create_action(INCANTATION_COMPLETE, &incantation,
-            sizeof(incantation_action_t));
-        add_action(server->actions, action);
-    }
-    action = create_action(INCANTATION_END, &incantation,
-        sizeof(incantation_action_t));
-    add_action(server->actions, action);
-}
-
 static void incantation_action(server_t *server, player_list_t *player_list,
     player_t *player, bool success)
 {
+    event_completed_t event_completed = {.type = END_INCANTATION,
+        .player = player,
+        .response = formatstr(END_INCANTATION_RESPONSE, player->level),
+        .successful = success };
+    incantation_action_t inc_action = { .players = player_list,
+        .state = (success) ? SUCCESSFUL : FAILED };
     player_node_t *tmp = NULL;
-    action_t *ai_action = NULL;
 
-    if (!success) {
-        ai_action = create_event_completed_action(player, END_INCANTATION,
-            NULL, success);
-        add_action(server->actions, ai_action);
+    add_action(server->actions, create_action(EVENT_COMPLETED,
+        &event_completed, sizeof(event_completed_t)));
+    add_action(server->actions, create_action(INCANTATION_END,
+        &inc_action, sizeof(incantation_action_t)));
+    if (!success)
         return;
-    }
     LIST_FOREACH(tmp, player_list, entries) {
-        ai_action = create_event_completed_action(tmp->player, END_INCANTATION,
-            formatstr(END_INCANTATION_RESPONSE, tmp->player->level), success);
-        add_action(server->actions, ai_action);
+        if (tmp->player == player)
+            continue;
+        event_completed.player = tmp->player;
+        add_action(server->actions, create_action(EVENT_COMPLETED,
+            &event_completed, sizeof(event_completed_t)));
     }
-    gui_incantation_action(server, player_list, player, success);
+    add_action(server->actions, create_action(INCANTATION_COMPLETE,
+        &inc_action, sizeof(incantation_action_t)));
 }
 
 void incantation(server_t *server, player_t *player, event_t *event)
 {
+    log_debug("Incatation");
     tile_t tile = map_at(server->game->map, player->pos);
     player_list_t *players  = NULL;
     player_node_t *tmp = NULL;
@@ -119,6 +116,6 @@ void incantation(server_t *server, player_t *player, event_t *event)
     log_debug("%d: Incantation with %d players, level %d\n", player->number,
         player->number, get_player_list_size(players), player->level + 1);
     remove_incantation_items(tile.resource, player->level);
-    incantation_action(server, players, player, false);
-
+    incantation_action(server, players, player, true);
 }
+
