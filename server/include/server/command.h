@@ -55,6 +55,12 @@
     #define UNKNOWN_COMMAND "suc"
     #define INVALID_PARAMETERS "sbp"
 
+    // BONUS GUI
+    #define PLAYER_MOVE_REQUEST "player_move %d %d %d"
+    #define PLAYER_DIE_REQUEST "player_die %d"
+    #define INCANTATION_START_REQUEST "incantation_start %d"
+    #define INCANTATION_END_REQUEST "incantation_end %d"
+
     // AI
     #define FORWARD_REQUEST "forward"
     #define FORWARD_RESPONSE "ok"
@@ -125,6 +131,12 @@ void pdr_command(server_t *server, client_t *client,
     player_t *player, resource_e resource);
 void pgt_command(server_t *server, client_t *client,
     player_t *player, resource_e resource);
+
+// GUI BONUS
+void player_move(server_t *server, client_t *client, char *cmd);
+void player_die(server_t *server, client_t *client, char *cmd);
+void incantation_start_gui(server_t *server, client_t *client, char *cmd);
+void incantation_end_gui(server_t *server, client_t *client, char *cmd);
 
 // AI
 void forward_command(server_t *server, client_t *client, char *cmd);
