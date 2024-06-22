@@ -34,7 +34,7 @@
     #define PIN_RESPONSE "pin %d %d %d %d %d %d %d %d %d %d"
     #define PEX_RESPONSE "pex %d"
     #define PBC_RESPONSE "pbc %d %s"
-    #define PIC_RESPONSE "pic %d %d %s" /* %s == player_numbers */
+    #define PIC_RESPONSE "pic %d %d %d %s" /* %s == player_numbers */
     #define PIE_RESPONSE "pie %d %d %d"
     #define PFK_RESPONSE "pfk %d"
     #define PDR_RESPONSE "pdr %d %d"

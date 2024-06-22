@@ -9,7 +9,6 @@
 #include "game/game.h"
 #include "game/map.h"
 #include "game/player.h"
-#include "libs/log.h"
 #include "server/action.h"
 #include "server/command.h"
 #include <stdbool.h>
