@@ -19,7 +19,8 @@ namespace zappy
         SIBUR,
         MENDIANE,
         PHIRAS,
-        THYSTAME
+        THYSTAME,
+        EGGY,
     };
 
     class World {

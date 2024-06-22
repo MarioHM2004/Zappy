@@ -2,6 +2,7 @@ extends CharacterBody3D
 
 signal set_movement_state(_movement_state: MovementState)
 signal set_movement_direction(_movement_direction: Vector3)
+signal animation_restart(_animation_name: String)
 
 @export var movement_states: Dictionary
 @export var gravity: float = -9.8
@@ -11,7 +12,7 @@ signal set_movement_direction(_movement_direction: Vector3)
 var target_coordinate: Vector3
 var movement_direction: Vector3
 
-var override: bool = true
+var arrived = false
 
 func _ready():
 	set_movement_state.emit(movement_states["Idle"])
@@ -19,7 +20,8 @@ func _ready():
 func _process(_delta):
 	var current_position_xz = Vector3(global_transform.origin.x, 0, global_transform.origin.z)
 	var target_coordinate_xz = Vector3(target_coordinate.x, 0, target_coordinate.z)
-	if override and current_position_xz.distance_to(target_coordinate_xz) < 0.5:
+	if current_position_xz.distance_to(target_coordinate_xz) < 0.5 and not arrived:
+		arrived = true
 		set_movement_state.emit(movement_states["Idle"])
 
 func _physics_process(delta):
@@ -33,7 +35,7 @@ func is_movement_ongoing():
 	return abs(movement_direction.x) > 0 or abs(movement_direction.z) > 0
 
 func move_to_coordinate(coordinate: Vector3):
-	override = true
+	arrived = false
 	target_coordinate = coordinate
 	movement_direction = (coordinate - global_transform.origin).normalized()
 	movement_direction.y = 0
@@ -41,16 +43,20 @@ func move_to_coordinate(coordinate: Vector3):
 	set_movement_state.emit(movement_states["run"])
 
 func invocation_anim():
-	override = false
+	emit_signal("animation_restart", "Invocation")
 	set_movement_state.emit(movement_states["Invocation"])
 
 func death_anim():
-	override = false
+	emit_signal("animation_restart", "Death")
 	set_movement_state.emit(movement_states["Death"])
 	
 func idle_anim():
-	override = true
+	emit_signal("animation_restart", "Idle")
 	set_movement_state.emit(movement_states["Idle"])
+	
+func drop_anim():
+	emit_signal("animation_restart", "Drop")
+	set_movement_state.emit(movement_states["Drop"])
 
 func tint_one(path: String, principal: Color, dim: Color, shade: Color, light: Color):
 	var node: MeshInstance3D = get_node(path)

@@ -143,6 +143,7 @@ void zappy::Player::tint(godot::Color accent)
     _robot_body->call("tint", _main_body, _pupils, _accent, _eye_bg);
 }
 
+
 void zappy::Player::invocation(int level, bool init)
 {
     if (_state != PlayerState::PLAYER) {
@@ -166,8 +167,6 @@ void zappy::Player::invocation(int level, bool init)
 
     _main_body = get_accent_color(_level);
     _robot_body->call("tint", _main_body, _pupils, _accent, _eye_bg);
-
-    idle_anim();
 }
 
 void zappy::Player::invocation_anim() const
@@ -202,6 +201,17 @@ void zappy::Player::idle_anim() const
         return godot::UtilityFunctions::print("Method `idle_anim` not found");
     }
     _robot_body->call("idle_anim");
+}
+
+void zappy::Player::drop_anim() const
+{
+    if (_robot_body == nullptr) {
+        return godot::UtilityFunctions::print("Robot body is null");
+    }
+    if (!_robot_body->has_method("drop_anim")) {
+        return godot::UtilityFunctions::print("Method `drop_anim` not found");
+    }
+    _robot_body->call("drop_anim");
 }
 
 godot::Color zappy::Player::get_accent_color(std::size_t level)

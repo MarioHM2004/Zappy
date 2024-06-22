@@ -1,9 +1,13 @@
 extends Node
 
+@onready var animation_player: AnimationPlayer = $"../MeshRoot/3DGodotRobot/AnimationPlayer"
 @export var animation_tree: AnimationTree
 @export var robot: CharacterBody3D
 
 var tween: Tween
+
+func _on_animation_restart(_animation_name):
+	pass
 
 func _on_set_movement_state(_movement_state: MovementState):
 	if tween:

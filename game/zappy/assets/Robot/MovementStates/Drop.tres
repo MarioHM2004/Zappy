@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MovementState" load_steps=2 format=3 uid="uid://bumpqga4qd1ax"]
+
+[ext_resource type="Script" path="res://scripts/movement_state.gd" id="1_hnmjd"]
+
+[resource]
+script = ExtResource("1_hnmjd")
+id = 4
+movement_speed = 0.0
+acceleration = 6.0
+animation_speed = 1.0
