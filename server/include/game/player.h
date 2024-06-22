@@ -12,7 +12,6 @@
     #include "game.h"
     #include "game/map.h"
     #include "game/resources.h"
-#include "server/client.h"
     #include "server/socket.h"
     #include <sys/types.h>
 

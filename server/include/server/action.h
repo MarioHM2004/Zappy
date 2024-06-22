@@ -12,6 +12,7 @@
 #include "game/game.h"
 #include "game/player.h"
 #include "game/resources.h"
+#include "server/client.h"
 #include <sys/queue.h>
 
 typedef enum {
