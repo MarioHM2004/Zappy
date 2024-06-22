@@ -79,8 +79,6 @@ class Drone:
                     self.connect_nbr = int(payload)
                 case "eject":
                     print(f"eject: {payload}")
-                case "incantation":
-                    print(f"{payload}")
                 case "take":
                     self.inventory.add_item(payload, 1)
                     print(f"Inventory: {self.inventory}")
