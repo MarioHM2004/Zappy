@@ -181,6 +181,18 @@ void zappy::Player::invocation_anim() const
     _robot_body->call("invocation_anim");
 }
 
+void zappy::Player::egg_anim() const
+{
+    if (_robot_body == nullptr) {
+        return godot::UtilityFunctions::print("Robot body is null");
+    }
+    if (!_robot_body->has_method("egg_anim")) {
+        return godot::UtilityFunctions::print(
+            "Method `egg_anim` not found");
+    }
+    _robot_body->call("egg_anim");
+}
+
 void zappy::Player::death_anim() const
 {
     if (_robot_body == nullptr) {

@@ -203,8 +203,9 @@ godot::Genesis::Genesis()
         },
         {
             zappy::Constants::Commands::SERVER_KO,
-            [](const std::vector<std::string> &_response) {
-                UtilityFunctions::print("critical error: server KO");
+            [this](const std::vector<std::string> &_response) {
+                emit_signal(
+                    "error", "Critical error, server is not responding");
             },
         },
         {
@@ -329,14 +330,16 @@ godot::Genesis::Genesis()
         },
         {
             zappy::Constants::Commands::UNKNOWN_COMMAND,
-            [](const std::vector<std::string> &_response) {
-                UtilityFunctions::print("Unknown command");
+            [this](const std::vector<std::string> &_response) {
+                emit_signal(
+                    "error", "Unknown command, please check your input");
             },
         },
         {
             zappy::Constants::Commands::BAD_PARAMETER,
-            [](const std::vector<std::string> &_response) {
-                UtilityFunctions::print("Invalid argument");
+            [this](const std::vector<std::string> &_response) {
+                emit_signal(
+                    "error", "Invalid parameter, please check your input");
             },
         },
         {
@@ -348,7 +351,7 @@ godot::Genesis::Genesis()
                 emit_signal("resource",
                     zappy::World::resource_to_string(zappy::EGGY).c_str(),
                     player->get_position().x, player->get_position().z);
-                player->invocation_anim();
+                player->egg_anim();
             },
         },
         {
@@ -387,6 +390,24 @@ godot::Genesis::Genesis()
             zappy::Constants::Commands::EGG_LAID,
             [](const std::vector<std::string> &response) {
                 UtilityFunctions::print("egg laid");
+            },
+        },
+        {
+            zappy::Constants::Commands::SERVER_MESSAGE,
+            [](const std::vector<std::string> &response) {
+                std::string message = response.at(1);
+
+                UtilityFunctions::print(
+                    std::format("server message: `{}`", message).c_str());
+            },
+        },
+        {
+            zappy::Constants::Commands::BROADCAST,
+            [](const std::vector<std::string> &response) {
+                std::string message = response.at(1);
+
+                UtilityFunctions::print(
+                    std::format("broadcast: `{}`", message).c_str());
             },
         },
     };
@@ -505,8 +526,8 @@ void godot::Genesis::key_input(const Ref<InputEventKey> &key)
         case KEY_ESCAPE:
             Input::get_singleton()->set_mouse_mode(is_pressed
                     ? (key->get_keycode() == KEY_ESCAPE
-                              ? Input::MouseMode::MOUSE_MODE_VISIBLE
-                              : Input::MouseMode::MOUSE_MODE_HIDDEN)
+                            ? Input::MouseMode::MOUSE_MODE_VISIBLE
+                            : Input::MouseMode::MOUSE_MODE_HIDDEN)
                     : Input::get_singleton()->get_mouse_mode());
             break;
         default: break;

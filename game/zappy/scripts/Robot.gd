@@ -2,7 +2,6 @@ extends CharacterBody3D
 
 signal set_movement_state(_movement_state: MovementState)
 signal set_movement_direction(_movement_direction: Vector3)
-signal animation_restart(_animation_name: String)
 
 @export var movement_states: Dictionary
 @export var gravity: float = -9.8
@@ -13,16 +12,27 @@ var target_coordinate: Vector3
 var movement_direction: Vector3
 
 var arrived = false
+var run_state: MovementState = MovementState.new()
+var stopped_state: MovementState = MovementState.new()
 
 func _ready():
-	set_movement_state.emit(movement_states["Idle"])
+	run_state.movement_speed = 3
+	run_state.acceleration = 7
+	run_state.animation_speed = 1.15
+	stopped_state.movement_speed = 0
+	stopped_state.acceleration = 6
+	stopped_state.animation_speed = 1
+	set_movement_state.emit(stopped_state)
+	$"MeshRoot/3DGodotRobot/AnimationPlayer".play("Idle")
+	pass
 
 func _process(_delta):
 	var current_position_xz = Vector3(global_transform.origin.x, 0, global_transform.origin.z)
 	var target_coordinate_xz = Vector3(target_coordinate.x, 0, target_coordinate.z)
 	if current_position_xz.distance_to(target_coordinate_xz) < 0.5 and not arrived:
 		arrived = true
-		set_movement_state.emit(movement_states["Idle"])
+		$"MeshRoot/3DGodotRobot/AnimationPlayer".play("Idle")
+		set_movement_state.emit(stopped_state)
 
 func _physics_process(delta):
 	if !is_on_floor():
@@ -40,23 +50,24 @@ func move_to_coordinate(coordinate: Vector3):
 	movement_direction = (coordinate - global_transform.origin).normalized()
 	movement_direction.y = 0
 	set_movement_direction.emit(movement_direction)
-	set_movement_state.emit(movement_states["run"])
+	set_movement_state.emit(run_state)
+	$"MeshRoot/3DGodotRobot/AnimationPlayer".play("Run")
 
 func invocation_anim():
-	emit_signal("animation_restart", "Invocation")
-	set_movement_state.emit(movement_states["Invocation"])
+	$"MeshRoot/3DGodotRobot/AnimationPlayer".play("Kick")
 
 func death_anim():
-	emit_signal("animation_restart", "Death")
-	set_movement_state.emit(movement_states["Death"])
+	$"MeshRoot/3DGodotRobot/AnimationPlayer".play("Hurt")
 	
 func idle_anim():
-	emit_signal("animation_restart", "Idle")
-	set_movement_state.emit(movement_states["Idle"])
+	$"MeshRoot/3DGodotRobot/AnimationPlayer".play("Idle")
+	set_movement_state.emit(stopped_state)
 	
 func drop_anim():
-	emit_signal("animation_restart", "Drop")
-	set_movement_state.emit(movement_states["Drop"])
+	$"MeshRoot/3DGodotRobot/AnimationPlayer".play("Emote1")
+
+func egg_anim():
+	$"MeshRoot/3DGodotRobot/AnimationPlayer".play("Emote2")
 
 func tint_one(path: String, principal: Color, dim: Color, shade: Color, light: Color):
 	var node: MeshInstance3D = get_node(path)

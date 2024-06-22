@@ -1,16 +1,41 @@
-[gd_scene load_steps=26 format=3 uid="uid://dgto4y77lwlv6"]
+[gd_scene load_steps=17 format=3 uid="uid://dgto4y77lwlv6"]
 
 [ext_resource type="Script" path="res://scripts/Robot.gd" id="1_5n33w"]
-[ext_resource type="Resource" uid="uid://bt4mstbw5g22a" path="res://assets/Robot/MovementStates/Idle.tres" id="2_xkwfx"]
-[ext_resource type="Resource" uid="uid://p5otc2b8kpny" path="res://assets/Robot/MovementStates/run.tres" id="3_gh64p"]
+[ext_resource type="Script" path="res://scripts/movement_state.gd" id="2_7x727"]
 [ext_resource type="Script" path="res://scripts/movement_controller.gd" id="4_afwf3"]
-[ext_resource type="Resource" uid="uid://436oojo6rc1f" path="res://assets/Robot/MovementStates/invocation.tres" id="4_qsl60"]
-[ext_resource type="Resource" uid="uid://d3todgi72t6sg" path="res://assets/Robot/MovementStates/death.tres" id="5_rem3m"]
-[ext_resource type="Script" path="res://scripts/animation_controller.gd" id="5_rp5cb"]
-[ext_resource type="Resource" uid="uid://bumpqga4qd1ax" path="res://assets/Robot/MovementStates/Drop.tres" id="6_0v5u0"]
 [ext_resource type="PackedScene" uid="uid://ddq84xd1kwsxh" path="res://scenes/3d_godot_robot.tscn" id="6_haw36"]
 [ext_resource type="Shader" path="res://assets/color.gdshader" id="7_b7j6w"]
 [ext_resource type="Texture2D" uid="uid://c1oj7adfejcly" path="res://assets/Robot/3DGodotRobot_GodotPalette.png" id="8_jnnky"]
+
+[sub_resource type="Resource" id="Resource_opcc7"]
+script = ExtResource("2_7x727")
+movement_speed = 0.0
+acceleration = 6.0
+animation_speed = 1.0
+
+[sub_resource type="Resource" id="Resource_xrh67"]
+script = ExtResource("2_7x727")
+movement_speed = 0.0
+acceleration = 6.0
+animation_speed = 1.0
+
+[sub_resource type="Resource" id="Resource_5c5vl"]
+script = ExtResource("2_7x727")
+movement_speed = 0.0
+acceleration = 6.0
+animation_speed = 1.0
+
+[sub_resource type="Resource" id="Resource_we5wy"]
+script = ExtResource("2_7x727")
+movement_speed = 0.0
+acceleration = 6.0
+animation_speed = 1.0
+
+[sub_resource type="Resource" id="Resource_nri3o"]
+script = ExtResource("2_7x727")
+movement_speed = 3.0
+acceleration = 7.0
+animation_speed = 1.15
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dthk3"]
 
@@ -42,74 +67,23 @@ shader_parameter/OLDCOLORS = PackedColorArray(0.270588, 0.552941, 0.752941, 1, 0
 shader_parameter/NEWCOLORS = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1)
 shader_parameter/texture_albedo = ExtResource("8_jnnky")
 
-[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_sbk1e"]
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_d8ocd"]
-animation = &"Idle"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ivrrh"]
-animation = &"Idle"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_sgs6v"]
-animation = &"Run"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_n1wet"]
-animation = &"Emote2"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_30cn8"]
-animation = &"Hurt"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_habjc"]
-animation = &"Emote1"
-
-[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_6svfc"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_d8ocd")
-blend_point_0/pos = -1.0
-blend_point_1/node = SubResource("AnimationNodeAnimation_ivrrh")
-blend_point_1/pos = 0.0
-blend_point_2/node = SubResource("AnimationNodeAnimation_sgs6v")
-blend_point_2/pos = 1.0
-blend_point_3/node = SubResource("AnimationNodeAnimation_n1wet")
-blend_point_3/pos = 2.0
-blend_point_4/node = SubResource("AnimationNodeAnimation_30cn8")
-blend_point_4/pos = 3.0
-blend_point_5/node = SubResource("AnimationNodeAnimation_habjc")
-blend_point_5/pos = 4.0
-min_space = 0.0
-max_space = 4.0
-snap = 1.0
-
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_yl60q"]
-graph_offset = Vector2(-58.4912, 65.0816)
-nodes/movement_anim_speed/node = SubResource("AnimationNodeTimeScale_sbk1e")
-nodes/movement_anim_speed/position = Vector2(400, 120)
-nodes/movement_blend/node = SubResource("AnimationNodeBlendSpace1D_6svfc")
-nodes/movement_blend/position = Vector2(180, 140)
-nodes/output/position = Vector2(800, 160)
-node_connections = [&"movement_anim_speed", 0, &"movement_blend", &"output", 0, &"movement_anim_speed"]
-
 [node name="RobotScene" type="Node3D"]
 
 [node name="Robot" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 1.49012e-07, 0, 1, 0, -1.49012e-07, 0, 1, 0, 0, 0)
 script = ExtResource("1_5n33w")
 movement_states = {
-"Death": ExtResource("5_rem3m"),
-"Drop": ExtResource("6_0v5u0"),
-"Idle": ExtResource("2_xkwfx"),
-"Invocation": ExtResource("4_qsl60"),
-"run": ExtResource("3_gh64p")
+"Death": SubResource("Resource_opcc7"),
+"Drop": SubResource("Resource_xrh67"),
+"Idle": SubResource("Resource_5c5vl"),
+"Invocation": SubResource("Resource_we5wy"),
+"run": SubResource("Resource_nri3o")
 }
 
 [node name="MovementController" type="Node" parent="Robot" node_paths=PackedStringArray("robot", "mesh_root")]
 script = ExtResource("4_afwf3")
 robot = NodePath("..")
 mesh_root = NodePath("../MeshRoot")
-
-[node name="AnimationController" type="Node" parent="Robot" node_paths=PackedStringArray("animation_tree", "robot")]
-script = ExtResource("5_rp5cb")
-animation_tree = NodePath("../MeshRoot/AnimationTree")
-robot = NodePath("..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Robot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -118,33 +92,6 @@ shape = SubResource("CapsuleShape3D_dthk3")
 [node name="MeshRoot" type="Node3D" parent="Robot"]
 
 [node name="3DGodotRobot" parent="Robot/MeshRoot" instance=ExtResource("6_haw36")]
-
-[node name="Skeleton3D" parent="Robot/MeshRoot/3DGodotRobot/RobotArmature" index="0"]
-bones/0/position = Vector3(-7.26837e-17, 0.683622, 0.0298551)
-bones/0/rotation = Quaternion(0.0149092, 1.19196e-07, 1.77731e-09, 0.999889)
-bones/1/rotation = Quaternion(0.045866, -1.51912e-14, 1.09353e-08, 0.998948)
-bones/4/position = Vector3(-3.65722e-16, 0.151501, -0.011741)
-bones/4/rotation = Quaternion(0.0443503, 0.00252906, 0.00806274, 0.99898)
-bones/5/rotation = Quaternion(0.00821238, -4.94291e-14, -1.95798e-09, 0.999966)
-bones/7/position = Vector3(7.44409e-08, 0.540609, 0.312228)
-bones/8/position = Vector3(-0.04301, 0.0397857, 0.424345)
-bones/8/rotation = Quaternion(0.0422529, -0.0265183, -0.0408603, 0.997919)
-bones/9/position = Vector3(0.267321, 0.0764983, -0.028224)
-bones/9/rotation = Quaternion(-0.319589, -0.263372, -0.651728, 0.635412)
-bones/10/rotation = Quaternion(-0.210117, 0.689206, -0.30314, 0.62366)
-bones/11/rotation = Quaternion(-0.108469, -0.0934466, 0.0186508, 0.989522)
-bones/12/rotation = Quaternion(0.0209349, 0.0170217, -0.0176714, 0.99948)
-bones/13/position = Vector3(-0.267321, 0.0764983, -0.028224)
-bones/13/rotation = Quaternion(-0.665643, 0.606017, 0.312722, 0.303096)
-bones/14/rotation = Quaternion(-0.205538, -0.691435, 0.298514, 0.62495)
-bones/15/rotation = Quaternion(-0.101057, 0.0933044, -0.0193499, 0.990307)
-bones/16/rotation = Quaternion(0.0209349, -0.0170217, 0.0176714, 0.99948)
-bones/17/rotation = Quaternion(0.944981, 0.0683835, -0.0640775, 0.313415)
-bones/18/rotation = Quaternion(0.249628, 0.00871771, 0.024974, 0.967981)
-bones/19/rotation = Quaternion(-0.608714, 0.00331542, -0.00479122, 0.793368)
-bones/21/rotation = Quaternion(0.944981, -0.0683835, 0.0640776, 0.313415)
-bones/22/rotation = Quaternion(0.249628, -0.00871766, -0.0249741, 0.967981)
-bones/23/rotation = Quaternion(-0.608714, -0.00331545, 0.00479126, 0.793369)
 
 [node name="Bottom" parent="Robot/MeshRoot/3DGodotRobot/RobotArmature/Skeleton3D" index="0"]
 surface_material_override/0 = SubResource("ShaderMaterial_jxlq4")
@@ -159,16 +106,7 @@ surface_material_override/1 = SubResource("ShaderMaterial_vi8qr")
 [node name="Llimbs and head" parent="Robot/MeshRoot/3DGodotRobot/RobotArmature/Skeleton3D" index="3"]
 surface_material_override/0 = SubResource("ShaderMaterial_phu66")
 
-[node name="AnimationTree" type="AnimationTree" parent="Robot/MeshRoot"]
-root_node = NodePath("../3DGodotRobot")
-tree_root = SubResource("AnimationNodeBlendTree_yl60q")
-anim_player = NodePath("../3DGodotRobot/AnimationPlayer")
-parameters/movement_anim_speed/scale = 1.0
-parameters/movement_blend/blend_position = 3.77592
-
-[connection signal="animation_restart" from="Robot" to="Robot/AnimationController" method="_on_animation_restart"]
 [connection signal="set_movement_direction" from="Robot" to="Robot/MovementController" method="_on_set_movement_direction"]
 [connection signal="set_movement_state" from="Robot" to="Robot/MovementController" method="_on_set_movement_state"]
-[connection signal="set_movement_state" from="Robot" to="Robot/AnimationController" method="_on_set_movement_state"]
 
 [editable path="Robot/MeshRoot/3DGodotRobot"]
