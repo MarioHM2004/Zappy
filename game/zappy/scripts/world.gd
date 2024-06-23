@@ -148,7 +148,7 @@ func create_sibur(x, y):
 func create_thystame(x, y):
 	var thystame_scene = preload ("res://scenes/sprites/thystame.tscn")
 	var thystame_instance = thystame_scene.instantiate()
-	thystame_instance.position = Vector3(x - offset, 1.7, y - offset)
+	thystame_instance.position = Vector3(x, 1.7, y - offset)
 	thystame_instance.scale = Vector3(0.5, 0.5, 0.5)
 	var static_body = StaticBody3D.new()
 
@@ -164,10 +164,10 @@ func create_thystame(x, y):
 	map["thystame"][str(x) + "," + str(y)] = thystame_instance
 	
 func create_deraumere(x, y):
-	var thystame_scene = preload ("res://scenes/sprites/deraumere.tscn")
-	var thystame_instance = thystame_scene.instantiate()
-	thystame_instance.position = Vector3(x - offset, 1.7, y - offset)
-	thystame_instance.scale = Vector3(0.5, 0.5, 0.5)
+	var deraumere_scene = preload ("res://scenes/sprites/deraumere.tscn")
+	var deraumere_instance = deraumere_scene.instantiate()
+	deraumere_instance.position = Vector3(x - offset, 1.7, y - offset)
+	deraumere_instance.scale = Vector3(0.5, 0.5, 0.5)
 	var static_body = StaticBody3D.new()
 
 	var box_shape = BoxShape3D.new()
@@ -176,10 +176,10 @@ func create_deraumere(x, y):
 	static_body.translate(Vector3(0, 0, 0))
 	static_body.scale = Vector3(1, 1, 1)
 
-	thystame_instance.add_child(static_body)
+	deraumere_instance.add_child(static_body)
 	
-	add_child(thystame_instance)
-	map["deraumere"][str(x) + "," + str(y)] = thystame_instance
+	add_child(deraumere_instance)
+	map["deraumere"][str(x) + "," + str(y)] = deraumere_instance
 
 func create_world(x, y):
 	for i in range(y):
