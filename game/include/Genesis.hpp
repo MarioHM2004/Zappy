@@ -71,6 +71,7 @@ namespace godot
         void handle_settings(String address, String port);
         void handle_console(String command);
         void handle_focus(bool active);
+        void execute(const std::string &message);
     };
 } // namespace godot
 

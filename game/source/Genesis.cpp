@@ -287,7 +287,7 @@ godot::Genesis::Genesis()
                 CHECK_ARGCOUNT(END_GAME, response.size());
                 std::string team = response.at(1);
 
-                if (team == "GRAPHIC") {
+                if (team == zappy::Constants::TEAM_NAME) {
                     emit_signal("gameover");
                     for (auto &team : _teams) {
                         team.second->clear_players();
@@ -643,32 +643,7 @@ void godot::Genesis::handle_console(String command)
     std::string str = std::string(c_str);
 
     if (str.starts_with("!")) {
-        str = str.substr(1);
-        std::vector<std::string> response;
-        std::istringstream iss(str);
-
-        for (std::string token; std::getline(iss, token, ' ');) {
-            response.push_back(token);
-        }
-
-        if (response.empty()) {
-            return;
-        }
-
-        std::string command = response.at(0);
-
-        std::transform(command.begin(), command.end(), command.begin(),
-            [](unsigned char c) {
-                return std::tolower(c);
-            });
-
-        if (_callbacks.find(command) != _callbacks.end()) {
-            _callbacks.at(command)(response);
-        } else {
-            emit_signal("error",
-                std::format("unknown command: `{}`", command).c_str());
-        }
-
+        execute(str.substr(1));
         return;
     }
 
@@ -699,31 +674,36 @@ void godot::Genesis::tick()
     std::string message;
 
     while (_socket->pop_message(message)) {
-        std::istringstream iss(message);
-        std::vector<std::string> response;
+        execute(message);
+    }
+}
 
-        for (std::string token; std::getline(iss, token, ' ');) {
-            response.push_back(token);
-        }
+void godot::Genesis::execute(const std::string &message)
+{
+    std::istringstream iss(message);
+    std::vector<std::string> response;
 
-        if (response.empty()) {
-            continue;
-        }
+    for (std::string token; std::getline(iss, token, ' ');) {
+        response.push_back(token);
+    }
 
-        emit_signal("last_command", message.c_str());
+    if (response.empty()) {
+        return;
+    }
 
-        std::string command = response.at(0);
+    emit_signal("last_command", message.c_str());
 
-        std::transform(command.begin(), command.end(), command.begin(),
-            [](unsigned char c) {
-                return std::tolower(c);
-            });
+    std::string command = response.at(0);
 
-        if (_callbacks.find(command) != _callbacks.end()) {
-            _callbacks.at(command)(response);
-        } else {
-            emit_signal("error",
-                std::format("unknown command: `{}`", command).c_str());
-        }
+    std::transform(
+        command.begin(), command.end(), command.begin(), [](unsigned char c) {
+            return std::tolower(c);
+        });
+
+    if (_callbacks.find(command) != _callbacks.end()) {
+        _callbacks.at(command)(response);
+    } else {
+        emit_signal(
+            "error", std::format("unknown command: `{}`", command).c_str());
     }
 }

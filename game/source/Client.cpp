@@ -93,15 +93,15 @@ void zappy::TCPSocket::poll_socket()
         message += std::string(buffer, n);
 
         auto pos = std::find(message.begin(), message.end(), '\n');
+
+        _mutex->lock();
         while (pos != message.end()) {
             std::string token = message.substr(0, pos - message.begin());
-            _mutex->lock();
             _message_queue.push(token);
-            _mutex->unlock();
             message.erase(message.begin(), pos + 1);
             pos = std::find(message.begin(), message.end(), '\n');
         }
-
+        _mutex->unlock();
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
@@ -112,7 +112,6 @@ void zappy::TCPSocket::send_message(const std::string &msg)
         return godot::UtilityFunctions::print(std::strerror(errno));
     }
 
-    // apend \n to the message
     std::string message = msg + "\n";
 
     int n = write(_sockfd, message.c_str(), message.size());

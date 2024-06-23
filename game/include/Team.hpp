@@ -12,7 +12,6 @@ namespace zappy
     class Team {
       private:
         std::string _name;
-        std::size_t _count = 6; // TODO(jabolo): Use the correct value
         std::vector<std::shared_ptr<Player>> _players;
         godot::Color _color;
 
@@ -20,10 +19,8 @@ namespace zappy
         Team(std::string name);
 
         std::string get_name() const;
-        std::size_t get_max_count() const;
         std::size_t get_size() const;
 
-        void set_max_count(std::size_t count);
         const Player &get_player_at(std::size_t index);
         void add_player(std::shared_ptr<zappy::Player> player);
         void remove_player(std::size_t id);
