@@ -4,16 +4,14 @@
 ## File description:
 ## Drone.py
 ##
-import socket
-
 import app.const as const
-# import app.modules.Drone.Algorithm.Algorithm as algo
-import app.modules.Drone.Algorithm_v2.Algorithm_v2 as algo
+import app.modules.Drone.Algorithm_v2.Algorithm_v2 as algo2
+import app.modules.Drone.Algorithm_v3.Algorithm_v3 as algo3
 import app.modules.Drone.Inventory.Inventory as inv
 
 
 class Drone:
-    def __init__(self, team: str) -> None:
+    def __init__(self, team: str, id: int) -> None:
         self.life: int = 10
         self.team: str = team
         self.incantation_lvl: int = 1
@@ -23,7 +21,10 @@ class Drone:
         self.y_position: int = 0
         self.orientation: int = 0
         self.connect_nbr: int = 0
-        self.algo: algo.Algorithm = algo.Algorithm()
+        if id == 1:
+            self.algo: algo2.Algorithm = algo2.Algorithm()
+        elif id == 2:
+            self.algo: algo3.Algorithm = algo3.Algorithm()
         self.inventory: inv.Inventory = inv.Inventory()
         self.last_cmd: str = ""
 
@@ -46,7 +47,7 @@ class Drone:
             "orientation": self.orientation,
             "connect_nbr": self.connect_nbr,
             "inventory": self.inventory,
-            "last_cmd": self.last_cmd
+            "last_cmd": self.last_cmd,
         }
 
     def parse_payload(self, cmd: str, payload: str) -> None:
@@ -72,7 +73,7 @@ class Drone:
                 self.frozen = False
             match cmd:
                 case "look":
-                    self.view = payload.split(',')
+                    self.view = payload.split(",")
                 case "inventory":
                     self.inventory.update_inventory(payload)
                 case "connect_nbr":
@@ -85,7 +86,6 @@ class Drone:
         except Exception as e:
             print(f"Error parsing payload: {e}")
 
-
     def take_decision(self) -> str:
         """
         Decides what action (command) to take.
@@ -94,13 +94,19 @@ class Drone:
             str: The action (command) taken by the drone.
         """
 
-        print(f"**info [Drone {self.team} at ({self.x_position}, {self.y_position} - orientation: {self.orientation}) with {self.life} life, {self.incantation_lvl} elevation, {self.connect_nbr} connect nbr and Inventory: {self.inventory}]\n")
+        # print(f"**info [Drone {self.team} at ({self.x_position}, {self.y_position} - orientation: {self.orientation}) with {self.life} life, {self.incantation_lvl} elevation, {self.connect_nbr} connect nbr and Inventory: {self.inventory}]\n")
 
         action: str | None = None
 
         action = self.algo.choose_decision(self.__build_algo_payload())
 
-        if action is None or action not in const.CMD_FUNC and action.startswith("broadcast") is False and action.startswith("take") is False and action.startswith("set") is False:
+        if (
+            action is None
+            or action not in const.CMD_FUNC
+            and action.startswith("broadcast") is False
+            and action.startswith("take") is False
+            and action.startswith("set") is False
+        ):
             return "ko"
         if len(self.last_cmd) == 0:
             self.last_cmd = "look"

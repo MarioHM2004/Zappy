@@ -7,9 +7,9 @@
 import argparse
 import socket
 
+import app.const as const
 import app.modules.Drone.Drone as d
 import app.modules.Drone.DroneHelper as dh
-import app.const as const
 
 
 class AIManager:
@@ -25,6 +25,7 @@ class AIManager:
         self.parser = argparse.ArgumentParser(add_help=False)
         self.parser.add_argument("-help", action="help", help="Show this help message and exit")
         self.parser.add_argument("-p", type=int, required=True, help="Port number")
+        self.parser.add_argument("-ai", type=int, required=True, help="AI identifier", choices=[1, 2])
         self.parser.add_argument("-n", type=str, required=True, help="Name of the team")
         self.parser.add_argument("-h", type=str, default="localhost", help="Name of the machine; localhost by default")
         # self.frequency: int = frequency
@@ -34,7 +35,7 @@ class AIManager:
         self.port = args.p
         self.host = args.h
         self.team = args.n
-        self.drone = d.Drone(self.team)
+        self.drone = d.Drone(self.team, args.ai)
 
     def send_data(self, socket: socket.socket, data: str) -> None:
         to_send: str = f"{data}\n"
@@ -91,7 +92,6 @@ class AIManager:
             self.drone.connect_nbr = int(connect_nbr)
             self.map_size.extend([int(map[0]), int(map[1])])
 
-
         except Exception as e:
             print(f"-- Failed to connect to server: {host}:{port}, {e}")
         return socket_cl
@@ -127,36 +127,36 @@ class AIManager:
 
             # incantation
             if self.drone.frozen is True:
-                print("___test: Drone is frozen")
+                print("Drone is frozen")
                 aux = self.recv_data(socket=self.socket)
                 if aux.startswith("current level"):
                     self.drone.frozen = False
-                    print(f"___test: Drone was level: {self.drone.incantation_lvl}")
+                    print(f"Drone was level: {self.drone.incantation_lvl}")
                     self.drone.incantation_lvl = int(aux.split()[2])
-                    print(f"___test: Drone is now level: {self.drone.incantation_lvl}")
+                    print(f"Drone is now level: {self.drone.incantation_lvl}")
                 return True
 
             if cmd == "ko":
                 return False
 
-            print(f"[CMD]: {cmd}")
+            print(f"[CMD]: \033[36m{cmd}\033[0m")
             # if eject, we need to check if egg is ejected
             if cmd == "eject":
                 if self.execute_cmd(cmd=cmd) == "eject_failed":
-                    print("___test: eject failed")
+                    print("[INFO]: eject failed")
                     return True
                 elif self.execute_cmd(cmd="inventory") == "ko":
                     return False
                 return True
             elif cmd == "incantation":
                 if self.execute_cmd(cmd=cmd) == "incantation_failed":
-                    print("___test: incantation failed")
+                    print("[INFO]: incantation failed")
                     return True
                 return True
             elif cmd.startswith("take"):
                 aux = self.execute_cmd(cmd=cmd)
                 if aux == "take_failed":
-                    print("___test: take failed")
+                    print("[INFO]: take failed")
                     return True
                 if aux == "ko":
                     return False
@@ -164,7 +164,7 @@ class AIManager:
             elif cmd.startswith("set"):
                 aux = self.execute_cmd(cmd=cmd)
                 if aux == "set_failed":
-                    print("___test: set failed")
+                    print("[INFO]: set failed")
                     return True
                 if aux == "ko":
                     return False
@@ -173,12 +173,15 @@ class AIManager:
                 return False
 
         except Exception as e:
+            import traceback
+
             print(f"-- Error run: {e}")
+            traceback.print_exc()
             return False
         return True
 
     def handle_data(self, data: str) -> bool:
-        print(f"___test: Data: {data}")
+        # print(f"___test: Data: {data}")
         if data.startswith("dead"):
             return self.handle_pdi(data=data)
         return True

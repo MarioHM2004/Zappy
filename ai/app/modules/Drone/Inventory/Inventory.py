@@ -62,31 +62,31 @@ class Inventory:
     def update_inventory(self, inventory: list[str]) -> None:
         try:
             # clear inventory (remove [ and ])
-            if inventory[0] == '[':
+            if inventory[0] == "[":
                 inventory = inventory[1:]
-            if inventory[len(inventory) - 1] == ']':
+            if inventory[len(inventory) - 1] == "]":
                 inventory = inventory[:-1]
-            inventory = inventory.split(',')
+            inventory = inventory.split(",")
 
             for item in inventory:
-                #remove first space if exists
-                if item[0] == ' ':
+                # remove first space if exists
+                if item[0] == " ":
                     item = item[1:]
 
                 if item.startswith("food"):
-                    self.food = int(item[len("food"):])
+                    self.food = int(item[len("food") :])
                 elif item.startswith("linemate"):
-                    self.linemate = int(item[len("linemate"):])
+                    self.linemate = int(item[len("linemate") :])
                 elif item.startswith("deraumere"):
-                    self.deraumere = int(item[len("deraumere"):])
+                    self.deraumere = int(item[len("deraumere") :])
                 elif item.startswith("sibur"):
-                    self.sibur = int(item[len("sibur"):])
+                    self.sibur = int(item[len("sibur") :])
                 elif item.startswith("mendiane"):
-                    self.mendiane = int(item[len("mendiane"):])
+                    self.mendiane = int(item[len("mendiane") :])
                 elif item.startswith("phiras"):
-                    self.phiras = int(item[len("phiras"):])
+                    self.phiras = int(item[len("phiras") :])
                 elif item.startswith("thystame"):
-                    self.thystame = int(item[len("thystame"):])
+                    self.thystame = int(item[len("thystame") :])
 
         except Exception as e:
             print(f"Error updating inventory: {e}")

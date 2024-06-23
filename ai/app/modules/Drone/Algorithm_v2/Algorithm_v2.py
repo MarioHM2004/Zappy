@@ -113,7 +113,7 @@ class Algorithm:
                     break
         return scores
 
-    def __position_object(self, object:str, objects_in_view:List[str]) -> int:
+    def __position_object(self, object: str, objects_in_view: List[str]) -> int:
         """
         Return the position of the object in the view.
 
@@ -217,5 +217,7 @@ class Algorithm:
         # return "forward" # Testing purposes
 
     def display_payload(self, payload: const.AlgoPayload) -> None:
-        print(f"PAYLOAD: life={payload.get('life')}, team={payload.get('team')}, elevation={payload.get('elevation')}, view={payload.get('view')}, frozen={payload.get('frozen')}, x_position={payload.get('x_position')}, y_position={payload.get('y_position')}, orientation={payload.get('orientation')}, connect_nbr={payload.get('connect_nbr')},")
+        print(
+            f"PAYLOAD: life={payload.get('life')}, team={payload.get('team')}, elevation={payload.get('elevation')}, view={payload.get('view')}, frozen={payload.get('frozen')}, x_position={payload.get('x_position')}, y_position={payload.get('y_position')}, orientation={payload.get('orientation')}, connect_nbr={payload.get('connect_nbr')},"
+        )
         print(f"inventory=[{payload.get('inventory')}]")
