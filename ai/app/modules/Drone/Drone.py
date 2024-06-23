@@ -14,7 +14,7 @@ import app.modules.Drone.Inventory.Inventory as inv
 
 
 class Drone:
-    def __init__(self, team: str) -> None:
+    def __init__(self, team: str, id: int) -> None:
         self.life: int = 10
         self.team: str = team
         self.incantation_lvl: int = 1
@@ -24,9 +24,10 @@ class Drone:
         self.y_position: int = 0
         self.orientation: int = 0
         self.connect_nbr: int = 0
-        # self.algo2: algo2.Algorithm = algo2.Algorithm() # alba
-        # self.algo3: algo3.Algorithm = algo3.Algorithm() # pau
-        self.algo: algo3.Algorithm = algo3.Algorithm()
+        if id == 1:
+            self.algo: algo2.Algorithm = algo2.Algorithm()
+        elif id == 2:
+            self.algo: algo3.Algorithm = algo3.Algorithm()
         self.inventory: inv.Inventory = inv.Inventory()
         self.last_cmd: str = ""
 

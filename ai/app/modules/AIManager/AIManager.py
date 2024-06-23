@@ -25,6 +25,7 @@ class AIManager:
         self.parser = argparse.ArgumentParser(add_help=False)
         self.parser.add_argument("-help", action="help", help="Show this help message and exit")
         self.parser.add_argument("-p", type=int, required=True, help="Port number")
+        self.parser.add_argument("-ai", type=int, required=True, help="AI identifier", choices=[1, 2])
         self.parser.add_argument("-n", type=str, required=True, help="Name of the team")
         self.parser.add_argument("-h", type=str, default="localhost", help="Name of the machine; localhost by default")
         # self.frequency: int = frequency
@@ -34,7 +35,7 @@ class AIManager:
         self.port = args.p
         self.host = args.h
         self.team = args.n
-        self.drone = d.Drone(self.team)
+        self.drone = d.Drone(self.team, args.ai)
 
     def send_data(self, socket: socket.socket, data: str) -> None:
         to_send: str = f"{data}\n"

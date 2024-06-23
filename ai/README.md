@@ -5,10 +5,11 @@ An ai, created in Python, that simulates drone's mind.
 ## Usage
 
 ```sh
-USAGE: ./zappy_ai -p port -n team_name [-h host]
+USAGE: ./zappy_ai -p port -n team_name -ai id [-h host]
     port        is the port number
     team_name   is the name of the team
     host        is the name of the machine; localhost   by default
+    id          ai identifier, 1 for first algorithm 2 for second algorithm
 ```
 
 ## Example usage
