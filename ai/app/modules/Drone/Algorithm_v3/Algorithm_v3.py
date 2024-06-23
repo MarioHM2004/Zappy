@@ -25,12 +25,12 @@ def wants_to_elevate(payload: const.AlgoPayload) -> bool:
     elevation: int = payload.get("elevation")
     sinventory: inv.Inventory = payload.get("sinventory")
     connect_nbr: int = payload.get("connect_nbr")
-    linemate: int = sinventory.get_item("linemate")
-    deraumere: int = sinventory.get_item("deraumere")
-    sibur: int = sinventory.get_item("sibur")
-    mendiane: int = sinventory.get_item("mendiane")
-    phiras: int = sinventory.get_item("phiras")
-    thystame: int = sinventory.get_item("thystame")
+    linemate: int = sinventory.getInventory("linemate")
+    deraumere: int = sinventory.getInventory("deraumere")
+    sibur: int = sinventory.getInventory("sibur")
+    mendiane: int = sinventory.getInventory("mendiane")
+    phiras: int = sinventory.getInventory("phiras")
+    thystame: int = sinventory.getInventory("thystame")
 
     match elevation:
         # No case '1' cuz no additional users needed
@@ -138,20 +138,6 @@ class Algorithm:
             view_player_weight_mult=1,
         )
         self.objective: list[str] = []
-
-    def __reset_scores(self, scores: dict[str, float]) -> dict[str, float]:
-        """
-        Reset the scores of each decision.
-
-        Args:
-            scores (dict[str, float]): Scores to be reset.
-
-        Returns:
-            dict[str, float]: Dictionary with the name and scores of each decision.
-        """
-        for key in scores:
-            scores[key] = 0
-        return scores
 
     def __calculate_scores(self, payload: const.AlgoPayload) -> dict[str, float]:
         """
