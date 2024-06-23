@@ -85,3 +85,6 @@ func tint(principal: Color, dim: Color, shade: Color, light: Color):
 	
 	for path in paths:
 		tint_one(path, principal, dim, shade, light)
+
+func rotate_to(target):
+	set_movement_direction.emit(target);
