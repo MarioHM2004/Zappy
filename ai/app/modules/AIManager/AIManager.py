@@ -127,36 +127,36 @@ class AIManager:
 
             # incantation
             if self.drone.frozen is True:
-                print("___test: Drone is frozen")
+                print("Drone is frozen")
                 aux = self.recv_data(socket=self.socket)
                 if aux.startswith("current level"):
                     self.drone.frozen = False
-                    print(f"___test: Drone was level: {self.drone.incantation_lvl}")
+                    print(f"Drone was level: {self.drone.incantation_lvl}")
                     self.drone.incantation_lvl = int(aux.split()[2])
-                    print(f"___test: Drone is now level: {self.drone.incantation_lvl}")
+                    print(f"Drone is now level: {self.drone.incantation_lvl}")
                 return True
 
             if cmd == "ko":
                 return False
 
-            print(f"[CMD]: {cmd}")
+            print(f"[CMD]: \033[36m{cmd}\033[0m")
             # if eject, we need to check if egg is ejected
             if cmd == "eject":
                 if self.execute_cmd(cmd=cmd) == "eject_failed":
-                    print("___test: eject failed")
+                    print("[INFO]: eject failed")
                     return True
                 elif self.execute_cmd(cmd="inventory") == "ko":
                     return False
                 return True
             elif cmd == "incantation":
                 if self.execute_cmd(cmd=cmd) == "incantation_failed":
-                    print("___test: incantation failed")
+                    print("[INFO]: incantation failed")
                     return True
                 return True
             elif cmd.startswith("take"):
                 aux = self.execute_cmd(cmd=cmd)
                 if aux == "take_failed":
-                    print("___test: take failed")
+                    print("[INFO]: take failed")
                     return True
                 if aux == "ko":
                     return False
@@ -164,7 +164,7 @@ class AIManager:
             elif cmd.startswith("set"):
                 aux = self.execute_cmd(cmd=cmd)
                 if aux == "set_failed":
-                    print("___test: set failed")
+                    print("[INFO]: set failed")
                     return True
                 if aux == "ko":
                     return False
@@ -173,7 +173,10 @@ class AIManager:
                 return False
 
         except Exception as e:
+            import traceback
+
             print(f"-- Error run: {e}")
+            traceback.print_exc()
             return False
         return True
 

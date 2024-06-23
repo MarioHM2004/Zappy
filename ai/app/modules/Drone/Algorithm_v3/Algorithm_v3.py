@@ -4,7 +4,7 @@
 ## File description:
 ## Algorithm_v3.py
 ##
-from typing import List
+import random
 
 import app.const as const
 import app.modules.Drone.Algorithm_v3.AlgorithmV3Helper as ah
@@ -68,18 +68,18 @@ def wants_to_elevate(payload: const.AlgoPayload) -> bool:
 class Algorithm:
     def __init__(self) -> None:
         self.move: ah.MoveDecision = ah.MoveDecision(
-            life_weight_mult=1.5,
-            elevation_weight_mult=1,
-            view_food_weight_mult=1,
-            view_mineral_weight_mult=1,
-            view_player_weight_mult=2,
+            life_weight_mult=0.0,
+            elevation_weight_mult=1.2,
+            view_food_weight_mult=0.0,
+            view_mineral_weight_mult=1.2,
+            view_player_weight_mult=1.5,
         )
         self.look: ah.LookDecision = ah.LookDecision(
-            life_weight_mult=1,
-            elevation_weight_mult=1,
-            view_food_weight_mult=1,
-            view_mineral_weight_mult=1,
-            view_player_weight_mult=1,
+            life_weight_mult=0.1,
+            elevation_weight_mult=0.8,
+            view_food_weight_mult=0.9,
+            view_mineral_weight_mult=0.9,
+            view_player_weight_mult=0.9,
         )
         self.inventory: ah.InventoryDecision = ah.InventoryDecision(
             life_weight_mult=1,
@@ -103,11 +103,11 @@ class Algorithm:
             view_player_weight_mult=1,
         )
         self.fork: ah.ForkDecision = ah.ForkDecision(
-            life_weight_mult=0.2,
-            elevation_weight_mult=0.2,
-            view_food_weight_mult=0.2,
-            view_mineral_weight_mult=0.2,
-            view_player_weight_mult=0.2,
+            life_weight_mult=0.1,
+            elevation_weight_mult=0.1,
+            view_food_weight_mult=0.1,
+            view_mineral_weight_mult=0.1,
+            view_player_weight_mult=0.1,
         )
         self.eject: ah.EjectDecision = ah.EjectDecision(
             life_weight_mult=1,
@@ -117,10 +117,10 @@ class Algorithm:
             view_player_weight_mult=1,
         )
         self.take: ah.TakeDecision = ah.TakeDecision(
-            life_weight_mult=1,
-            elevation_weight_mult=1,
-            view_food_weight_mult=1.5,
-            view_mineral_weight_mult=1,
+            life_weight_mult=1.5,
+            elevation_weight_mult=1.5,
+            view_food_weight_mult=0.3,
+            view_mineral_weight_mult=1.9,
             view_player_weight_mult=1,
         )
         self.set: ah.SetDecision = ah.SetDecision(
@@ -131,13 +131,12 @@ class Algorithm:
             view_player_weight_mult=1,
         )
         self.incantation: ah.IncantationDecision = ah.IncantationDecision(
-            life_weight_mult=1,
-            elevation_weight_mult=1,
-            view_food_weight_mult=1,
-            view_mineral_weight_mult=1,
-            view_player_weight_mult=1,
+            life_weight_mult=1.1,
+            elevation_weight_mult=1.1,
+            view_food_weight_mult=1.1,
+            view_mineral_weight_mult=1.1,
+            view_player_weight_mult=1.1,
         )
-        self.objective: list[str] = []
 
     def __calculate_scores(self, payload: const.AlgoPayload) -> dict[str, float]:
         """
@@ -167,7 +166,16 @@ class Algorithm:
             str(decision): decision.compute_weight(payload=payload, last_decision=payload.get("last_cmd"))
             for decision in decisions
         }
+        print(f"[SCORES]: {scores}")
         return scores
+
+    def __get_max_score(self, scores: dict[str, float]) -> str:
+        max_key = max(scores, key=scores.get)
+        max_value = scores[max_key]
+
+        max_keys = [key for key, value in scores.items() if value == max_value]
+
+        return random.choice(max_keys)
 
     def choose_decision(self, payload: const.AlgoPayload) -> str:
         """
@@ -179,24 +187,18 @@ class Algorithm:
         Returns:
             str: The decision to take.
         """
-        print("HERE: choose_decision")
+        scores: dict[str, float] = {}
+
         if payload.get("frozen") is True:
-            print("HERE: Drone is frozen")
             return "ko"
         scores = self.__calculate_scores(payload)
-        decision: str = max(scores, key=scores.get)
-        print("----self.move.next_cmds: ", self.broadcast.next_cmds)
+        decision: str = self.__get_max_score(scores=scores)
         match decision.strip():
-            case "take":
-                scores.pop("take")
-                decision = max(scores, key=scores.get)
-            case "set":
-                scores.pop("set")
-                decision = max(scores, key=scores.get)
-            case "eject":
-                scores.pop("eject")
-                decision = max(scores, key=scores.get)
+            case "take" | "set" | "eject":
+                scores.pop(decision)
+                decision = self.__get_max_score(scores=scores)
 
+        # print(f"[NEXT_CMDS]: {self.broadcast.next_cmds}")
         return decision
 
     def display_payload(self, payload: const.AlgoPayload) -> None:

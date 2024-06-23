@@ -12,7 +12,7 @@ import app.const as const
 import app.modules.Drone.Inventory.Inventory as inv
 
 
-def wants_to_elevate(payload: const.AlgoPayload) -> bool:
+def wants_to_elevate(payload: const.AlgoPayload, view: str | None = None) -> bool:
     """
     Check if the drone wants to elevate.
 
@@ -32,6 +32,22 @@ def wants_to_elevate(payload: const.AlgoPayload) -> bool:
     mendiane: int = inventory.getInventory("mendiane")
     phiras: int = inventory.getInventory("phiras")
     thystame: int = inventory.getInventory("thystame")
+
+    if view is not None:
+        view = view.split(" ")
+        for obj in view:
+            if obj == "linemate":
+                linemate += 1
+            elif obj == "deraumere":
+                deraumere += 1
+            elif obj == "sibur":
+                sibur += 1
+            elif obj == "mendiane":
+                mendiane += 1
+            elif obj == "phiras":
+                phiras += 1
+            elif obj == "thystame":
+                thystame += 1
 
     match elevation:
         # No case '1' cuz no additional users needed
@@ -67,6 +83,17 @@ def wants_to_elevate(payload: const.AlgoPayload) -> bool:
 
 
 def needs_object(object: str, incantation: int, inventory: inv.Inventory) -> bool:
+    """
+    Check if the drone needs a certain object.
+
+    Args:
+        object (str): The object to check if the drone needs.
+        incantation (int): The incantation level.
+        inventory (inv.Inventory): The inventory of the drone.
+
+    Returns:
+        bool: True if the drone needs the object, False otherwise.
+    """
     needs: bool = False
 
     match incantation:
@@ -129,7 +156,6 @@ def needs_object(object: str, incantation: int, inventory: inv.Inventory) -> boo
                 needs = True
         case _:
             needs = False
-
     return needs
 
 
@@ -139,7 +165,7 @@ class Decision(ABC):
     set_items: bool = False
     wants_to_look: bool = False
     waiting_to_elevate: bool = False
-    direction_vias: dict[str, float] = {"forward": 0, "right": 0, "left": 0}
+    direction_vias: dict[str, float] = {"forward": 0, "right": 0, "left": 0}  # note rm
     next_cmds: list[str] = []
 
     def __init__(
@@ -245,7 +271,7 @@ class Decision(ABC):
         # print(f"Elevation weight: {elevation_weight}")
         # print(f"Conditional command weight: {conditional_cmd_weight}")
         # print(f"Total weight: {weight}")
-        print(f"Decision: \033[36m{self}\033[0m {weight}")
+        # print(f"Decision: \033[36m{self}\033[0m {weight}")
         return weight
 
     @abstractmethod
@@ -287,15 +313,16 @@ class MoveDecision(Decision):
         if view is None or len(view) == 0:
             return weight
         for i in range(1, len(view)):
-            if view[i].find("player") != -1:
-                weight = float("inf")
-                Decision.next_cmds.append("forward")
-                if i in right_indexes:
-                    Decision.next_cmds.append("right")
-                    Decision.next_cmds.append("left")
-                elif i in left_indexes:
-                    Decision.next_cmds.append("left")
-                    Decision.next_cmds.append("right")
+            if view[i].find("player") == -1:
+                weight = self._view_player_weight_mult * (random.randint(1, 5) / 10)
+                self.movecmd = random.choice(["right", "left", "forward"])
+                # Decision.next_cmds.append("forward")
+                # if i in right_indexes:
+                #     Decision.next_cmds.append("right")
+                #     Decision.next_cmds.append("left")
+                # elif i in left_indexes:
+                #     Decision.next_cmds.append("left")
+                #     Decision.next_cmds.append("right")
         if len(Decision.next_cmds) == 0:
             if len(view[0]) < len("player"):
                 num: int = random.randint(0, 2)
@@ -307,7 +334,7 @@ class MoveDecision(Decision):
                     case _:
                         pass
                 Decision.next_cmds.append("forward")
-        if len(Decision.next_cmds) > 0 and Decision.next_cmds[0] in ["right", "left", "forward"]:
+        if len(Decision.next_cmds) > 0:
             self.movecmd = Decision.next_cmds[0]
         return weight
 
@@ -337,19 +364,21 @@ class LookDecision(Decision):
         )
 
     def _compute_view_weight(self, payload: const.AlgoPayload, last_decision: str) -> float:
-        return self._view_mineral_weight_mult * self._view_food_weight_mult * self._view_player_weight_mult
+        return 0
 
     def _compute_elevation_weight(self, payload: const.AlgoPayload) -> float:
-        return self._elevation_weight_mult
+        return 0
 
     def _compute_conditional_cmd_weight(self, payload: const.AlgoPayload, last_decision: str) -> float:
         weight: float = 0
 
         if Decision.iterator % 3 == 0:
             weight = 3
-        if self.wants_to_look is True:
-            self.wants_to_look = False
+        if Decision.wants_to_look is True:
+            Decision.wants_to_look = False
             weight = float("inf")
+        if last_decision == self.__str__():
+            weight = 0
         return weight
 
     def __str__(self) -> str:
@@ -375,16 +404,18 @@ class InventoryDecision(Decision):
         )
 
     def _compute_view_weight(self, payload: const.AlgoPayload, last_decision: str) -> float:
-        return self._view_mineral_weight_mult * self._view_food_weight_mult * self._view_player_weight_mult
+        return self._view_food_weight_mult * self._view_mineral_weight_mult * self._view_player_weight_mult
 
     def _compute_elevation_weight(self, payload: const.AlgoPayload) -> float:
-        return self._elevation_weight_mult
+        return 0
 
     def _compute_conditional_cmd_weight(self, payload: const.AlgoPayload, last_decision: str) -> float:
         weight: float = 0
 
         if Decision.iterator % 5 == 0:
-            weight = 5
+            weight = 10
+        if last_decision == self.__str__():
+            weight = 0
         return weight
 
     def __str__(self) -> str:
@@ -410,17 +441,16 @@ class BroadcastDecision(Decision):
         )
 
     def _compute_view_weight(self, payload: const.AlgoPayload, last_decision: str) -> float:
-        return self._view_mineral_weight_mult * self._view_food_weight_mult * self._view_player_weight_mult
+        return 0
 
     def _compute_elevation_weight(self, payload: const.AlgoPayload) -> float:
-        return self._elevation_weight_mult
+        return 0
 
     def _compute_conditional_cmd_weight(self, payload: const.AlgoPayload, last_decision: str) -> float:
         weight: float = 0
 
         if self.waiting_to_elevate is True and Decision.broadcast_msg != "":
             weight = float("inf")
-        Decision.wants_to_look = True
         return weight
 
     def __str__(self) -> str:
@@ -448,16 +478,18 @@ class ConnectNbrDecision(Decision):
         )
 
     def _compute_view_weight(self, payload: const.AlgoPayload, last_decision: str) -> float:
-        return self._view_mineral_weight_mult * self._view_food_weight_mult * self._view_player_weight_mult
+        return 0
 
     def _compute_elevation_weight(self, payload: const.AlgoPayload) -> float:
-        return self._elevation_weight_mult
+        return 0
 
     def _compute_conditional_cmd_weight(self, payload: const.AlgoPayload, last_decision: str) -> float:
         weight: float = 0
 
         if Decision.iterator % 25 == 0:
             weight = 25
+        if last_decision == self.__str__():
+            weight = 0
         return weight
 
     def __str__(self) -> str:
@@ -558,6 +590,8 @@ class TakeDecision(Decision):
 
     def _compute_view_weight(self, payload: const.AlgoPayload, last_decision: str) -> float:
         weight: float = 0
+        food_weight: float = 0
+        mineral_weight: float = 0
         needed_objects: list[str] = []
         view: list[str] = payload.get("view")
 
@@ -568,18 +602,24 @@ class TakeDecision(Decision):
             if needs_object(object, payload.get("elevation"), payload.get("inventory")):
                 needed_objects.append(object)
 
-        print(payload.get("inventory").getInventory("linemate"))
+        if view[0].count("food") > 0:
+            needed_objects.append("food")
         if view[0].count("player") > 1:
             weight = -10
         elif len(needed_objects) > 0:
-            for obj in view[0]:
+            for obj in view[0].split(" "):
                 if obj in needed_objects:
-                    weight = 1 * self._view_mineral_weight_mult
-                    self.item = obj
-                    break
-        if payload.get("inventory").getInventory("food") < 3 and view[0].count("food") > 0:
-            weight = self._view_food_weight_mult
+                    if obj == "food":
+                        food = payload.get("inventory").getInventory("food")
+                        if food == 0:
+                            food = 1
+                        food_weight = (1 * self._view_food_weight_mult) / food * 2
+                    else:
+                        mineral_weight = self._view_mineral_weight_mult
+                        self.item = obj
+        if food_weight > mineral_weight:
             self.item = "food"
+        weight = max(food_weight, mineral_weight)
         return weight
 
     def _compute_elevation_weight(self, payload: const.AlgoPayload) -> float:
@@ -665,11 +705,16 @@ class IncantationDecision(Decision):
 
     def _compute_elevation_weight(self, payload: const.AlgoPayload) -> float:
         weight: float = 0
+        view: list[str] = payload.get("view")
 
-        if wants_to_elevate(payload):
-            if payload.get("elevation") == 1:
-                weight = 1
-
+        if view is None or len(view) == 0:
+            return weight
+        if wants_to_elevate(payload, view[0]):
+            self.waiting_to_elevate = True
+            Decision.broadcast_msg = f"incantation {payload.get('elevation')}"
+            weight = 10 / random.randint(3, 9)
+        if Decision.iterator % 30 == 0:
+            weight = 10
         if payload.get("last_cmd") == "incantation":
             weight = 0
         return weight * self._elevation_weight_mult
