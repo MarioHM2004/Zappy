@@ -15,7 +15,6 @@ zappy::Player::Player(godot::SceneTree *tree, std::size_t number,
 {
     godot::Node3D *egg = instantiate(_egg_path);
     if (egg == nullptr) {
-        godot::UtilityFunctions::print("egg scene is null");
         return;
     }
 
@@ -61,7 +60,7 @@ bool zappy::Player::is_frozen() const
 void zappy::Player::set_position(godot::Vector3 position)
 {
     if (_robot_body == nullptr) {
-        return godot::UtilityFunctions::print("Robot body is null");
+        return;
     }
 
     if (!_robot_body->has_method("move_to_coordinate")) {
@@ -93,18 +92,17 @@ void zappy::Player::spawn()
 
     robot->set_position(_position);
     robot->scale_object_local(godot::Vector3(0.5, 0.5, 0.5));
-    character_body->rotate_object_local(
-        godot::Vector3(0, 1, 0), 90 * _orientation);
 
     _robot_scene = robot;
     _robot_body = character_body;
 
     if (_robot_scene->get_child_count() <= 0) {
-        return godot::UtilityFunctions::print("Robot body is null");
+        return godot::UtilityFunctions::print("Robot body is malformed");
     }
 
     tint(_accent);
     _tree->get_root()->add_child(_robot_scene);
+    look_at(_orientation);
 }
 
 void zappy::Player::lay_egg()
@@ -118,6 +116,7 @@ void zappy::Player::lay_egg()
 void zappy::Player::set_orientation(Orientation orientation)
 {
     _orientation = orientation;
+    look_at(_orientation);
 }
 
 zappy::Orientation zappy::Player::get_orientation() const
@@ -128,11 +127,11 @@ zappy::Orientation zappy::Player::get_orientation() const
 void zappy::Player::tint(godot::Color accent)
 {
     if (_state != PlayerState::PLAYER) {
-        return godot::UtilityFunctions::print("State mismatch at " __FILE__);
+        return;
     }
 
     if (_robot_body == nullptr) {
-        return godot::UtilityFunctions::print("Robot body is null");
+        return;
     }
 
     if (!_robot_body->has_method("tint")) {
@@ -146,11 +145,11 @@ void zappy::Player::tint(godot::Color accent)
 void zappy::Player::invocation(int level, bool init)
 {
     if (_state != PlayerState::PLAYER) {
-        return godot::UtilityFunctions::print("State mismatch at " __FILE__);
+        return;
     }
 
     if (_robot_body == nullptr) {
-        return godot::UtilityFunctions::print("Robot body is null");
+        return;
     }
 
     _frozen = init;
@@ -171,7 +170,7 @@ void zappy::Player::invocation(int level, bool init)
 void zappy::Player::invocation_anim() const
 {
     if (_robot_body == nullptr) {
-        return godot::UtilityFunctions::print("Robot body is null");
+        return;
     }
     if (!_robot_body->has_method("invocation_anim")) {
         return godot::UtilityFunctions::print(
@@ -183,7 +182,7 @@ void zappy::Player::invocation_anim() const
 void zappy::Player::egg_anim() const
 {
     if (_robot_body == nullptr) {
-        return godot::UtilityFunctions::print("Robot body is null");
+        return;
     }
     if (!_robot_body->has_method("egg_anim")) {
         return godot::UtilityFunctions::print("Method `egg_anim` not found");
@@ -194,7 +193,7 @@ void zappy::Player::egg_anim() const
 void zappy::Player::death_anim() const
 {
     if (_robot_body == nullptr) {
-        return godot::UtilityFunctions::print("Robot body is null");
+        return;
     }
     if (!_robot_body->has_method("death_anim")) {
         return godot::UtilityFunctions::print("Method `death_anim` not found");
@@ -205,7 +204,7 @@ void zappy::Player::death_anim() const
 void zappy::Player::idle_anim() const
 {
     if (_robot_body == nullptr) {
-        return godot::UtilityFunctions::print("Robot body is null");
+        return;
     }
     if (!_robot_body->has_method("idle_anim")) {
         return godot::UtilityFunctions::print("Method `idle_anim` not found");
@@ -216,7 +215,7 @@ void zappy::Player::idle_anim() const
 void zappy::Player::drop_anim() const
 {
     if (_robot_body == nullptr) {
-        return godot::UtilityFunctions::print("Robot body is null");
+        return;
     }
     if (!_robot_body->has_method("drop_anim")) {
         return godot::UtilityFunctions::print("Method `drop_anim` not found");
@@ -282,4 +281,26 @@ void zappy::Player::set_accent_color(godot::Color color)
 zappy::PlayerState zappy::Player::get_state() const
 {
     return _state;
+}
+
+void zappy::Player::look_at(Orientation orientation)
+{
+    if (_robot_body == nullptr) {
+        return;
+    }
+    if (!_robot_body->has_method("rotate_to")) {
+        return godot::UtilityFunctions::print("Method `rotate_to` not found");
+    }
+
+    godot::Vector3 target;
+
+    switch (orientation) {
+        case NORTH: target = godot::Vector3(0, 0, -1); break;
+        case EAST: target = godot::Vector3(1, 0, 0); break;
+        case SOUTH: target = godot::Vector3(0, 0, 1); break;
+        case WEST: target = godot::Vector3(-1, 0, 0); break;
+        default: return godot::UtilityFunctions::print("Invalid orientation");
+    }
+
+    _robot_body->call("rotate_to", target);
 }

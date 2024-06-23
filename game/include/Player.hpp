@@ -15,7 +15,7 @@
 
 namespace zappy
 {
-    enum Orientation { NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3 };
+    enum Orientation { NORTH = 1, EAST = 2, SOUTH = 3, WEST = 4 };
 
     enum PlayerState {
         EGG = 0,
@@ -73,6 +73,7 @@ namespace zappy
         void drop_anim() const;
         void egg_anim() const;
         void destroy();
+        void look_at(Orientation orientation);
 
         static godot::Color get_accent_color(std::size_t level);
         static godot::Node3D *instantiate(std::string &path);
