@@ -69,17 +69,23 @@ godot::Genesis::Genesis()
                         return std::stoi(elem);
                     });
 
+                zappy::TileData initial_tile = _world->get_tile(x, y);
+
                 for (auto it = resources.begin(); it != resources.end();
                      ++it) {
                     zappy::ResourceType kind =
                         static_cast<zappy::ResourceType>(
                             std::distance(resources.begin(), it));
-                    if (*it > 0) {
-                        emit_signal("resource",
-                            zappy::World::resource_to_string(kind).c_str(), x,
-                            y);
+                    std::size_t new_value = *it;
+
+                    if (initial_tile[kind] != new_value) {
+                        if (new_value > 0) {
+                            emit_signal("resource",
+                                zappy::World::resource_to_string(kind).c_str(),
+                                x, y);
+                        }
+                        _world->set_resource(x, y, kind, new_value);
                     }
-                    _world->set_resource(x, y, kind, *it);
                 }
             },
         },
@@ -170,8 +176,11 @@ godot::Genesis::Genesis()
                     _players.at(std::stoi(response.at(1)));
                 std::size_t x = std::stoi(response.at(2));
                 std::size_t y = std::stoi(response.at(3));
+                zappy::Orientation orientation =
+                    static_cast<zappy::Orientation>(std::stoi(response.at(4)));
 
                 player->set_position(Vector3(x, 1, y));
+                player->set_orientation(orientation);
             },
         },
         {
@@ -548,8 +557,8 @@ void godot::Genesis::key_input(const Ref<InputEventKey> &key)
         case KEY_ESCAPE:
             Input::get_singleton()->set_mouse_mode(is_pressed
                     ? (key->get_keycode() == KEY_ESCAPE
-                              ? Input::MouseMode::MOUSE_MODE_VISIBLE
-                              : Input::MouseMode::MOUSE_MODE_HIDDEN)
+                            ? Input::MouseMode::MOUSE_MODE_VISIBLE
+                            : Input::MouseMode::MOUSE_MODE_HIDDEN)
                     : Input::get_singleton()->get_mouse_mode());
             break;
         default: break;
