@@ -7,9 +7,9 @@
 import argparse
 import socket
 
+import app.const as const
 import app.modules.Drone.Drone as d
 import app.modules.Drone.DroneHelper as dh
-import app.const as const
 
 
 class AIManager:
@@ -91,7 +91,6 @@ class AIManager:
 
             self.drone.connect_nbr = int(connect_nbr)
             self.map_size.extend([int(map[0]), int(map[1])])
-
 
         except Exception as e:
             print(f"-- Failed to connect to server: {host}:{port}, {e}")

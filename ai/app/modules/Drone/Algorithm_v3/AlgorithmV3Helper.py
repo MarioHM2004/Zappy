@@ -4,12 +4,13 @@
 ## File description:
 ## AlgorithmHelper.py
 ##
+import random
 from abc import ABC
 from abc import abstractmethod
-import random
 
 import app.const as const
 import app.modules.Drone.Inventory.Inventory as inv
+
 
 def wants_to_elevate(payload: const.AlgoPayload) -> bool:
     """
@@ -65,7 +66,7 @@ def wants_to_elevate(payload: const.AlgoPayload) -> bool:
     return value
 
 
-def needs_object(object:str, incantation: int, inventory: inv.Inventory) -> bool:
+def needs_object(object: str, incantation: int, inventory: inv.Inventory) -> bool:
     needs: bool = False
 
     match incantation:
@@ -128,8 +129,9 @@ def needs_object(object:str, incantation: int, inventory: inv.Inventory) -> bool
                 needs = True
         case _:
             needs = False
-        
+
     return needs
+
 
 class Decision(ABC):
     iterator: int = 0
@@ -223,7 +225,7 @@ class Decision(ABC):
         Returns:
             int: The weight of the decision.
         """
-        weight: float = 0         
+        weight: float = 0
         if len(Decision.next_cmds) > 0:
             if Decision.next_cmds[0].find(self.__str__().partition(" ")[0]) != -1:
                 Decision.next_cmds.pop(0)
@@ -242,7 +244,7 @@ class Decision(ABC):
         # print(f"View weight: {view_weight}")
         # print(f"Elevation weight: {elevation_weight}")
         # print(f"Conditional command weight: {conditional_cmd_weight}")
-        # print(f"Total weight: {weight}")  
+        # print(f"Total weight: {weight}")
         print(f"Decision: \033[36m{self}\033[0m {weight}")
         return weight
 
@@ -281,7 +283,7 @@ class MoveDecision(Decision):
         left_indexes: list[int] = [3, 7, 13, 8, 14, 15]
         right_indexes: list[int] = [1, 5, 11, 4, 10, 9]
         view: list[str] = payload.get("view")
-        
+
         if view is None or len(view) == 0:
             return weight
         for i in range(1, len(view)):
@@ -663,13 +665,13 @@ class IncantationDecision(Decision):
 
     def _compute_elevation_weight(self, payload: const.AlgoPayload) -> float:
         weight: float = 0
-        
+
         if wants_to_elevate(payload):
             if payload.get("elevation") == 1:
                 weight = 1
-        
+
         if payload.get("last_cmd") == "incantation":
-            weight =  0
+            weight = 0
         return weight * self._elevation_weight_mult
 
     def __str__(self) -> str:

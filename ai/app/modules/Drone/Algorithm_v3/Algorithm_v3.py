@@ -7,8 +7,9 @@
 from typing import List
 
 import app.const as const
-import app.modules.Drone.Inventory.Inventory as inv
 import app.modules.Drone.Algorithm_v3.AlgorithmV3Helper as ah
+import app.modules.Drone.Inventory.Inventory as inv
+
 
 def wants_to_elevate(payload: const.AlgoPayload) -> bool:
     """
@@ -209,9 +210,11 @@ class Algorithm:
             case "eject":
                 scores.pop("eject")
                 decision = max(scores, key=scores.get)
-                
+
         return decision
 
     def display_payload(self, payload: const.AlgoPayload) -> None:
-        print(f"PAYLOAD: life={payload.get('life')}, team={payload.get('team')}, elevation={payload.get('elevation')}, view={payload.get('view')}, frozen={payload.get('frozen')}, x_position={payload.get('x_position')}, y_position={payload.get('y_position')}, orientation={payload.get('orientation')}, connect_nbr={payload.get('connect_nbr')},")
+        print(
+            f"PAYLOAD: life={payload.get('life')}, team={payload.get('team')}, elevation={payload.get('elevation')}, view={payload.get('view')}, frozen={payload.get('frozen')}, x_position={payload.get('x_position')}, y_position={payload.get('y_position')}, orientation={payload.get('orientation')}, connect_nbr={payload.get('connect_nbr')},"
+        )
         print(f"inventory=[{payload.get('inventory')}]")

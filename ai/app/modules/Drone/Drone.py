@@ -7,10 +7,10 @@
 import socket
 
 import app.const as const
-# import app.modules.Drone.Algorithm.Algorithm as algo
 import app.modules.Drone.Algorithm_v2.Algorithm_v2 as algo2
 import app.modules.Drone.Algorithm_v3.Algorithm_v3 as algo3
 import app.modules.Drone.Inventory.Inventory as inv
+# import app.modules.Drone.Algorithm.Algorithm as algo
 
 
 class Drone:
@@ -50,7 +50,7 @@ class Drone:
             "orientation": self.orientation,
             "connect_nbr": self.connect_nbr,
             "inventory": self.inventory,
-            "last_cmd": self.last_cmd
+            "last_cmd": self.last_cmd,
         }
 
     def parse_payload(self, cmd: str, payload: str) -> None:
@@ -76,7 +76,7 @@ class Drone:
                 self.frozen = False
             match cmd:
                 case "look":
-                    self.view = payload.split(',')
+                    self.view = payload.split(",")
                 case "inventory":
                     self.inventory.update_inventory(payload)
                 case "connect_nbr":
@@ -88,7 +88,6 @@ class Drone:
                     print(f"Inventory: {self.inventory}")
         except Exception as e:
             print(f"Error parsing payload: {e}")
-
 
     def take_decision(self) -> str:
         """
@@ -104,7 +103,13 @@ class Drone:
 
         action = self.algo.choose_decision(self.__build_algo_payload())
 
-        if action is None or action not in const.CMD_FUNC and action.startswith("broadcast") is False and action.startswith("take") is False and action.startswith("set") is False:
+        if (
+            action is None
+            or action not in const.CMD_FUNC
+            and action.startswith("broadcast") is False
+            and action.startswith("take") is False
+            and action.startswith("set") is False
+        ):
             return "ko"
         if len(self.last_cmd) == 0:
             self.last_cmd = "look"
