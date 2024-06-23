@@ -9,7 +9,6 @@ from typing import List
 import app.const as const
 import app.modules.Drone.Inventory.Inventory as inv
 
-
 class Algorithm:
     def __init__(self) -> None:
         self.forward: str = "forward"

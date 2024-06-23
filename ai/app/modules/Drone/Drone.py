@@ -8,7 +8,8 @@ import socket
 
 import app.const as const
 # import app.modules.Drone.Algorithm.Algorithm as algo
-import app.modules.Drone.Algorithm_v2.Algorithm_v2 as algo
+import app.modules.Drone.Algorithm_v2.Algorithm_v2 as algo2
+import app.modules.Drone.Algorithm_v3.Algorithm_v3 as algo3
 import app.modules.Drone.Inventory.Inventory as inv
 
 
@@ -23,7 +24,9 @@ class Drone:
         self.y_position: int = 0
         self.orientation: int = 0
         self.connect_nbr: int = 0
-        self.algo: algo.Algorithm = algo.Algorithm()
+        # self.algo2: algo2.Algorithm = algo2.Algorithm() # alba
+        # self.algo3: algo3.Algorithm = algo3.Algorithm() # pau
+        self.algo: algo3.Algorithm = algo3.Algorithm()
         self.inventory: inv.Inventory = inv.Inventory()
         self.last_cmd: str = ""
 
@@ -94,7 +97,7 @@ class Drone:
             str: The action (command) taken by the drone.
         """
 
-        print(f"**info [Drone {self.team} at ({self.x_position}, {self.y_position} - orientation: {self.orientation}) with {self.life} life, {self.incantation_lvl} elevation, {self.connect_nbr} connect nbr and Inventory: {self.inventory}]\n")
+        # print(f"**info [Drone {self.team} at ({self.x_position}, {self.y_position} - orientation: {self.orientation}) with {self.life} life, {self.incantation_lvl} elevation, {self.connect_nbr} connect nbr and Inventory: {self.inventory}]\n")
 
         action: str | None = None
 

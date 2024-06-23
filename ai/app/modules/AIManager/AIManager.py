@@ -178,7 +178,7 @@ class AIManager:
         return True
 
     def handle_data(self, data: str) -> bool:
-        print(f"___test: Data: {data}")
+        # print(f"___test: Data: {data}")
         if data.startswith("dead"):
             return self.handle_pdi(data=data)
         return True
