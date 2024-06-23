@@ -315,7 +315,7 @@ class MoveDecision(Decision):
         for i in range(1, len(view)):
             if view[i].find("player") == -1:
                 weight = self._view_player_weight_mult * (random.randint(1, 5) / 10)
-                self.movecmd = random.choice(["right", "left", "forward"])
+                self.movecmd = random.choices(["right", "left", "forward"], [0.2, 0.2, 0.6], k=1)[0]
                 # Decision.next_cmds.append("forward")
                 # if i in right_indexes:
                 #     Decision.next_cmds.append("right")
